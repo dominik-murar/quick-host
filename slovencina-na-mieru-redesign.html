@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slovenčina na mieru — Redesign proposal v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue-50:#EFF4FB;--blue-100:#D9E6F6;--blue-200:#BBD3EE;--blue-300:#7FB4E8;--blue-400:#4A90D9;
+  --blue-500:#2470BE;--blue-600:#1E5B9F;--blue-700:#17497F;--blue-800:#123A66;--blue-900:#0E2C4D;
+  --amber-50:#FDF8EA;--amber-100:#FAEFCE;--amber-200:#F7E4A8;--amber-300:#F2D372;--amber-400:#E8BC3E;
+  --amber-500:#D4A017;--amber-600:#B07F0C;--amber-700:#8A620A;--amber-800:#6B4C0C;--amber-900:#4A340A;
+  --red-50:#FDF973;--red-100:#FBE4E0;--red-300:#F09A9A;--red-500:#D64B4B;--red-600:#C13333;--red-700:#A02828;--red-800:#7F2020;
+  --green-50:#EDF8F1;--green-100:#D3EFDF;--green-300:#6EE7B7;--green-500:#10A36A;--green-600:#08875A;--green-700:#076B48;
+  --paper:#F7F4EC;--surface:#FFFCF6;--sunken:#F0EADC;
+  --border:#E6DECD;--border-strong:#D2C7B1;
+  --text:#2B2724;--muted:#6E655A;--accent:var(--blue-600);
+  --e1:0 1px 2px rgba(43,39,36,.05), 0 2px 6px rgba(43,39,36,.05);
+  --e2:0 2px 4px rgba(43,39,36,.06), 0 8px 18px -6px rgba(43,39,36,.10);
+  --e3:0 6px 14px -4px rgba(43,39,36,.12), 0 20px 40px -12px rgba(43,39,36,.16);
+  --ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --dis:Nunito,var(--ui);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--text);font-family:var(--ui);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px 96px}
+header.hero{background:linear-gradient(152deg,#17497F,#1E5B9F 50%,#2470BE);color:#fff;padding:60px 24px 52px;margin-bottom:52px;position:relative;overflow:hidden}
+header.hero:after{content:"";position:absolute;right:-70px;top:-90px;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle,rgba(242,211,114,.24),transparent 68%)}
+.hero-inner{max-width:1080px;margin:0 auto;position:relative;z-index:1}
+.eyebrow{font-family:var(--ui);font-size:12px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--amber-300);margin:0 0 14px}
+h1{font-family:var(--dis);font-size:clamp(29px,5vw,44px);line-height:1.14;margin:0 0 16px;font-weight:800;letter-spacing:-.02em}
+.hero p{font-size:17.5px;line-height:1.55;margin:0;max-width:62ch;color:rgba(255,255,255,.9)}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.hero-meta span{font-size:12.5px;font-weight:500;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);padding:5px 11px;border-radius:999px}
+h2{font-size:12.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:60px 0 6px;padding-top:26px;border-top:1px solid var(--border)}
+h2:first-of-type{margin-top:0}
+h2+.lede{font-family:var(--dis);font-size:26px;font-weight:700;letter-spacing:-.015em;line-height:1.28;margin:0 0 20px}
+h3{font-family:var(--dis);font-size:18px;font-weight:700;margin:32px 0 10px;letter-spacing:-.01em}
+h4{font-size:13.5px;font-weight:600;margin:0 0 10px;color:var(--muted)}
+p{margin:0 0 14px}
+a{color:var(--blue-600)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.87em;background:var(--sunken);border:1px solid var(--border);padding:1.5px 5px;border-radius:5px}
+pre{background:#221F1B;color:#EFE9DE;padding:19px 22px;border-radius:14px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;box-shadow:var(--e2);margin:0 0 18px}
+pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+pre .c{color:#9A8F7E}pre .k{color:#9DC7FF}pre .s{color:#F2D372}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px 26px;box-shadow:var(--e1);margin:0 0 18px}
+.verdict{background:linear-gradient(180deg,var(--blue-50),var(--surface) 72%);border:1px solid var(--blue-200);border-left:4px solid var(--blue-600);border-radius:16px;padding:24px 28px;margin:0 0 24px}
+.verdict p:last-child{margin-bottom:0}
+.note{background:var(--amber-50);border:1px solid var(--amber-200);border-left:4px solid var(--amber-400);border-radius:16px;padding:20px 24px;margin:0 0 20px}
+.note p:last-child{margin-bottom:0}
+.note h4{color:var(--amber-800)}
+.warn{background:#FBE9E5;border:1px solid var(--red-100);border-left:4px solid var(--red-500);border-radius:16px;padding:20px 24px;margin:0 0 20px}
+.warn p:last-child{margin-bottom:0}
+.warn h4{color:var(--red-800)}
+.fix{background:var(--green-50);border:1px solid var(--green-100);border-left:4px solid var(--green-500);border-radius:16px;padding:20px 24px;margin:0 0 18px}
+.fix p:last-child{margin-bottom:0}
+.fix h4{color:var(--green-700)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:0 0 18px}
+th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:0 12px 9px;border-bottom:1.5px solid var(--border-strong)}
+td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 12px 8px;box-shadow:var(--e1);margin-bottom:18px;overflow-x:auto}
+.ratio{font-family:ui-monospace,Menlo,monospace;font-weight:600;white-space:nowrap}
+.chip{display:inline-block;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.chip.fail{background:var(--red-100);color:var(--red-800)}
+.chip.pass{background:var(--green-100);color:var(--green-700)}
+.chip.keep{background:var(--blue-100);color:var(--blue-800)}
+.chip.amb{background:var(--amber-100);color:var(--amber-800)}
+.sw-row{display:flex;flex-wrap:wrap;gap:0;border-radius:14px;overflow:hidden;box-shadow:var(--e1);margin:0 0 8px}
+.sw{flex:1 1 0;min-width:62px;height:72px;display:flex;flex-direction:column;justify-content:flex-end;padding:7px 8px;font-size:10.5px;font-weight:600;line-height:1.3}
+.sw b{display:block;font-size:11px;font-weight:700}
+.sw small{font-family:ui-monospace,Menlo,monospace;font-size:9px;opacity:.85;font-weight:500}
+.ramp-label{display:flex;justify-content:space-between;align-items:baseline;margin:22px 0 8px;gap:12px;flex-wrap:wrap}
+.ramp-label strong{font-family:var(--dis);font-size:16px}
+.ramp-label span{font-size:13px;color:var(--muted)}
+.after-ramp{font-size:13px;color:var(--muted);margin-bottom:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:8px}
+.role{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--e1)}
+.role .dot{width:34px;height:34px;border-radius:11px;margin-bottom:12px;box-shadow:var(--e1)}
+.role strong{display:block;font-family:var(--dis);font-size:15.5px;margin-bottom:3px}
+.role span{font-size:13.2px;color:var(--muted);line-height:1.5;display:block}
+.role em{display:block;font-size:12px;color:var(--muted);margin-top:9px;font-style:normal;font-family:ui-monospace,Menlo,monospace}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:8px}
+li>strong{font-weight:650}
+.finding{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:22px 24px;box-shadow:var(--e1);margin-bottom:16px}
+.finding-head{display:flex;gap:13px;align-items:flex-start;margin-bottom:11px}
+.finding-num{flex:0 0 auto;width:27px;height:27px;border-radius:9px;background:var(--blue-600);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.finding-head h3{margin:0;font-size:17.5px;flex:1}
+.finding p:last-child{margin-bottom:0}
+.ev{background:var(--sunken);border-left:3px solid var(--border-strong);border-radius:0 9px 9px 0;padding:11px 15px;margin:12px 0 0;font-size:13.5px;color:var(--muted)}
+.ev strong{color:var(--text);font-weight:600}
+.ev+.ev{margin-top:8px}
+.corr{background:var(--amber-50);border-left:3px solid var(--amber-400);border-radius:0 9px 9px 0;padding:11px 15px;margin:12px 0 0;font-size:13.5px;color:var(--amber-900)}
+.corr b{display:block;font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--amber-700);margin-bottom:3px}
+/* ---------- phone mockups ---------- */
+.phone.light,.phone.oldlight{
+  --paper:#F7F4EC;--surface:#FFFCF6;--sunken:#F0EADC;
+  --border:#E6DECD;--border-strong:#D2C7B1;--text:#2B2724;--muted:#6E655A;
+  color:var(--text);
+}
+.phone.dark{color:#F4EFE6}
+.mockups{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:26px;margin:0 0 22px}
+.mock-col>h4{display:flex;align-items:center;gap:8px;margin-bottom:13px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.05em}
+.tag.now{background:var(--sunken);color:var(--muted);border:1px solid var(--border-strong)}
+.tag.next{background:var(--blue-600);color:#fff}
+.cap{font-size:13px;color:var(--muted);margin-top:13px}
+.phone{border-radius:32px;padding:14px 12px 18px;box-shadow:var(--e3);overflow:hidden;font-size:14px;font-family:var(--ui)}
+.phone.light{background:var(--paper)}
+.phone.oldlight{background:#fff;border:1px solid #E6DECD}
+.phone.dark{background:#191714}
+.notch{width:52px;height:4px;border-radius:99px;background:var(--border-strong);margin:0 auto 14px;opacity:.7}
+.phone.dark .notch{background:#3A352E}
+/* ===== CURRENT STATE (faithful to code) ===== */
+.o-row{display:flex;justify-content:space-between;align-items:center;padding:0 4px}
+.o-streak{display:inline-block;border:1px solid #121212;border-radius:16px;padding:4px 10px;font-size:13px;color:#121212}
+.o-welcome{text-align:center;font-size:33px;color:#121212;padding:50px 0}
+.o-card{background:#1E5B9F;border-radius:10px;padding:19px;margin-bottom:14px}
+.o-card h5{margin:0 0 7px;font-size:18px;font-weight:700;color:#fff;text-transform:uppercase}
+.o-card ul{margin:0;padding-left:0;list-style:none}
+.o-card li{color:#fff;font-size:14px;margin:0 0 2px}
+.o-cardrow{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.o-enter{flex:0 0 auto;width:33px;height:33px;border-radius:50%;background:#D64B4B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.o-instr{font-size:14px;color:#121212;opacity:.65;padding-bottom:8px}
+.o-cols{display:flex;justify-content:space-between;column-gap:10px}
+.o-colL{flex:1;align-items:flex-start;display:flex;flex-direction:column}
+.o-colR{flex:1;align-items:flex-end;display:flex;flex-direction:column}
+.o-tp{border-radius:10px;border:2px solid;padding:13px 12px;margin-bottom:16px;font-size:14px;font-weight:500;color:#121212;background:transparent;width:100%;text-align:center}
+.o-tp.ua{border-color:#F2D372}
+.o-tp.sk{border-color:#1E5B9F}
+.o-tp.ua.on{background:#F2D372;color:#fff}
+.o-tp.sk.on{background:#1E5B9F;color:#fff}
+.o-tp.ua.done{background:#F2D37299;color:#121212}
+.o-tp.sk.done{background:#1E5B9F99;color:#121212}
+.o-btn{border-radius:50px;padding:13px;text-align:center;color:#fff;font-size:15px;margin-top:12px}
+.o-progress{height:40px;border-radius:10px;background:#1E5B9F99;position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.o-progress i{position:absolute;left:0;top:0;bottom:0;width:45%;background:#1E5B9F;border-radius:10px}
+.o-progress span{position:relative;color:#fff;font-size:14px;z-index:1}
+.o-outlined{border:2px solid #1E5B9F;border-radius:10px;padding:14px;margin-bottom:14px;text-align:center;font-weight:500;color:#121212;font-size:15px}
+/* ===== PROPOSED ===== */
+.n-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;padding:0 4px}
+.n-streak{display:inline-flex;align-items:center;gap:7px;background:var(--amber-100);color:var(--amber-900);border-radius:999px;padding:6px 14px 6px 11px;font-size:13.5px;font-weight:700;font-family:var(--dis)}
+.n-streak .fl{width:7px;height:7px;border-radius:50%;background:var(--amber-500);box-shadow:0 0 0 3px rgba(212,160,23,.22)}
+.n-gear{width:32px;height:32px;border-radius:11px;background:var(--surface);box-shadow:var(--e1);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
+.phone.dark .n-gear{background:#2B2722;box-shadow:none;color:#A69B8B}
+.n-hi{font-family:var(--dis);font-size:31px;font-weight:800;letter-spacing:-.025em;margin:0 4px 22px;line-height:1.12}
+.phone.dark .n-hi{color:#F4EFE6}
+/* pips = progress with no copy */
+.pips{display:flex;gap:5px;align-items:center}
+.pips i{flex:1;height:7px;border-radius:99px;background:var(--sunken);box-shadow:inset 0 1px 2px rgba(43,39,36,.07)}
+.phone.dark .pips i{background:#2B2722;box-shadow:none}
+.pips i.on{background:var(--blue-600);box-shadow:none}
+.phone.dark .pips i.on{background:var(--blue-400)}
+.pips i.ok{background:var(--green-600)}
+.phone.dark .pips i.ok{background:var(--green-300)}
+.pips i.am{background:var(--amber-400)}
+/* module card — soft, no border, notepad */
+.n-card{background:var(--surface);border:none;border-radius:22px;padding:18px 19px;margin-bottom:13px;box-shadow:var(--e2)}
+.phone.dark .n-card{background:#221F1B;box-shadow:none;border:1px solid #3A352E}
+.n-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.phone.dark .n-eyebrow{color:#A69B8B}
+.n-card h5{font-family:var(--dis);margin:0 0 10px;font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.phone.dark .n-card h5{color:#F4EFE6}
+.n-bul{margin:0 0 14px;padding:0;list-style:none}
+.n-bul li{display:flex;gap:8px;align-items:baseline;font-size:14px;color:var(--muted);margin:0 0 3px}
+.phone.dark .n-bul li{color:#A69B8B}
+.n-bul li:before{content:"";flex:0 0 auto;width:5px;height:5px;border-radius:50%;background:var(--amber-400);transform:translateY(-2px)}
+.n-cardfoot{display:flex;align-items:center;gap:12px;margin-top:14px}
+.n-cardfoot .pips{flex:1}
+/* game-y button: 3px bottom edge */
+.n-btn{border-radius:999px;padding:14px;text-align:center;font-size:15.5px;font-weight:700;font-family:var(--dis);letter-spacing:-.01em;margin-top:4px}
+.n-btn.pri{background:var(--blue-600);color:#fff;box-shadow:0 3px 0 var(--blue-800)}
+.n-btn.ok{background:var(--green-600);color:#fff;box-shadow:0 3px 0 var(--green-700)}
+.n-btn.sec{background:var(--surface);color:var(--blue-700);box-shadow:0 2px 0 var(--border-strong),var(--e1)}
+.phone.dark .n-btn.sec{background:#2B2722;color:var(--blue-300);box-shadow:0 2px 0 #3A352E}
+.n-chevbtn{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--blue-600);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 3px 0 var(--blue-800)}
+.n-lock{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--sunken);color:var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:15px}
+.phone.dark .n-lock{background:#2B2722;color:#3A352E}
+.n-card.locked{box-shadow:none;background:transparent;border:1.5px dashed var(--border-strong)}
+.phone.dark .n-card.locked{background:transparent;border:1.5px dashed #3A352E}
+.n-card.locked h5,.phone.dark .n-card.locked h5{color:var(--muted)}
+.phone.dark .n-card.locked h5{color:#A69B8B}
+/* exercise: side-by-side columns */
+.n-instr{font-size:15px;color:var(--muted);margin:0 0 20px;padding:0 2px}
+.phone.dark .n-instr{color:#A69B8B}
+.n-cols{display:flex;column-gap:10px}
+.n-col{flex:1;display:flex;flex-direction:column}
+.n-tp{border-radius:16px;padding:15px 10px;margin-bottom:14px;font-size:14.5px;font-weight:650;text-align:center;background:var(--surface);box-shadow:var(--e1);border:1.5px solid var(--border)}
+.phone.dark .n-tp{background:#221F1B;border-color:#3A352E;color:#F4EFE6}
+.n-tp.ua{border-color:var(--amber-200)}
+.n-tp.sk{border-color:var(--blue-100)}
+.phone.dark .n-tp.ua{border-color:#6B4C0C}
+.phone.dark .n-tp.sk{border-color:#123A66}
+.n-tp.on.ua{background:var(--amber-300);border-color:var(--amber-500);color:var(--amber-900);box-shadow:0 3px 0 var(--amber-500)}
+.n-tp.on.sk{background:var(--blue-600);border-color:var(--blue-800);color:#fff;box-shadow:0 3px 0 var(--blue-800)}
+.n-tp.done{box-shadow:none;opacity:.55;border-style:dashed}
+.n-tp.done.ua{background:var(--amber-50);border-color:var(--amber-200);color:var(--amber-900)}
+.n-tp.done.sk{background:var(--blue-50);border-color:var(--blue-200);color:var(--blue-800)}
+.phone.dark .n-tp.done.ua{background:rgba(242,211,114,.1);color:var(--amber-200)}
+.phone.dark .n-tp.done.sk{background:rgba(36,112,190,.16);color:var(--blue-200)}
+.n-colhead{display:flex;justify-content:space-between;margin-bottom:10px;padding:0 2px;gap:10px}
+.n-colhead i{flex:1;height:3px;border-radius:99px;display:block}
+.n-colhead i.a{background:var(--amber-300)}
+.n-colhead i.b{background:var(--blue-300)}
+.n-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding:0 2px}
+.n-hdr .back{color:var(--blue-700);font-size:19px;font-weight:700}
+.phone.dark .n-hdr .back{color:var(--blue-300)}
+.n-hdr .ttl{flex:1;font-family:var(--dis);font-size:16px;font-weight:800;letter-spacing:-.01em;text-align:center}
+.phone.dark .n-hdr .ttl{color:#F4EFE6}
+.n-hdr .spk{color:var(--muted);font-size:15px}
+.n-lesson{background:var(--surface);border:none;border-radius:20px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--e2);display:flex;align-items:center;gap:14px}
+.phone.dark .n-lesson{background:#221F1B;box-shadow:none;border:1px solid #3A352E}
+.n-lesson .body{flex:1;min-width:0}
+.n-lesson h6{font-family:var(--dis);margin:0 0 9px;font-size:16.5px;font-weight:700;letter-spacing:-.01em}
+.phone.dark .n-lesson h6{color:#F4EFE6}
+.n-num{flex:0 0 auto;width:34px;height:34px;border-radius:12px;background:var(--amber-100);color:var(--amber-900);display:flex;align-items:center;justify-content:center;font-family:var(--dis);font-size:14px;font-weight:800}
+.phone.dark .n-num{background:rgba(242,211,114,.13);color:var(--amber-300)}
+.n-num.done{background:var(--green-100);color:var(--green-700)}
+.phone.dark .n-num.done{background:rgba(16,163,106,.16);color:var(--green-300)}
+.scale-row{display:flex;align-items:baseline;gap:16px;padding:11px 0;border-bottom:1px solid var(--border)}
+.scale-row:last-child{border-bottom:none}
+.scale-row .nm{flex:0 0 110px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);font-weight:600}
+.scale-row .spec{flex:0 0 92px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--muted)}
+.scale-row .demo{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.radii{display:flex;gap:14px;flex-wrap:wrap}
+.radii div{width:74px;height:62px;background:var(--blue-50);border:1.5px solid var(--blue-200);display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-size:10.5px;font-family:ui-monospace,Menlo,monospace;color:var(--blue-800)}
+.elev{display:flex;gap:18px;flex-wrap:wrap}
+.elev div{flex:1;min-width:128px;background:var(--surface);border-radius:16px;padding:16px;font-size:12px;font-family:ui-monospace,Menlo,monospace;color:var(--muted);text-align:center}
+.phase{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:0;box-shadow:var(--e1);margin-bottom:14px;overflow:hidden}
+.phase-h{display:flex;align-items:center;gap:12px;padding:15px 20px;background:var(--sunken);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.phase-h .n{flex:0 0 auto;width:26px;height:26px;border-radius:9px;background:var(--blue-600);color:#fff;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.phase-h strong{flex:1;font-family:var(--dis);font-size:15.5px;font-weight:700}
+.phase-h .eff{font-size:11.5px;font-weight:650;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:3px 10px;border-radius:999px}
+.phase-b{padding:16px 20px}
+.phase-b ul{margin:0;padding-left:20px}
+.phase-b li{margin-bottom:6px;font-size:14.5px}
+.phase-b li:last-child{margin-bottom:0}
+.q{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--amber-400);border-radius:0 16px 16px 0;padding:18px 22px;margin-bottom:13px;box-shadow:var(--e1)}
+.q strong{display:block;font-family:var(--dis);font-size:16px;margin-bottom:5px}
+.q p{margin:0;font-size:14.2px;color:var(--muted)}
+.q p+p{margin-top:8px}
+footer{margin-top:68px;padding-top:24px;border-top:1px solid var(--border);color:var(--muted);font-size:13.5px}
+@media(max-width:640px){
+  .tbl-wrap{padding:8px 8px 4px}
+  table,thead,tbody,tr,td{display:block;width:100%}
+  thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  tr{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+  td{border:none;padding:5px 0;display:flex;gap:12px;align-items:baseline}
+  td:before{content:attr(data-label);flex:0 0 80px;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+  td>*{flex:1;min-width:0}
+  .scale-row{flex-wrap:wrap;gap:8px}
+  .scale-row .nm,.scale-row .spec{flex:0 0 auto}
+  h2+.lede{font-size:22px}
+  header.hero{padding:44px 20px 40px}
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --paper:#191714;--surface:#221F1B;--sunken:#2B2722;
+    --border:#3A352E;--border-strong:#4C4539;
+    --text:#F4EFE6;--muted:#A69B8B;--accent:#7FB4E8;
+    --e1:0 1px 2px rgba(0,0,0,.4);--e2:0 4px 10px -2px rgba(0,0,0,.5);--e3:0 14px 30px -8px rgba(0,0,0,.6);
+  }
+  .verdict{background:linear-gradient(180deg,rgba(36,112,190,.18),var(--surface) 72%);border-color:#2E4A6B;border-left-color:var(--blue-400)}
+  .note{background:rgba(242,211,114,.09);border-color:#6B4C0C;border-left-color:var(--amber-500)}
+  .note h4{color:var(--amber-300)}
+  .warn{background:rgba(214,75,75,.11);border-color:#7F2020;border-left-color:var(--red-500)}
+  .warn h4{color:#F09A9A}
+  .fix{background:rgba(16,163,106,.11);border-color:#076B48;border-left-color:var(--green-500)}
+  .fix h4{color:var(--green-300)}
+  .corr{background:rgba(242,211,114,.09);color:var(--amber-200)}
+  .chip.fail{background:rgba(214,75,75,.2);color:#F09A9A}
+  .chip.pass{background:rgba(16,163,106,.2);color:var(--green-300)}
+  .chip.keep{background:rgba(74,144,217,.2);color:var(--blue-200)}
+  .chip.amb{background:rgba(242,211,114,.17);color:var(--amber-300)}
+  .radii div{background:rgba(74,144,217,.14);border-color:var(--blue-500);color:var(--blue-200)}
+  .q{border-left-color:var(--amber-500)}
+  .phone.oldlight{border-color:#3A352E}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Design proposal · revision 2</p>
+    <h1>Slovenčina na mieru<br>Warm paper, not a dashboard</h1>
+    <p>Revised on your three notes: matching words stay side by side, nothing needs new
+       Slovak or Ukrainian copy, and the whole thing moves onto warm paper with soft cards
+       and a bit of tactility instead of enterprise chrome.</p>
+    <div class="hero-meta">
+      <span>v2.0.0-alpha.1</span>
+      <span>Revision 2 — supersedes rev 1</span>
+      <span>11 Sep 2026</span>
+      <span>Proposal — nothing implemented yet</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>What changed in this revision</h2>
+<p class="lede">Your three notes, and what each one actually forced</p>
+
+<div class="fix">
+  <h4>1 · Words stay side by side</h4>
+  <p>My mistake in rev 1 — I stacked them into two groups, which quietly broke the exercise.
+     <code>WordsExerciseView</code> is a <strong>two-column matching game</strong>:
+     <code>LeftColumn</code> holds the Ukrainian keys, <code>RightColumn</code> the Slovak values,
+     and you tap one on each side to pair them. Stacking them removes the spatial relationship
+     the whole interaction depends on. The two-column layout is preserved below and everything
+     else was designed around it.</p>
+</div>
+
+<div class="fix">
+  <h4>2 · No new copy — this turned out to help</h4>
+  <p>Every mockup below uses <strong>only strings that already exist</strong> in
+     <code>translations/sk.ts</code> and <code>ua.ts</code>, or content that already comes from
+     Firestore. There is a full string-by-string inventory further down so you can check it.</p>
+  <p>This constraint improved the design rather than limiting it. The most dashboard-ish things in
+     rev 1 — the <em>142 SLOV / 3 MODULY / 68% HOTOVO</em> stat row, the <em>POKRAČUJ</em> and
+     <em>VŠETKY MODULY</em> section labels, the "Dokonči Modul 2 na odomknutie" locked message — all
+     needed new copy, and all of them were exactly what made it feel corporate. Removing them left
+     hierarchy to be carried by layout, weight and colour, which is what you actually wanted.</p>
+</div>
+
+<div class="fix">
+  <h4>3 · Warm paper, soft cards, a little tactility</h4>
+  <p>You're right about Codex's background — a warm cream reads calm and paper-like in a way a cool
+     near-white can't. I've taken that and gone further from the dashboard: no visible card borders
+     (soft shadow instead), radii up from 10px to 20–22px, progress as <strong>segment pips</strong>
+     rather than percentage bars, and a 3px bottom edge on buttons and active pills so they feel
+     like physical keys. That last one is the cheapest "game" signal there is.</p>
+  <p>What I did <em>not</em> take from Codex's version: the extra explanatory copy (rule 2), the
+     legend line at the bottom, and the density. Yours is a drill app used in short bursts — it wants
+     fewer things on screen, larger.</p>
+</div>
+
+<h2>Two corrections to rev 1</h2>
+<p class="lede">I got two counts wrong; both make the case stronger, not weaker</p>
+<div class="card" style="margin-bottom:18px">
+  <div class="corr">
+    <b>Correction — amber usage</b>
+    Rev 1 said <code>tertiary</code> had 1 usage and <code>tertiaryOpaq</code> had 0. Wrong — I only
+    grepped the <code>.styles.ts</code> files. Actual count is <strong>3 usages</strong>, all inside
+    <code>PillWordTranslate</code>: the <code>ua</code> border, the active fill
+    (<code>tertiary</code>), and the matched fill (<code>tertiaryOpaq</code>).
+    <br><br>
+    So <strong>amber already means Ukrainian in the one place it appears</strong> — your concept is
+    partly built. The finding still holds (amber is confined to a single component and appears nowhere
+    else in the app), but it's less "unfinished idea" and more "good idea never extended".
+  </div>
+  <div class="corr" style="margin-top:12px">
+    <b>Correction — blue usage</b>
+    Rev 1 said 7 components reference <code>colors.primary</code>. The real number is
+    <strong>12 files</strong>: the seven I listed plus <code>SentenceInput</code>,
+    <code>FormInput</code>, <code>AppLogo</code>, <code>LoadingScreen</code>, and
+    <code>PillWordTranslate.tsx</code> itself.
+  </div>
+</div>
+
+<h2>Warm palette</h2>
+<p class="lede">Same four hues, warm paper underneath them</p>
+<p>The accent ramps are unchanged from rev 1 — your blue <code>#1E5B9F</code> and amber
+   <code>#F2D372</code> still sit in them untouched. What changed is the neutrals: cool blue-grey
+   out, warm paper in. The tints inside each ramp were also nudged warm so pale amber and pale blue
+   don't read as cold patches on a cream ground.</p>
+
+<div class="ramp-label"><strong>Neutrals — paper</strong><span>the change you asked for</span></div>
+<div class="sw-row">
+  <div class="sw" style="background:#F7F4EC;color:#2B2724"><b>paper</b><small>F7F4EC</small></div>
+  <div class="sw" style="background:#FFFCF6;color:#2B2724"><b>surface</b><small>FFFCF6</small></div>
+  <div class="sw" style="background:#F0EADC;color:#2B2724"><b>sunken</b><small>F0EADC</small></div>
+  <div class="sw" style="background:#E6DECD;color:#2B2724"><b>border</b><small>E6DECD</small></div>
+  <div class="sw" style="background:#D2C7B1;color:#2B2724"><b>strong</b><small>D2C7B1</small></div>
+  <div class="sw" style="background:#6E655A;color:#fff"><b>muted</b><small>6E655A</small></div>
+  <div class="sw" style="background:#2B2724;color:#fff"><b>text</b><small>2B2724</small></div>
+</div>
+<p class="after-ramp">Text on paper <strong>13.47:1</strong> ✓ · muted on paper <strong>5.20:1</strong> ✓
+   (was 3.95:1 and failing). Warm near-black <code>#2B2724</code> instead of <code>#121212</code> —
+   pure black on cream looks like ink that dried wrong.</p>
+
+<div class="ramp-label"><strong>Neutrals — night</strong><span>warm charcoal, not blue-black</span></div>
+<div class="sw-row">
+  <div class="sw" style="background:#191714;color:#F4EFE6"><b>paper</b><small>191714</small></div>
+  <div class="sw" style="background:#221F1B;color:#F4EFE6"><b>surface</b><small>221F1B</small></div>
+  <div class="sw" style="background:#2B2722;color:#F4EFE6"><b>sunken</b><small>2B2722</small></div>
+  <div class="sw" style="background:#3A352E;color:#F4EFE6"><b>border</b><small>3A352E</small></div>
+  <div class="sw" style="background:#4C4539;color:#F4EFE6"><b>strong</b><small>4C4539</small></div>
+  <div class="sw" style="background:#A69B8B;color:#191714"><b>muted</b><small>A69B8B</small></div>
+  <div class="sw" style="background:#F4EFE6;color:#191714"><b>text</b><small>F4EFE6</small></div>
+</div>
+<p class="after-ramp">Text on surface <strong>14.33:1</strong> ✓ · muted <strong>6.00:1</strong> ✓.
+   Warm-charcoal rather than the cool <code>#0B1220</code> of rev 1, so dark mode reads as the same
+   app with the lamp off.</p>
+
+<div class="ramp-label"><strong>Amber</strong><span>Ukrainian · home · already half-built in your code</span></div>
+<div class="sw-row">
+  <div class="sw" style="background:#FDF8EA;color:#4A340A"><b>50</b><small>FDF8EA</small></div>
+  <div class="sw" style="background:#FAEFCE;color:#4A340A"><b>100</b><small>FAEFCE</small></div>
+  <div class="sw" style="background:#F7E4A8;color:#4A340A"><b>200</b><small>F7E4A8</small></div>
+  <div class="sw" style="background:#F2D372;color:#4A340A"><b>300 ◄</b><small>F2D372</small></div>
+  <div class="sw" style="background:#E8BC3E;color:#4A340A"><b>400</b><small>E8BC3E</small></div>
+  <div class="sw" style="background:#D4A017;color:#fff"><b>500</b><small>D4A017</small></div>
+  <div class="sw" style="background:#B07F0C;color:#fff"><b>600</b><small>B07F0C</small></div>
+  <div class="sw" style="background:#8A620A;color:#fff"><b>700</b><small>8A620A</small></div>
+  <div class="sw" style="background:#6B4C0C;color:#fff"><b>800</b><small>6B4C0C</small></div>
+  <div class="sw" style="background:#4A340A;color:#fff"><b>900</b><small>4A340A</small></div>
+</div>
+<p class="after-ramp">◄ your existing <code>tertiary</code>, the active <code>ua</code> pill fill.
+   Its one real bug: the component pairs it with <strong>white text</strong>
+   (<code>PillWordTranslate.styles.ts</code> uses white when not inactive) = <strong>1.46:1</strong>.
+   Swap to <code>amber-900</code> text and the same pill becomes <strong>8.02:1</strong> ✓ with no
+   colour change at all.</p>
+
+<div class="ramp-label"><strong>Blue · Green · Red</strong><span>unchanged from rev 1, tints warmed</span></div>
+<div class="sw-row">
+  <div class="sw" style="background:#EFF4FB;color:#0E2C4D"><b>b-50</b><small>EFF4FB</small></div>
+  <div class="sw" style="background:#BBD3EE;color:#0E2C4D"><b>b-200</b><small>BBD3EE</small></div>
+  <div class="sw" style="background:#4A90D9;color:#fff"><b>b-400</b><small>4A90D9</small></div>
+  <div class="sw" style="background:#1E5B9F;color:#fff"><b>b-600 ◄</b><small>1E5B9F</small></div>
+  <div class="sw" style="background:#123A66;color:#fff"><b>b-800</b><small>123A66</small></div>
+  <div class="sw" style="background:#EDF8F1;color:#076B48"><b>g-50</b><small>EDF8F1</small></div>
+  <div class="sw" style="background:#08875A;color:#fff"><b>g-600 ★</b><small>08875A</small></div>
+  <div class="sw" style="background:#FBE4E0;color:#7F2020"><b>r-100</b><small>FBE4E0</small></div>
+  <div class="sw" style="background:#D64B4B;color:#fff"><b>r-500 ◄</b><small>D64B4B</small></div>
+  <div class="sw" style="background:#C13333;color:#fff"><b>r-600 ★</b><small>C13333</small></div>
+</div>
+<p class="after-ramp">◄ existing values kept · ★ the contrast-safe steps used with white text.
+   Roles are unchanged: <strong>blue</strong> = app, Slovak, progress · <strong>amber</strong> =
+   Ukrainian, home · <strong>green</strong> = correct · <strong>red</strong> = errors only.</p>
+<h2>Home</h2>
+<p class="lede">Existing copy only — the stat row is gone, and it's better for it</p>
+
+<div class="mockups">
+  <div class="mock-col">
+    <h4><span class="tag now">Now</span></h4>
+    <div class="phone oldlight">
+      <div class="notch"></div>
+      <div class="o-row"><span class="o-streak">3 dni</span><span style="color:#121212">⚙</span></div>
+      <div class="o-welcome">Vitaj!</div>
+      <div class="o-card">
+        <h5>ZÁKLADY</h5>
+        <div class="o-cardrow">
+          <ul><li>• Pozdravy</li><li>• Čísla</li><li>• Farby</li></ul>
+          <div class="o-enter">›</div>
+        </div>
+      </div>
+      <div class="o-card">
+        <h5>V MESTE</h5>
+        <div class="o-cardrow">
+          <ul><li>• Doprava</li><li>• Obchody</li><li>• Smery</li></ul>
+          <div class="o-enter">›</div>
+        </div>
+      </div>
+      <div class="o-card" style="opacity:.6">
+        <h5>PRÁCA</h5>
+        <div class="o-cardrow">
+          <ul><li>• Pohovor</li><li>• Kolegovia</li><li>• Zmluva</li></ul>
+          <div style="color:#fff;font-size:16px">🔒</div>
+        </div>
+      </div>
+    </div>
+    <p class="cap">Pure white, 80px of dead padding above "Vitaj!", three identical saturated blue
+       slabs with a red chevron. Locked = <code>opacity: 0.6</code>. No progress anywhere.</p>
+  </div>
+
+  <div class="mock-col">
+    <h4><span class="tag next">Proposed</span></h4>
+    <div class="phone light">
+      <div class="notch"></div>
+      <div class="n-top">
+        <span class="n-streak"><span class="fl"></span>3 dni</span>
+        <span class="n-gear">⚙</span>
+      </div>
+      <p class="n-hi">Vitaj!</p>
+      <div class="n-card">
+        <p class="n-eyebrow">Modul 1</p>
+        <h5>Základy</h5>
+        <ul class="n-bul"><li>Pozdravy</li><li>Čísla</li><li>Farby</li></ul>
+        <div class="n-cardfoot">
+          <span class="pips"><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i></span>
+          <span class="n-chevbtn" style="background:var(--green-600);box-shadow:0 3px 0 var(--green-700)">✓</span>
+        </div>
+      </div>
+      <div class="n-card">
+        <p class="n-eyebrow">Modul 2</p>
+        <h5>V meste</h5>
+        <ul class="n-bul"><li>Doprava</li><li>Obchody</li><li>Smery</li></ul>
+        <div class="n-cardfoot">
+          <span class="pips"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="n-btn pri" style="margin-top:14px">Pokračovať</div>
+      </div>
+      <div class="n-card locked">
+        <p class="n-eyebrow">Modul 3</p>
+        <div style="display:flex;align-items:center;gap:12px">
+          <h5 style="flex:1;margin:0">Práca</h5>
+          <span class="n-lock">🔒</span>
+        </div>
+      </div>
+    </div>
+    <p class="cap">Warm paper, soft shadowed cards, 22px radii, no borders. Progress is
+       <strong>pips</strong> — no percentages, no labels, no new copy. The module you're on gets a
+       real <em>Pokračovať</em> button (existing string) instead of a section header saying so;
+       finished modules get a green tick. Locked is a dashed outline and a lock, nothing to explain.</p>
+  </div>
+
+  <div class="mock-col">
+    <h4><span class="tag next">Proposed · night</span></h4>
+    <div class="phone dark">
+      <div class="notch"></div>
+      <div class="n-top">
+        <span class="n-streak" style="background:rgba(242,211,114,.13);color:#F2D372"><span class="fl"></span>3 dni</span>
+        <span class="n-gear">⚙</span>
+      </div>
+      <p class="n-hi">Vitaj!</p>
+      <div class="n-card">
+        <p class="n-eyebrow">Modul 1</p>
+        <h5>Základy</h5>
+        <ul class="n-bul"><li>Pozdravy</li><li>Čísla</li><li>Farby</li></ul>
+        <div class="n-cardfoot">
+          <span class="pips"><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i></span>
+          <span class="n-chevbtn" style="background:var(--green-600);box-shadow:0 3px 0 var(--green-700)">✓</span>
+        </div>
+      </div>
+      <div class="n-card">
+        <p class="n-eyebrow">Modul 2</p>
+        <h5>V meste</h5>
+        <ul class="n-bul"><li>Doprava</li><li>Obchody</li><li>Smery</li></ul>
+        <div class="n-cardfoot">
+          <span class="pips"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="n-btn pri" style="margin-top:14px">Pokračovať</div>
+      </div>
+      <div class="n-card locked">
+        <p class="n-eyebrow">Modul 3</p>
+        <div style="display:flex;align-items:center;gap:12px">
+          <h5 style="flex:1;margin:0">Práca</h5>
+          <span class="n-lock">🔒</span>
+        </div>
+      </div>
+    </div>
+    <p class="cap">Warm charcoal keeps the paper character after dark. Accents step down the ramps
+       (<code>blue-400</code>, <code>amber-300</code>, <code>green-300</code>) so nothing glows.</p>
+  </div>
+</div>
+
+<h2>Words exercise — side by side</h2>
+<p class="lede">Two columns preserved: Ukrainian left, Slovak right</p>
+
+<div class="mockups">
+  <div class="mock-col">
+    <h4><span class="tag now">Now</span></h4>
+    <div class="phone oldlight">
+      <div class="notch"></div>
+      <div style="text-align:center;font-size:17px;font-weight:700;color:#121212;margin-bottom:22px">Slovná zásoba</div>
+      <p class="o-instr">Spoj slovo s jeho prekladom:</p>
+      <div class="o-cols">
+        <div class="o-colL">
+          <div class="o-tp ua on">дякую</div>
+          <div class="o-tp ua">будь ласка</div>
+          <div class="o-tp ua done">добрий день</div>
+        </div>
+        <div class="o-colR">
+          <div class="o-tp sk">prosím</div>
+          <div class="o-tp sk">ďakujem</div>
+          <div class="o-tp sk done">dobrý deň</div>
+        </div>
+      </div>
+      <div class="o-btn" style="background:#A1CEC1">Správne! Pokračovať</div>
+      <p style="text-align:center;font-size:11px;color:#B07F0C;margin:8px 0 0;font-weight:600">↑ 1.73:1</p>
+    </div>
+    <p class="cap">The layout is right — the colour coding is already there too (amber = ua, blue = sk).
+       Three problems: the active pill puts <strong>white on <code>#F2D372</code> = 1.46:1</strong>,
+       the matched state uses a 60%-alpha fill that muddies against white, and the success button is
+       <strong>1.73:1</strong>. All three are colour, not layout.</p>
+  </div>
+
+  <div class="mock-col">
+    <h4><span class="tag next">Proposed</span></h4>
+    <div class="phone light">
+      <div class="notch"></div>
+      <div class="n-hdr"><span class="back">‹</span><span class="ttl">Slovná zásoba</span><span class="spk">🔊</span></div>
+      <p class="n-instr">Spoj slovo s jeho prekladom:</p>
+      <div class="n-colhead"><i class="a"></i><i class="b"></i></div>
+      <div class="n-cols">
+        <div class="n-col">
+          <div class="n-tp ua on">дякую</div>
+          <div class="n-tp ua">будь ласка</div>
+          <div class="n-tp ua done">добрий день</div>
+        </div>
+        <div class="n-col">
+          <div class="n-tp sk">prosím</div>
+          <div class="n-tp sk">ďakujem</div>
+          <div class="n-tp sk done">dobrý deň</div>
+        </div>
+      </div>
+    </div>
+    <p class="cap">Same two columns, same tap-to-pair. Resting pills are warm-white cards with a
+       faint amber or blue edge so the language is readable at a glance without shouting. The active
+       pill is a <strong>solid amber or blue key with a 3px bottom edge</strong> — pressed-in feel,
+       and dark text on amber instead of white. Matched pairs go dashed and recede rather than turning
+       translucent. Two thin rules above the columns replace a legend line.</p>
+  </div>
+
+  <div class="mock-col">
+    <h4><span class="tag next">Complete + night</span></h4>
+    <div class="phone light" style="margin-bottom:22px">
+      <div class="notch"></div>
+      <div class="n-hdr"><span class="back">‹</span><span class="ttl">Slovná zásoba</span><span class="spk">🔊</span></div>
+      <p class="n-instr">Spoj slovo s jeho prekladom:</p>
+      <div class="n-colhead"><i class="a"></i><i class="b"></i></div>
+      <div class="n-cols">
+        <div class="n-col">
+          <div class="n-tp ua done">дякую</div>
+          <div class="n-tp ua done">будь ласка</div>
+          <div class="n-tp ua done">добрий день</div>
+        </div>
+        <div class="n-col">
+          <div class="n-tp sk done">ďakujem</div>
+          <div class="n-tp sk done">prosím</div>
+          <div class="n-tp sk done">dobrý deň</div>
+        </div>
+      </div>
+      <div class="n-btn ok">Správne! Pokračovať</div>
+    </div>
+    <div class="phone dark">
+      <div class="notch"></div>
+      <div class="n-hdr"><span class="back">‹</span><span class="ttl">Slovná zásoba</span><span class="spk">🔊</span></div>
+      <p class="n-instr">Spoj slovo s jeho prekladom:</p>
+      <div class="n-colhead"><i class="a"></i><i class="b"></i></div>
+      <div class="n-cols">
+        <div class="n-col">
+          <div class="n-tp ua on">дякую</div>
+          <div class="n-tp ua">будь ласка</div>
+        </div>
+        <div class="n-col">
+          <div class="n-tp sk">prosím</div>
+          <div class="n-tp sk">ďakujem</div>
+        </div>
+      </div>
+    </div>
+    <p class="cap">The success button only appears once every pair is matched — which is already how
+       <code>WordsExerciseView</code> works (<code>invisible</code> until
+       <code>matchedKeys.size === shuffledKeys.length</code>). Green at
+       <strong>4.54:1</strong> ✓ instead of 1.73:1.</p>
+  </div>
+</div>
+
+<h2>Unit screen</h2>
+<p class="lede">Where the progress bar actually lives — pips replace the blue slab</p>
+
+<div class="mockups">
+  <div class="mock-col">
+    <h4><span class="tag now">Now</span></h4>
+    <div class="phone oldlight">
+      <div class="notch"></div>
+      <div style="text-align:center;font-size:17px;font-weight:700;color:#121212;margin-bottom:22px">Základy</div>
+      <div class="o-outlined">Slovná zásoba<div class="o-progress" style="margin:12px 0 0"><i style="width:100%"></i><span>10/10</span></div></div>
+      <div class="o-outlined">Vety<div class="o-progress" style="margin:12px 0 0"><i style="width:40%"></i><span>4/10</span></div></div>
+      <div class="o-outlined">Otázky a odpovede<div class="o-progress" style="margin:12px 0 0"><i style="width:0%"></i><span>0/10</span></div></div>
+      <div class="o-outlined">Príbeh<div class="o-progress" style="margin:12px 0 0"><i style="width:0%"></i><span>0/8</span></div></div>
+    </div>
+    <p class="cap">Four 2px-outlined boxes each containing a 44px blue slab. The slab is a bar chart,
+       not a progress indicator — it dominates the row it's meant to annotate.</p>
+  </div>
+
+  <div class="mock-col">
+    <h4><span class="tag next">Proposed</span></h4>
+    <div class="phone light">
+      <div class="notch"></div>
+      <div class="n-hdr"><span class="back">‹</span><span class="ttl">Základy</span><span class="spk"></span></div>
+      <div class="n-lesson">
+        <span class="n-num done">✓</span>
+        <div class="body"><h6>Slovná zásoba</h6>
+          <span class="pips"><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i></span></div>
+      </div>
+      <div class="n-lesson">
+        <span class="n-num">2</span>
+        <div class="body"><h6>Vety</h6>
+          <span class="pips"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+      </div>
+      <div class="n-lesson">
+        <span class="n-num">3</span>
+        <div class="body"><h6>Otázky a odpovede</h6>
+          <span class="pips"><i></i><i></i><i></i><i></i><i></i></span></div>
+      </div>
+      <div class="n-lesson">
+        <span class="n-num">4</span>
+        <div class="body"><h6>Príbeh</h6>
+          <span class="pips"><i></i><i></i><i></i><i></i></span></div>
+      </div>
+      <div class="n-btn sec" style="margin-top:18px">Náhodný výber</div>
+    </div>
+    <p class="cap">Lesson names are the existing <code>unit.*</code> strings. Pips carry progress with
+       no numbers and no copy; a finished lesson swaps its index for a green tick. <em>Náhodný výber</em>
+       is the existing <code>unit.buttonRandomChoice</code>, now a quiet secondary key.</p>
+  </div>
+
+  <div class="mock-col">
+    <h4><span class="tag next">Why pips</span></h4>
+    <div class="card" style="box-shadow:var(--e2)">
+      <h4 style="margin-bottom:14px">Pips vs. bar vs. percentage</h4>
+      <p style="font-size:14px">A percentage is a <em>report</em>. Pips are a <em>board</em> — you can
+         see how many steps are left and count them, which is what makes progress feel like a game
+         rather than a metric.</p>
+      <p style="font-size:14px">They also need no copy, work at any width, and read correctly at a
+         glance in both themes. And they degrade well: a 40-item lesson renders as a thin segmented
+         line rather than 40 unreadable dots, because each pip is <code>flex:1</code>.</p>
+      <p style="font-size:14px;margin-bottom:0">The existing <code>ProgressBar</code> component already
+         receives exactly what's needed — <code>status</code> and <code>goal</code> — so this is a
+         swap of its internals, not a data change.</p>
+    </div>
+  </div>
+</div>
+<h2>Copy inventory</h2>
+<p class="lede">Every string above, traced to something that already exists</p>
+<p>Nothing here needs writing or translating. Two things I deliberately did not do: invent a greeting
+   with a name, and label the sections.</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>String in mockup</th><th>Source</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td data-label="String">Vitaj!</td><td data-label="Source"><code>home.welcome</code></td><td data-label="Status"><span class="chip pass">Exists</span></td></tr>
+<tr><td data-label="String">3 dni</td><td data-label="Source"><code>home.twoDays</code> + streak number</td><td data-label="Status"><span class="chip pass">Exists</span></td></tr>
+<tr><td data-label="String">Modul 1 / 2 / 3</td><td data-label="Source"><code>home.unit</code> + index</td><td data-label="Status"><span class="chip pass">Exists</span></td></tr>
+<tr><td data-label="String">Pokračovať</td><td data-label="Source"><code>common.buttonContinue</code></td><td data-label="Status"><span class="chip pass">Exists</span></td></tr>
+<tr><td data-label="String">Správne! Pokračovať</td><td data-label="Source"><code>common.buttonSuccess</code></td><td data-label="Status"><span class="chip pass">Exists</span></td></tr>
+<tr><td data-label="String">Spoj slovo s jeho prekladom:</td><td data-label="Source"><code>exerciseWords.instructions</code></td><td data-label="Status"><span class="chip pass">Exists</span></td></tr>
+<tr><td data-label="String">Slovná zásoba · Vety · Otázky a odpovede · Príbeh</td><td data-label="Source"><code>unit.vocabulary</code> / <code>sentences</code> / <code>qa</code> / <code>story</code></td><td data-label="Status"><span class="chip pass">Exists</span></td></tr>
+<tr><td data-label="String">Náhodný výber</td><td data-label="Source"><code>unit.buttonRandomChoice</code></td><td data-label="Status"><span class="chip pass">Exists</span></td></tr>
+<tr><td data-label="String">Základy · V meste · Práca</td><td data-label="Source">Firestore <code>modules/_meta.name</code></td><td data-label="Status"><span class="chip keep">Content</span></td></tr>
+<tr><td data-label="String">Pozdravy · Čísla · Farby …</td><td data-label="Source">Firestore <code>_meta.benefits[]</code></td><td data-label="Status"><span class="chip keep">Content</span></td></tr>
+<tr><td data-label="String">дякую / ďakujem, будь ласка / prosím …</td><td data-label="Source">Firestore lesson word pairs</td><td data-label="Status"><span class="chip keep">Content — illustrative</span></td></tr>
+<tr><td data-label="String">✓ · 🔒 · ‹ · 🔊 · pips</td><td data-label="Source">Glyphs and shapes, no text</td><td data-label="Status"><span class="chip pass">No copy</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note">
+  <h4>On the word pairs specifically</h4>
+  <p>The Slovak/Ukrainian pairs in the exercise mockups are illustrative stand-ins for whatever your
+     Firestore lesson content already holds — they render from data, so nothing needs translating for
+     this redesign. If you'd rather the mockups showed your real content, send me a lesson document and
+     I'll swap them.</p>
+</div>
+
+<h2>Type and texture</h2>
+<p class="lede">Where the "notepad, not dashboard" feeling actually comes from</p>
+
+<h3>Nunito for headings, Inter for body</h3>
+<p>Rev 1 recommended Inter throughout. Inter is excellent and neutral — which is precisely the problem
+   for the feeling you're after. <strong>Nunito</strong> has rounded terminals and a warmer, softer
+   skeleton, covers Latin Extended <em>and</em> Cyrillic, and reads friendly without tipping into
+   childish. Using it for display and headings only, with Inter for body copy, keeps long Slovak
+   sentences crisp while making every heading and number feel handmade.</p>
+<div class="card">
+  <div class="scale-row"><span class="nm">display</span><span class="spec">32/38 · 800</span><span class="demo" style="font-family:var(--dis);font-size:30px;font-weight:800;letter-spacing:-.025em;line-height:1.14">Vitaj!</span></div>
+  <div class="scale-row"><span class="nm">title</span><span class="spec">24/30 · 800</span><span class="demo" style="font-family:var(--dis);font-size:23px;font-weight:800;letter-spacing:-.02em">Slovná zásoba</span></div>
+  <div class="scale-row"><span class="nm">heading</span><span class="spec">20/26 · 700</span><span class="demo" style="font-family:var(--dis);font-size:19px;font-weight:700;letter-spacing:-.012em">Otázky a odpovede</span></div>
+  <div class="scale-row"><span class="nm">body</span><span class="spec">16/24 · 400</span><span class="demo" style="font-size:16px">Spoj slovo s jeho prekladom</span></div>
+  <div class="scale-row"><span class="nm">bodyStrong</span><span class="spec">16/24 · 600</span><span class="demo" style="font-size:16px;font-weight:600">будь ласка</span></div>
+  <div class="scale-row"><span class="nm">button</span><span class="spec">16/20 · 700</span><span class="demo" style="font-family:var(--dis);font-size:16px;font-weight:700">Pokračovať</span></div>
+  <div class="scale-row"><span class="nm">eyebrow</span><span class="spec">11/16 · 700 · .1em</span><span class="demo" style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Modul 2</span></div>
+</div>
+<p style="font-size:13.5px;color:var(--muted)">Nunito-only is a fine simpler option — it holds up at
+   16px body size. Inter-only is the safest and least distinctive.</p>
+
+<h3>The four texture moves</h3>
+<div class="grid2">
+  <div class="card">
+    <h4>1 · Soft shadow instead of borders</h4>
+    <p style="font-size:14.5px;margin-bottom:0">Cards get <code>e2</code> and no border at all. The
+       paper-to-card step is deliberately subtle (<strong>1.07:1</strong>) — the shadow does the lifting.
+       Hairline borders on every box is the single most dashboard-ish habit in the current UI.</p>
+  </div>
+  <div class="card">
+    <h4>2 · Radii up to 20–22px</h4>
+    <p style="font-size:14.5px;margin-bottom:0">From a uniform 10px. Large radii on warm paper read as
+       soft physical objects; 10px reads as a 2016 web panel. Pills and buttons stay fully round.</p>
+  </div>
+  <div class="card">
+    <h4>3 · A 3px bottom edge on anything pressable</h4>
+    <p style="font-size:14.5px;margin-bottom:0">Buttons and active pills get <code>box-shadow: 0 3px 0
+       &lt;darker step&gt;</code>. Combined with a spring that removes it on press, the control feels
+       like a key going down. This is the cheapest and most effective "game" cue available, and it costs
+       one line per component.</p>
+  </div>
+  <div class="card">
+    <h4>4 · Pips instead of bars and percentages</h4>
+    <p style="font-size:14.5px;margin-bottom:0">Countable steps rather than a measured quantity. No
+       copy, no numbers, and it turns the Unit screen from a status report into a board.</p>
+  </div>
+</div>
+
+<h2>Accessibility</h2>
+<p class="lede">Six failures in the current palette — one more than rev 1 found</p>
+<p>Rev 1 missed the active <code>ua</code> pill, because the white text is applied in the component
+   rather than the stylesheet. It's the worst one in the app.</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Where</th><th>Current</th><th>Now</th><th>Proposed</th></tr></thead>
+<tbody>
+<tr>
+  <td data-label="Where"><strong>Active Ukrainian pill</strong><br><span style="color:var(--muted);font-size:13px">Words exercise — the tapped word</span></td>
+  <td data-label="Current">white on <code>#F2D372</code></td>
+  <td data-label="Now"><span class="ratio">1.46:1</span> <span class="chip fail">Fails</span></td>
+  <td data-label="Proposed"><code>amber-900</code> on <code>amber-300</code><br><span class="ratio">8.02:1</span> <span class="chip pass">✓</span></td>
+</tr>
+<tr>
+  <td data-label="Where"><strong>Success button</strong><br><span style="color:var(--muted);font-size:13px">"Správne! Pokračovať"</span></td>
+  <td data-label="Current">white on <code>#A1CEC1</code></td>
+  <td data-label="Now"><span class="ratio">1.73:1</span> <span class="chip fail">Fails</span></td>
+  <td data-label="Proposed">white on <code>green-600</code><br><span class="ratio">4.54:1</span> <span class="chip pass">✓</span></td>
+</tr>
+<tr>
+  <td data-label="Where"><strong>Success button, dark</strong></td>
+  <td data-label="Current">white on <code>#5e9183</code></td>
+  <td data-label="Now"><span class="ratio">3.59:1</span> <span class="chip fail">Fails</span></td>
+  <td data-label="Proposed">white on <code>green-600</code><br><span class="ratio">4.54:1</span> <span class="chip pass">✓</span></td>
+</tr>
+<tr>
+  <td data-label="Where"><strong>Confirm button</strong><br><span style="color:var(--muted);font-size:13px">"Potvrdiť" — red as primary</span></td>
+  <td data-label="Current">white on <code>#D64B4B</code></td>
+  <td data-label="Now"><span class="ratio">4.23:1</span> <span class="chip fail">Fails</span></td>
+  <td data-label="Proposed">white on <code>blue-600</code><br><span class="ratio">6.88:1</span> <span class="chip pass">✓</span></td>
+</tr>
+<tr>
+  <td data-label="Where"><strong>Chat bubble, dark</strong><br><span style="color:var(--muted);font-size:13px">Story exercise</span></td>
+  <td data-label="Current">white on <code>#808080</code></td>
+  <td data-label="Now"><span class="ratio">3.95:1</span> <span class="chip fail">Fails</span></td>
+  <td data-label="Proposed">surface + border<br><span class="ratio">14.33:1</span> <span class="chip pass">✓</span></td>
+</tr>
+<tr>
+  <td data-label="Where"><strong>Muted text</strong><br><span style="color:var(--muted);font-size:13px">Settings footer, reset link — 13px</span></td>
+  <td data-label="Current"><code>#808080</code> on white</td>
+  <td data-label="Now"><span class="ratio">3.95:1</span> <span class="chip fail">Fails</span></td>
+  <td data-label="Proposed"><code>#6E655A</code> on paper<br><span class="ratio">5.20:1</span> <span class="chip pass">✓</span></td>
+</tr>
+<tr>
+  <td data-label="Where"><strong>Module card</strong></td>
+  <td data-label="Current">white on <code>#1E5B9F</code></td>
+  <td data-label="Now"><span class="ratio">6.88:1</span> <span class="chip pass">Passes</span></td>
+  <td data-label="Proposed">unchanged — your blue is the strong one<br><span class="chip keep">Keep</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>Sequence</h2>
+<p class="lede">Six phases, accessibility first, no big-bang rewrite</p>
+<div class="phase">
+  <div class="phase-h"><span class="n">1</span><strong>Warm tokens + the six contrast fixes</strong><span class="eff">~half a day</span></div>
+  <div class="phase-b"><ul>
+    <li>Add <code>themes/tokens.ts</code> with the ramps; map both themes onto semantic names.</li>
+    <li>Keep the old flat <code>colors</code> keys as deprecated aliases so nothing breaks mid-migration.</li>
+    <li>Swap the paper/night neutrals in — this alone is most of the visual change.</li>
+    <li><strong>Fix the active <code>ua</code> pill first.</strong> One line, 1.46:1 → 8.02:1.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">2</span><strong>Nunito + type scale</strong><span class="eff">~2 hours</span></div>
+  <div class="phase-b"><ul>
+    <li>Load Nunito and Inter alongside the existing <code>Octicons.font</code> call.</li>
+    <li>Add a <code>Text</code> atom with a <code>variant</code> prop; migrate per screen.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">3</span><strong>Buttons, pills, the bottom edge</strong><span class="eff">~half a day</span></div>
+  <div class="phase-b"><ul>
+    <li><code>Button</code> variants: <code>primary</code> / <code>success</code> / <code>danger</code> / <code>secondary</code>.</li>
+    <li>Unify the four pill components onto one base taking <code>state</code> and <code>language</code>.</li>
+    <li>Add the 3px bottom edge and the press spring together — they only work as a pair.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">4</span><strong>Cards and pips</strong><span class="eff">~1 day</span></div>
+  <div class="phase-b"><ul>
+    <li>Merge <code>MainCard</code> and <code>OutlinedCard</code> into one <code>Card</code> with variants; drop borders for <code>e2</code>.</li>
+    <li>Rebuild <code>ProgressBar</code> internals as pips — same <code>status</code>/<code>goal</code> props.</li>
+    <li>Delete the 80px <code>HomeStats</code> padding; move <em>Pokračovať</em> onto the active module card.</li>
+    <li>Real locked state instead of <code>opacity: 0.6</code>.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">5</span><strong>Motion and haptics</strong><span class="eff">~half a day</span></div>
+  <div class="phase-b"><ul>
+    <li><code>reanimated</code> and <code>expo-haptics</code> are installed with <strong>zero imports</strong> — press springs, pip fills, a haptic on match.</li>
+    <li>One <code>usePressScale</code> hook and one <code>feedback.ts</code> helper covers all of it.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">6</span><strong>Night pass + audit</strong><span class="eff">~half a day</span></div>
+  <div class="phase-b"><ul>
+    <li>Verify the warm-charcoal surfaces on device; re-run contrast on every pair.</li>
+    <li>Add a token snapshot test so ratios can't regress; delete the phase-1 aliases.</li>
+  </ul></div>
+</div>
+
+<h2>Still your call</h2>
+<div class="q">
+  <strong>1 · How warm is too warm?</strong>
+  <p><code>#F7F4EC</code> is a moderate cream — noticeably paper, still calm. Codex's looks a touch
+     warmer. It's a one-value change either way, so worth eyeballing on your own screen before phase 1.</p>
+</div>
+<div class="q">
+  <strong>2 · Nunito, or stay neutral?</strong>
+  <p>Nunito is what makes it feel handmade rather than generic, and it covers both scripts. If you'd
+     rather not commit to personality yet, Inter-only still gets you most of the way — the warm paper
+     and soft cards are doing more work than the typeface.</p>
+</div>
+<div class="q">
+  <strong>3 · Green for correct, still?</strong>
+  <p>Unchanged from rev 1 and still my recommendation. The current sage <code>#A1CEC1</code> is already
+     off-flag, so this isn't adding a hue so much as fixing one — and it takes the worst contrast
+     failure in the app off the board.</p>
+</div>
+<div class="q">
+  <strong>4 · Amber beyond the ua pill — v2.1?</strong>
+  <p>You mentioned hints as a future use. Nothing in this revision adds them, since they'd need copy.
+     Worth noting that the ramp is sized for it already: <code>amber-50</code> surface with
+     <code>amber-900</code> text is <strong>10.24:1</strong>, so a hint block can drop in later with no
+     palette work.</p>
+</div>
+
+<footer>
+  <p><strong>Slovenčina na mieru</strong> — redesign proposal, revision 2, 11 September 2026.
+     Prepared against <code>t3code/modernize-color-scheme</code> at <code>7dae15a</code>. Contrast
+     ratios computed to WCAG 2.1 against the exact colour pairs the components render. Two counts from
+     revision 1 are corrected above. No code has been changed.</p>
+</footer>
+
+</div>
+</body>
+</html>
