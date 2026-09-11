@@ -240,6 +240,10 @@ li>strong{font-weight:650}
 .phase-b ul{margin:0;padding-left:20px}
 .phase-b li{margin-bottom:6px;font-size:14.5px}
 .phase-b li:last-child{margin-bottom:0}
+.phase.done .n{background:var(--green-600)}
+.phase.done .eff{color:var(--green-700);background:var(--green-100);border-color:var(--green-300)}
+.phase.next .n{background:var(--amber-500);color:var(--amber-900)}
+.phase.next .eff{color:var(--amber-800);background:var(--amber-100);border-color:var(--amber-300)}
 .q{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--amber-400);border-radius:0 16px 16px 0;padding:18px 22px;margin-bottom:13px;box-shadow:var(--e1)}
 .q strong{display:block;font-family:var(--dis);font-size:16px;margin-bottom:5px}
 .q p{margin:0;font-size:14.2px;color:var(--muted)}
@@ -280,6 +284,8 @@ footer{margin-top:68px;padding-top:24px;border-top:1px solid var(--border);color
   .radii div{background:rgba(74,144,217,.14);border-color:var(--blue-500);color:var(--blue-200)}
   .q{border-left-color:var(--amber-500)}
   .phone.oldlight{border-color:#3A352E}
+  .phase.done .eff{color:var(--green-300);background:rgba(16,163,106,.18);border-color:var(--green-700)}
+  .phase.next .eff{color:var(--amber-300);background:rgba(242,211,114,.12);border-color:var(--amber-700)}
 }
 
 .cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;margin-bottom:18px}
@@ -308,8 +314,8 @@ pre.sm{font-size:12px;line-height:1.6}
        split by lifetime, and routes that orchestrate rather than hold. Sized against
        your CLAUDE.md priorities — readable first, modular second, performant third.</p>
     <div class="hero-meta">
-      <span>Proposal — no code changed</span>
-      <span>Reconsiders the whole context structure</span>
+      <span>Steps 1–5 complete</span>
+      <span>Step 6 not started</span>
       <span>11 Sep 2026</span>
     </div>
   </div>
@@ -643,42 +649,43 @@ setActiveKey(<span class="s">""</span>); setActiveVal(<span class="s">""</span>)
 
 <h2>Order I'd do it in</h2>
 <p class="lede">Each step ships on its own and leaves the app working</p>
-<div class="phase">
-  <div class="phase-h"><span class="n">1</span><strong>Extract domain/streak.ts and fix both streak bugs</strong><span class="eff">~2 hours</span></div>
+<div class="phase done">
+  <div class="phase-h"><span class="n">1</span><strong>Extract domain/streak.ts and fix both streak bugs</strong><span class="eff">Done</span></div>
   <div class="phase-b"><ul>
     <li>Pure functions plus tests; delete <code>shouldIncrementStreak</code> and the looping effect.</li>
     <li>Highest value first — it stops unbounded Firestore writes and probably unblocks Home.</li>
   </ul></div>
 </div>
-<div class="phase">
-  <div class="phase-h"><span class="n">2</span><strong>Repositories</strong><span class="eff">~half a day</span></div>
+<div class="phase done">
+  <div class="phase-h"><span class="n">2</span><strong>Repositories</strong><span class="eff">Done</span></div>
   <div class="phase-b"><ul>
     <li>Move Firestore/AsyncStorage calls out of the provider unchanged, no behaviour change.</li>
     <li>Mechanical and low risk; makes step 3 mostly deletion.</li>
   </ul></div>
 </div>
-<div class="phase">
-  <div class="phase-h"><span class="n">3</span><strong>SessionProvider</strong><span class="eff">~half a day</span></div>
+<div class="phase done">
+  <div class="phase-h"><span class="n">3</span><strong>SessionProvider</strong><span class="eff">Done</span></div>
   <div class="phase-b"><ul>
     <li>Collapse <code>AuthProvider</code> + profile half of <code>FirebaseProvider</code> into the union; remove the upward <code>setInitializing</code> dependency.</li>
     <li>Touches every screen's loading guard, but each one gets shorter.</li>
   </ul></div>
 </div>
-<div class="phase">
-  <div class="phase-h"><span class="n">4</span><strong>UnitProvider on the unit route</strong><span class="eff">~2 hours</span></div>
+<div class="phase done">
+  <div class="phase-h"><span class="n">4</span><strong>UnitProvider on the unit route</strong><span class="eff">Done</span></div>
   <div class="phase-b"><ul>
     <li>Mount it in <code>unit/_layout.tsx</code>; delete <code>clearUnitData</code> and Home's cleanup effect.</li>
   </ul></div>
 </div>
-<div class="phase">
-  <div class="phase-h"><span class="n">5</span><strong>Split the exercise route</strong><span class="eff">~1 day</span></div>
+<div class="phase done">
+  <div class="phase-h"><span class="n">5</span><strong>Split the exercise route</strong><span class="eff">Done · 11 Sep</span></div>
   <div class="phase-b"><ul>
     <li>Union + reducer + button table + the remount key; three per-kind hooks.</li>
-    <li>Biggest single change, and the one that most needs the earlier steps in place.</li>
+    <li>Implemented as a keyed round boundary with isolated words, prompt and story hooks.</li>
+    <li>Verified with TypeScript, ESLint, 46 tests and a clean web bundle startup.</li>
   </ul></div>
 </div>
-<div class="phase">
-  <div class="phase-h"><span class="n">6</span><strong>Reshape UserData</strong><span class="eff">~2 hours</span></div>
+<div class="phase next">
+  <div class="phase-h"><span class="n">6</span><strong>Reshape UserData</strong><span class="eff">Not started · ~2 hours</span></div>
   <div class="phase-b"><ul>
     <li>Progress into its own field; delete <code>getUserUnitData</code>. Needs a migration read-path for existing documents.</li>
   </ul></div>
@@ -686,18 +693,16 @@ setActiveKey(<span class="s">""</span>); setActiveVal(<span class="s">""</span>)
 
 <div class="warn">
   <h4>Where I'd push back on myself</h4>
-  <p>Steps 5 and 6 are the expensive ones and the least forced. If you only ever do 1 to 4, you
-     have removed the loop, the inverted dependency and the manual cleanup, and the exercise route
-     is untouched but no worse. I would not start 5 without wanting the exercise screens changed
-     for their own sake.</p>
+  <p>Step 5 is complete. It was the largest application-code change, but remains reversible as a
+     normal code change.</p>
   <p>Step 6 also touches stored data, which is the only part of this that cannot be rolled back
      with a revert.</p>
 </div>
 
 <footer>
-  <p><strong>Slovenčina na mieru</strong> — state and context refactor proposal, 11 September 2026.
+  <p><strong>Slovenčina na mieru</strong> — state and context refactor tracker, updated 11 September 2026.
      Line references are against <code>t3code/modernize-color-scheme</code> at <code>704fbf1</code>.
-     No code has been changed.</p>
+     Steps 1–5 are implemented; step 6 remains a proposal.</p>
 </footer>
 
 </div>
