@@ -314,8 +314,8 @@ pre.sm{font-size:12px;line-height:1.6}
        split by lifetime, and routes that orchestrate rather than hold. Sized against
        your CLAUDE.md priorities — readable first, modular second, performant third.</p>
     <div class="hero-meta">
-      <span>Steps 1–5 complete</span>
-      <span>Step 6 code complete · reset pending</span>
+      <span>Steps 1–6 implemented</span>
+      <span>On-read migration in review</span>
       <span>11 Sep 2026</span>
     </div>
   </div>
@@ -685,11 +685,12 @@ setActiveKey(<span class="s">""</span>); setActiveVal(<span class="s">""</span>)
   </ul></div>
 </div>
 <div class="phase next">
-  <div class="phase-h"><span class="n">6</span><strong>Reshape UserData</strong><span class="eff">Code complete · reset pending</span></div>
+  <div class="phase-h"><span class="n">6</span><strong>Reshape UserData</strong><span class="eff">Merged · migration fix in review</span></div>
   <div class="phase-b"><ul>
     <li>Progress now lives under <code>profile.progress</code>; <code>getUserUnitData</code> and its runtime narrowing are deleted.</li>
-    <li>No compatibility read path: the dormant Firestore <code>users</code> collection must be cleared before deployment.</li>
-    <li>Implemented on <code>refactor/reshape-user-data</code>, stacked on the step 5 branch.</li>
+    <li>Legacy profiles are migrated on first read, preserving metadata, activity, and every unit's progress.</li>
+    <li>Already-migrated profiles require no write; malformed progress fails explicitly instead of being discarded.</li>
+    <li>The schema shipped in PR 25; the data-preserving migration is in PR 26.</li>
   </ul></div>
 </div>
 
@@ -697,15 +698,14 @@ setActiveKey(<span class="s">""</span>); setActiveVal(<span class="s">""</span>)
   <h4>Where I'd push back on myself</h4>
   <p>Step 5 is complete. It was the largest application-code change, but remains reversible as a
      normal code change.</p>
-  <p>The step 6 code is complete. Its clean-break schema deliberately avoids a migration; rollout
-     remains blocked until the old Firestore user documents are cleared. Module content and
-     Firebase Authentication accounts are not part of that reset.</p>
+  <p>Step 6's schema is merged. Recent activity made a destructive reset unacceptable, so PR 26
+     replaces it with a one-time, on-read migration that preserves existing progress.</p>
 </div>
 
 <footer>
   <p><strong>Slovenčina na mieru</strong> — state and context refactor tracker, updated 11 September 2026.
      Line references are against <code>t3code/modernize-color-scheme</code> at <code>704fbf1</code>.
-     Steps 1–5 are implemented; step 6 code is complete with its user-data reset pending.</p>
+     Steps 1–6 are implemented; the data-preserving migration follow-up is in review.</p>
 </footer>
 
 </div>
