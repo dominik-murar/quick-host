@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slovenčina na mieru — State &amp; context refactor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue-50:#EFF4FB;--blue-100:#D9E6F6;--blue-200:#BBD3EE;--blue-300:#7FB4E8;--blue-400:#4A90D9;
+  --blue-500:#2470BE;--blue-600:#1E5B9F;--blue-700:#17497F;--blue-800:#123A66;--blue-900:#0E2C4D;
+  --amber-50:#FDF8EA;--amber-100:#FAEFCE;--amber-200:#F7E4A8;--amber-300:#F2D372;--amber-400:#E8BC3E;
+  --amber-500:#D4A017;--amber-600:#B07F0C;--amber-700:#8A620A;--amber-800:#6B4C0C;--amber-900:#4A340A;
+  --red-50:#FDF973;--red-100:#FBE4E0;--red-300:#F09A9A;--red-500:#D64B4B;--red-600:#C13333;--red-700:#A02828;--red-800:#7F2020;
+  --green-50:#EDF8F1;--green-100:#D3EFDF;--green-300:#6EE7B7;--green-500:#10A36A;--green-600:#08875A;--green-700:#076B48;
+  --paper:#F7F4EC;--surface:#FFFCF6;--sunken:#F0EADC;
+  --border:#E6DECD;--border-strong:#D2C7B1;
+  --text:#2B2724;--muted:#6E655A;--accent:var(--blue-600);
+  --e1:0 1px 2px rgba(43,39,36,.05), 0 2px 6px rgba(43,39,36,.05);
+  --e2:0 2px 4px rgba(43,39,36,.06), 0 8px 18px -6px rgba(43,39,36,.10);
+  --e3:0 6px 14px -4px rgba(43,39,36,.12), 0 20px 40px -12px rgba(43,39,36,.16);
+  --ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --dis:Nunito,var(--ui);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--text);font-family:var(--ui);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px 96px}
+header.hero{background:linear-gradient(152deg,#17497F,#1E5B9F 50%,#2470BE);color:#fff;padding:60px 24px 52px;margin-bottom:52px;position:relative;overflow:hidden}
+header.hero:after{content:"";position:absolute;right:-70px;top:-90px;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle,rgba(242,211,114,.24),transparent 68%)}
+.hero-inner{max-width:1080px;margin:0 auto;position:relative;z-index:1}
+.eyebrow{font-family:var(--ui);font-size:12px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--amber-300);margin:0 0 14px}
+h1{font-family:var(--dis);font-size:clamp(29px,5vw,44px);line-height:1.14;margin:0 0 16px;font-weight:800;letter-spacing:-.02em}
+.hero p{font-size:17.5px;line-height:1.55;margin:0;max-width:62ch;color:rgba(255,255,255,.9)}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.hero-meta span{font-size:12.5px;font-weight:500;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);padding:5px 11px;border-radius:999px}
+h2{font-size:12.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:60px 0 6px;padding-top:26px;border-top:1px solid var(--border)}
+h2:first-of-type{margin-top:0}
+h2+.lede{font-family:var(--dis);font-size:26px;font-weight:700;letter-spacing:-.015em;line-height:1.28;margin:0 0 20px}
+h3{font-family:var(--dis);font-size:18px;font-weight:700;margin:32px 0 10px;letter-spacing:-.01em}
+h4{font-size:13.5px;font-weight:600;margin:0 0 10px;color:var(--muted)}
+p{margin:0 0 14px}
+a{color:var(--blue-600)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.87em;background:var(--sunken);border:1px solid var(--border);padding:1.5px 5px;border-radius:5px}
+pre{background:#221F1B;color:#EFE9DE;padding:19px 22px;border-radius:14px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;box-shadow:var(--e2);margin:0 0 18px}
+pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+pre .c{color:#9A8F7E}pre .k{color:#9DC7FF}pre .s{color:#F2D372}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px 26px;box-shadow:var(--e1);margin:0 0 18px}
+.verdict{background:linear-gradient(180deg,var(--blue-50),var(--surface) 72%);border:1px solid var(--blue-200);border-left:4px solid var(--blue-600);border-radius:16px;padding:24px 28px;margin:0 0 24px}
+.verdict p:last-child{margin-bottom:0}
+.note{background:var(--amber-50);border:1px solid var(--amber-200);border-left:4px solid var(--amber-400);border-radius:16px;padding:20px 24px;margin:0 0 20px}
+.note p:last-child{margin-bottom:0}
+.note h4{color:var(--amber-800)}
+.warn{background:#FBE9E5;border:1px solid var(--red-100);border-left:4px solid var(--red-500);border-radius:16px;padding:20px 24px;margin:0 0 20px}
+.warn p:last-child{margin-bottom:0}
+.warn h4{color:var(--red-800)}
+.fix{background:var(--green-50);border:1px solid var(--green-100);border-left:4px solid var(--green-500);border-radius:16px;padding:20px 24px;margin:0 0 18px}
+.fix p:last-child{margin-bottom:0}
+.fix h4{color:var(--green-700)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:0 0 18px}
+th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:0 12px 9px;border-bottom:1.5px solid var(--border-strong)}
+td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 12px 8px;box-shadow:var(--e1);margin-bottom:18px;overflow-x:auto}
+.ratio{font-family:ui-monospace,Menlo,monospace;font-weight:600;white-space:nowrap}
+.chip{display:inline-block;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.chip.fail{background:var(--red-100);color:var(--red-800)}
+.chip.pass{background:var(--green-100);color:var(--green-700)}
+.chip.keep{background:var(--blue-100);color:var(--blue-800)}
+.chip.amb{background:var(--amber-100);color:var(--amber-800)}
+.sw-row{display:flex;flex-wrap:wrap;gap:0;border-radius:14px;overflow:hidden;box-shadow:var(--e1);margin:0 0 8px}
+.sw{flex:1 1 0;min-width:62px;height:72px;display:flex;flex-direction:column;justify-content:flex-end;padding:7px 8px;font-size:10.5px;font-weight:600;line-height:1.3}
+.sw b{display:block;font-size:11px;font-weight:700}
+.sw small{font-family:ui-monospace,Menlo,monospace;font-size:9px;opacity:.85;font-weight:500}
+.ramp-label{display:flex;justify-content:space-between;align-items:baseline;margin:22px 0 8px;gap:12px;flex-wrap:wrap}
+.ramp-label strong{font-family:var(--dis);font-size:16px}
+.ramp-label span{font-size:13px;color:var(--muted)}
+.after-ramp{font-size:13px;color:var(--muted);margin-bottom:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:8px}
+.role{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--e1)}
+.role .dot{width:34px;height:34px;border-radius:11px;margin-bottom:12px;box-shadow:var(--e1)}
+.role strong{display:block;font-family:var(--dis);font-size:15.5px;margin-bottom:3px}
+.role span{font-size:13.2px;color:var(--muted);line-height:1.5;display:block}
+.role em{display:block;font-size:12px;color:var(--muted);margin-top:9px;font-style:normal;font-family:ui-monospace,Menlo,monospace}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:8px}
+li>strong{font-weight:650}
+.finding{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:22px 24px;box-shadow:var(--e1);margin-bottom:16px}
+.finding-head{display:flex;gap:13px;align-items:flex-start;margin-bottom:11px}
+.finding-num{flex:0 0 auto;width:27px;height:27px;border-radius:9px;background:var(--blue-600);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.finding-head h3{margin:0;font-size:17.5px;flex:1}
+.finding p:last-child{margin-bottom:0}
+.ev{background:var(--sunken);border-left:3px solid var(--border-strong);border-radius:0 9px 9px 0;padding:11px 15px;margin:12px 0 0;font-size:13.5px;color:var(--muted)}
+.ev strong{color:var(--text);font-weight:600}
+.ev+.ev{margin-top:8px}
+.corr{background:var(--amber-50);border-left:3px solid var(--amber-400);border-radius:0 9px 9px 0;padding:11px 15px;margin:12px 0 0;font-size:13.5px;color:var(--amber-900)}
+.corr b{display:block;font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--amber-700);margin-bottom:3px}
+/* ---------- phone mockups ---------- */
+.phone.light,.phone.oldlight{
+  --paper:#F7F4EC;--surface:#FFFCF6;--sunken:#F0EADC;
+  --border:#E6DECD;--border-strong:#D2C7B1;--text:#2B2724;--muted:#6E655A;
+  color:var(--text);
+}
+.phone.dark{color:#F4EFE6}
+.mockups{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:26px;margin:0 0 22px}
+.mock-col>h4{display:flex;align-items:center;gap:8px;margin-bottom:13px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.05em}
+.tag.now{background:var(--sunken);color:var(--muted);border:1px solid var(--border-strong)}
+.tag.next{background:var(--blue-600);color:#fff}
+.cap{font-size:13px;color:var(--muted);margin-top:13px}
+.phone{border-radius:32px;padding:14px 12px 18px;box-shadow:var(--e3);overflow:hidden;font-size:14px;font-family:var(--ui)}
+.phone.light{background:var(--paper)}
+.phone.oldlight{background:#fff;border:1px solid #E6DECD}
+.phone.dark{background:#191714}
+.notch{width:52px;height:4px;border-radius:99px;background:var(--border-strong);margin:0 auto 14px;opacity:.7}
+.phone.dark .notch{background:#3A352E}
+/* ===== CURRENT STATE (faithful to code) ===== */
+.o-row{display:flex;justify-content:space-between;align-items:center;padding:0 4px}
+.o-streak{display:inline-block;border:1px solid #121212;border-radius:16px;padding:4px 10px;font-size:13px;color:#121212}
+.o-welcome{text-align:center;font-size:33px;color:#121212;padding:50px 0}
+.o-card{background:#1E5B9F;border-radius:10px;padding:19px;margin-bottom:14px}
+.o-card h5{margin:0 0 7px;font-size:18px;font-weight:700;color:#fff;text-transform:uppercase}
+.o-card ul{margin:0;padding-left:0;list-style:none}
+.o-card li{color:#fff;font-size:14px;margin:0 0 2px}
+.o-cardrow{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.o-enter{flex:0 0 auto;width:33px;height:33px;border-radius:50%;background:#D64B4B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.o-instr{font-size:14px;color:#121212;opacity:.65;padding-bottom:8px}
+.o-cols{display:flex;justify-content:space-between;column-gap:10px}
+.o-colL{flex:1;align-items:flex-start;display:flex;flex-direction:column}
+.o-colR{flex:1;align-items:flex-end;display:flex;flex-direction:column}
+.o-tp{border-radius:10px;border:2px solid;padding:13px 12px;margin-bottom:16px;font-size:14px;font-weight:500;color:#121212;background:transparent;width:100%;text-align:center}
+.o-tp.ua{border-color:#F2D372}
+.o-tp.sk{border-color:#1E5B9F}
+.o-tp.ua.on{background:#F2D372;color:#fff}
+.o-tp.sk.on{background:#1E5B9F;color:#fff}
+.o-tp.ua.done{background:#F2D37299;color:#121212}
+.o-tp.sk.done{background:#1E5B9F99;color:#121212}
+.o-btn{border-radius:50px;padding:13px;text-align:center;color:#fff;font-size:15px;margin-top:12px}
+.o-progress{height:40px;border-radius:10px;background:#1E5B9F99;position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.o-progress i{position:absolute;left:0;top:0;bottom:0;width:45%;background:#1E5B9F;border-radius:10px}
+.o-progress span{position:relative;color:#fff;font-size:14px;z-index:1}
+.o-outlined{border:2px solid #1E5B9F;border-radius:10px;padding:14px;margin-bottom:14px;text-align:center;font-weight:500;color:#121212;font-size:15px}
+/* ===== PROPOSED ===== */
+.n-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;padding:0 4px}
+.n-streak{display:inline-flex;align-items:center;gap:7px;background:var(--amber-100);color:var(--amber-900);border-radius:999px;padding:6px 14px 6px 11px;font-size:13.5px;font-weight:700;font-family:var(--dis)}
+.n-streak .fl{width:7px;height:7px;border-radius:50%;background:var(--amber-500);box-shadow:0 0 0 3px rgba(212,160,23,.22)}
+.n-gear{width:32px;height:32px;border-radius:11px;background:var(--surface);box-shadow:var(--e1);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
+.phone.dark .n-gear{background:#2B2722;box-shadow:none;color:#A69B8B}
+.n-hi{font-family:var(--dis);font-size:31px;font-weight:800;letter-spacing:-.025em;margin:0 4px 22px;line-height:1.12}
+.phone.dark .n-hi{color:#F4EFE6}
+/* pips = progress with no copy */
+.pips{display:flex;gap:5px;align-items:center}
+.pips i{flex:1;height:7px;border-radius:99px;background:var(--sunken);box-shadow:inset 0 1px 2px rgba(43,39,36,.07)}
+.phone.dark .pips i{background:#2B2722;box-shadow:none}
+.pips i.on{background:var(--blue-600);box-shadow:none}
+.phone.dark .pips i.on{background:var(--blue-400)}
+.pips i.ok{background:var(--green-600)}
+.phone.dark .pips i.ok{background:var(--green-300)}
+.pips i.am{background:var(--amber-400)}
+/* module card — soft, no border, notepad */
+.n-card{background:var(--surface);border:none;border-radius:22px;padding:18px 19px;margin-bottom:13px;box-shadow:var(--e2)}
+.phone.dark .n-card{background:#221F1B;box-shadow:none;border:1px solid #3A352E}
+.n-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.phone.dark .n-eyebrow{color:#A69B8B}
+.n-card h5{font-family:var(--dis);margin:0 0 10px;font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.phone.dark .n-card h5{color:#F4EFE6}
+.n-bul{margin:0 0 14px;padding:0;list-style:none}
+.n-bul li{display:flex;gap:8px;align-items:baseline;font-size:14px;color:var(--muted);margin:0 0 3px}
+.phone.dark .n-bul li{color:#A69B8B}
+.n-bul li:before{content:"";flex:0 0 auto;width:5px;height:5px;border-radius:50%;background:var(--amber-400);transform:translateY(-2px)}
+.n-cardfoot{display:flex;align-items:center;gap:12px;margin-top:14px}
+.n-cardfoot .pips{flex:1}
+/* game-y button: 3px bottom edge */
+.n-btn{border-radius:999px;padding:14px;text-align:center;font-size:15.5px;font-weight:700;font-family:var(--dis);letter-spacing:-.01em;margin-top:4px}
+.n-btn.pri{background:var(--blue-600);color:#fff;box-shadow:0 3px 0 var(--blue-800)}
+.n-btn.ok{background:var(--green-600);color:#fff;box-shadow:0 3px 0 var(--green-700)}
+.n-btn.sec{background:var(--surface);color:var(--blue-700);box-shadow:0 2px 0 var(--border-strong),var(--e1)}
+.phone.dark .n-btn.sec{background:#2B2722;color:var(--blue-300);box-shadow:0 2px 0 #3A352E}
+.n-chevbtn{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--blue-600);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 3px 0 var(--blue-800)}
+.n-lock{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--sunken);color:var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:15px}
+.phone.dark .n-lock{background:#2B2722;color:#3A352E}
+.n-card.locked{box-shadow:none;background:transparent;border:1.5px dashed var(--border-strong)}
+.phone.dark .n-card.locked{background:transparent;border:1.5px dashed #3A352E}
+.n-card.locked h5,.phone.dark .n-card.locked h5{color:var(--muted)}
+.phone.dark .n-card.locked h5{color:#A69B8B}
+/* exercise: side-by-side columns */
+.n-instr{font-size:15px;color:var(--muted);margin:0 0 20px;padding:0 2px}
+.phone.dark .n-instr{color:#A69B8B}
+.n-cols{display:flex;column-gap:10px}
+.n-col{flex:1;display:flex;flex-direction:column}
+.n-tp{border-radius:16px;padding:15px 10px;margin-bottom:14px;font-size:14.5px;font-weight:650;text-align:center;background:var(--surface);box-shadow:var(--e1);border:1.5px solid var(--border)}
+.phone.dark .n-tp{background:#221F1B;border-color:#3A352E;color:#F4EFE6}
+.n-tp.ua{border-color:var(--amber-200)}
+.n-tp.sk{border-color:var(--blue-100)}
+.phone.dark .n-tp.ua{border-color:#6B4C0C}
+.phone.dark .n-tp.sk{border-color:#123A66}
+.n-tp.on.ua{background:var(--amber-300);border-color:var(--amber-500);color:var(--amber-900);box-shadow:0 3px 0 var(--amber-500)}
+.n-tp.on.sk{background:var(--blue-600);border-color:var(--blue-800);color:#fff;box-shadow:0 3px 0 var(--blue-800)}
+.n-tp.done{box-shadow:none;opacity:.55;border-style:dashed}
+.n-tp.done.ua{background:var(--amber-50);border-color:var(--amber-200);color:var(--amber-900)}
+.n-tp.done.sk{background:var(--blue-50);border-color:var(--blue-200);color:var(--blue-800)}
+.phone.dark .n-tp.done.ua{background:rgba(242,211,114,.1);color:var(--amber-200)}
+.phone.dark .n-tp.done.sk{background:rgba(36,112,190,.16);color:var(--blue-200)}
+.n-colhead{display:flex;justify-content:space-between;margin-bottom:10px;padding:0 2px;gap:10px}
+.n-colhead i{flex:1;height:3px;border-radius:99px;display:block}
+.n-colhead i.a{background:var(--amber-300)}
+.n-colhead i.b{background:var(--blue-300)}
+.n-hdr{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding:0 2px}
+.n-hdr .back{color:var(--blue-700);font-size:19px;font-weight:700}
+.phone.dark .n-hdr .back{color:var(--blue-300)}
+.n-hdr .ttl{flex:1;font-family:var(--dis);font-size:16px;font-weight:800;letter-spacing:-.01em;text-align:center}
+.phone.dark .n-hdr .ttl{color:#F4EFE6}
+.n-hdr .spk{color:var(--muted);font-size:15px}
+.n-lesson{background:var(--surface);border:none;border-radius:20px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--e2);display:flex;align-items:center;gap:14px}
+.phone.dark .n-lesson{background:#221F1B;box-shadow:none;border:1px solid #3A352E}
+.n-lesson .body{flex:1;min-width:0}
+.n-lesson h6{font-family:var(--dis);margin:0 0 9px;font-size:16.5px;font-weight:700;letter-spacing:-.01em}
+.phone.dark .n-lesson h6{color:#F4EFE6}
+.n-num{flex:0 0 auto;width:34px;height:34px;border-radius:12px;background:var(--amber-100);color:var(--amber-900);display:flex;align-items:center;justify-content:center;font-family:var(--dis);font-size:14px;font-weight:800}
+.phone.dark .n-num{background:rgba(242,211,114,.13);color:var(--amber-300)}
+.n-num.done{background:var(--green-100);color:var(--green-700)}
+.phone.dark .n-num.done{background:rgba(16,163,106,.16);color:var(--green-300)}
+.scale-row{display:flex;align-items:baseline;gap:16px;padding:11px 0;border-bottom:1px solid var(--border)}
+.scale-row:last-child{border-bottom:none}
+.scale-row .nm{flex:0 0 110px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);font-weight:600}
+.scale-row .spec{flex:0 0 92px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--muted)}
+.scale-row .demo{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.radii{display:flex;gap:14px;flex-wrap:wrap}
+.radii div{width:74px;height:62px;background:var(--blue-50);border:1.5px solid var(--blue-200);display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-size:10.5px;font-family:ui-monospace,Menlo,monospace;color:var(--blue-800)}
+.elev{display:flex;gap:18px;flex-wrap:wrap}
+.elev div{flex:1;min-width:128px;background:var(--surface);border-radius:16px;padding:16px;font-size:12px;font-family:ui-monospace,Menlo,monospace;color:var(--muted);text-align:center}
+.phase{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:0;box-shadow:var(--e1);margin-bottom:14px;overflow:hidden}
+.phase-h{display:flex;align-items:center;gap:12px;padding:15px 20px;background:var(--sunken);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.phase-h .n{flex:0 0 auto;width:26px;height:26px;border-radius:9px;background:var(--blue-600);color:#fff;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.phase-h strong{flex:1;font-family:var(--dis);font-size:15.5px;font-weight:700}
+.phase-h .eff{font-size:11.5px;font-weight:650;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:3px 10px;border-radius:999px}
+.phase-b{padding:16px 20px}
+.phase-b ul{margin:0;padding-left:20px}
+.phase-b li{margin-bottom:6px;font-size:14.5px}
+.phase-b li:last-child{margin-bottom:0}
+.q{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--amber-400);border-radius:0 16px 16px 0;padding:18px 22px;margin-bottom:13px;box-shadow:var(--e1)}
+.q strong{display:block;font-family:var(--dis);font-size:16px;margin-bottom:5px}
+.q p{margin:0;font-size:14.2px;color:var(--muted)}
+.q p+p{margin-top:8px}
+footer{margin-top:68px;padding-top:24px;border-top:1px solid var(--border);color:var(--muted);font-size:13.5px}
+@media(max-width:640px){
+  .tbl-wrap{padding:8px 8px 4px}
+  table,thead,tbody,tr,td{display:block;width:100%}
+  thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  tr{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+  td{border:none;padding:5px 0;display:flex;gap:12px;align-items:baseline}
+  td:before{content:attr(data-label);flex:0 0 80px;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+  td>*{flex:1;min-width:0}
+  .scale-row{flex-wrap:wrap;gap:8px}
+  .scale-row .nm,.scale-row .spec{flex:0 0 auto}
+  h2+.lede{font-size:22px}
+  header.hero{padding:44px 20px 40px}
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --paper:#191714;--surface:#221F1B;--sunken:#2B2722;
+    --border:#3A352E;--border-strong:#4C4539;
+    --text:#F4EFE6;--muted:#A69B8B;--accent:#7FB4E8;
+    --e1:0 1px 2px rgba(0,0,0,.4);--e2:0 4px 10px -2px rgba(0,0,0,.5);--e3:0 14px 30px -8px rgba(0,0,0,.6);
+  }
+  .verdict{background:linear-gradient(180deg,rgba(36,112,190,.18),var(--surface) 72%);border-color:#2E4A6B;border-left-color:var(--blue-400)}
+  .note{background:rgba(242,211,114,.09);border-color:#6B4C0C;border-left-color:var(--amber-500)}
+  .note h4{color:var(--amber-300)}
+  .warn{background:rgba(214,75,75,.11);border-color:#7F2020;border-left-color:var(--red-500)}
+  .warn h4{color:#F09A9A}
+  .fix{background:rgba(16,163,106,.11);border-color:#076B48;border-left-color:var(--green-500)}
+  .fix h4{color:var(--green-300)}
+  .corr{background:rgba(242,211,114,.09);color:var(--amber-200)}
+  .chip.fail{background:rgba(214,75,75,.2);color:#F09A9A}
+  .chip.pass{background:rgba(16,163,106,.2);color:var(--green-300)}
+  .chip.keep{background:rgba(74,144,217,.2);color:var(--blue-200)}
+  .chip.amb{background:rgba(242,211,114,.17);color:var(--amber-300)}
+  .radii div{background:rgba(74,144,217,.14);border-color:var(--blue-500);color:var(--blue-200)}
+  .q{border-left-color:var(--amber-500)}
+  .phone.oldlight{border-color:#3A352E}
+}
+
+.cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;margin-bottom:18px}
+.cols2 h4{display:flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.badnow{background:var(--sunken);color:var(--muted);border:1px solid var(--border-strong);font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.05em}
+.goodnext{background:var(--blue-600);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.05em}
+pre.sm{font-size:12px;line-height:1.6}
+.layer{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:20px 22px;box-shadow:var(--e1);margin-bottom:14px}
+.layer h3{margin:0 0 4px;font-size:17px}
+.layer .sub{font-size:12.5px;color:var(--muted);font-family:ui-monospace,Menlo,monospace;margin-bottom:12px}
+.layer p:last-child{margin-bottom:0}
+.kill{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.kill span{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#FBE9E5;color:var(--red-800);border:1px solid var(--red-100);padding:4px 10px;border-radius:8px;text-decoration:line-through}
+@media(prefers-color-scheme:dark){.kill span{background:rgba(214,75,75,.14);color:#F09A9A;border-color:#7F2020}}
+.pref{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green-500);border-radius:0 14px 14px 0;padding:16px 20px;margin-bottom:12px;box-shadow:var(--e1)}
+.pref strong{display:block;font-family:var(--dis);font-size:14.5px;margin-bottom:4px}
+.pref p{margin:0;font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Refactor proposal</p>
+    <h1>State &amp; context,<br>restructured</h1>
+    <p>Three layers instead of one god-provider: pure domain functions, two contexts
+       split by lifetime, and routes that orchestrate rather than hold. Sized against
+       your CLAUDE.md priorities — readable first, modular second, performant third.</p>
+    <div class="hero-meta">
+      <span>Proposal — no code changed</span>
+      <span>Reconsiders the whole context structure</span>
+      <span>11 Sep 2026</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>The short answer</h2>
+<div class="verdict">
+  <p><strong>The problem isn't the contexts, it's that state is stored where it's derived
+     and shared where it's local.</strong> Almost every symptom traces to one of those two.</p>
+  <p><code>shouldIncrementStreak</code> is derived from a date but kept in state — that's the
+     infinite write loop. <code>currentUnitData</code> is global but only ever used by one
+     route subtree — that's why <code>clearUnitData()</code> has to exist. The exercise route
+     holds <strong>15 <code>useState</code></strong> calls, three of which are mutually
+     exclusive by exercise type, so nothing stops an impossible combination compiling.</p>
+  <p>Three layers fix it: <strong>pure domain functions</strong> that don't know about React,
+     <strong>two contexts split by lifetime</strong> rather than by data source, and
+     <strong>routes as orchestrators</strong>. The exercise route goes from 623 lines to
+     roughly 80.</p>
+</div>
+
+<h2>What's actually wrong</h2>
+<p class="lede">Five structural problems, each with its own fix</p>
+
+<div class="finding">
+  <div class="finding-head"><div class="finding-num">1</div><h3>Derived state stored as state</h3></div>
+  <p><code>shouldIncrementStreak</code> is a pure function of <code>lastExerciseDate</code> and
+     today's date, but it lives in <code>useState</code> and is written by an effect that also
+     performs a Firestore write. Because the effect depends on <code>userData</code> and its
+     <code>setUserData</code> always allocates a fresh object, it re-triggers itself forever
+     once the date is stale.</p>
+  <p>Storing it is what makes the loop possible. A function can't loop.</p>
+  <div class="ev"><strong>FirebaseProvider.tsx:147-168</strong> — one effect that both derives a
+     boolean and mutates the database.</div>
+</div>
+
+<div class="finding">
+  <div class="finding-head"><div class="finding-num">2</div><h3>One provider owning four unrelated things</h3></div>
+  <p><code>FirebaseProvider</code> is 204 lines covering: the user profile, lesson progress, the
+     streak, unit content, the AsyncStorage cache, and two loading flags. Nothing in it needs
+     to know about anything else in it.</p>
+  <p>The tell is <code>clearUnitData()</code>. Unit content is global state with a route-shaped
+     lifetime, so the Home screen has to manually reset it on focus. If it were owned by the
+     unit route it would unmount on its own and that function would not exist.</p>
+  <div class="ev"><strong>index.tsx:31-34</strong> — Home runs a <code>useFocusEffect</code> whose
+     only job is to clean up state belonging to a different screen.</div>
+</div>
+
+<div class="finding">
+  <div class="finding-head"><div class="finding-num">3</div><h3>A child provider mutating its parent</h3></div>
+  <p><code>AuthProvider</code> exposes <code>setInitializing</code>, and
+     <code>FirebaseProvider</code> — its child — calls it in three places. So auth's readiness is
+     decided by whether a Firestore read finished, and the dependency runs upward.</p>
+  <p>It also means "initialising" and "loading" are two separate booleans that must agree.
+     Nothing enforces that, and both can be wrong at once.</p>
+  <div class="ev"><strong>FirebaseProvider.tsx:34, 144, 165, 167</strong> — four references to a
+     setter that belongs to the provider above it.</div>
+</div>
+
+<div class="finding">
+  <div class="finding-head"><div class="finding-num">4</div><h3>Impossible states are representable</h3></div>
+  <p>The exercise route keeps three nullable data slots — <code>wordsExerciseData</code>,
+     <code>sentencesExerciseData</code>, <code>storiesExerciseData</code> — of which exactly one
+     is ever non-null. The type permits all eight combinations. The render path compensates with
+     guards like <code>exerciseType === "words" &amp;&amp; wordsExerciseData</code>, which is the
+     type system being re-implemented by hand at runtime.</p>
+  <p>Same shape at the session level: <code>user</code> and <code>userData</code> are
+     independently optional, so "signed in but no profile" and "profile but signed out" both
+     typecheck.</p>
+  <div class="ev"><strong>[exerciseType].tsx:74-95</strong> — three mutually exclusive slots plus
+     four more per-type state atoms in one scope, separated only by comments.</div>
+</div>
+
+<div class="finding">
+  <div class="finding-head"><div class="finding-num">5</div><h3>A state machine spread across four switches</h3></div>
+  <p><code>buttonAction</code> is a six-value union driving a genuine state machine, but its
+     transitions and its presentation are scattered: <strong>four separate
+     <code>switch</code> statements</strong> over the same union, at lines 287, 301, 438 and 456,
+     plus an <code>isButtonDisabled</code> function branching on exercise type.</p>
+  <p>Adding a state means finding all five. Two of them already disagree — <code>"failed"</code>
+     renders the wrong-answer text but, until last week, took the neutral button colour.</p>
+  <div class="ev"><strong>[exerciseType].tsx</strong> — <code>buttonText</code>,
+     <code>buttonType</code>, <code>handleSentencesQuestionsButtonPress</code>,
+     <code>handleStoriesButtonPress</code>.</div>
+</div>
+
+<h2>Proposed structure</h2>
+<p class="lede">Three layers, each with one job</p>
+
+<div class="layer">
+  <h3>1 · Domain — pure functions, no React</h3>
+  <p class="sub">domain/streak.ts · domain/progress.ts · domain/exercise.ts</p>
+  <p>Every rule that is currently tangled with an effect or a Firestore call becomes a plain
+     function of its inputs. No hooks, no mocks, trivially testable — which matters most for the
+     streak, where the bugs actually are.</p>
+</div>
+
+<div class="layer">
+  <h3>2 · Data — repositories, no React</h3>
+  <p class="sub">data/userRepository.ts · data/unitRepository.ts</p>
+  <p>Firestore and AsyncStorage access as flat async functions. Today
+     <code>getUnitData</code> interleaves cache reads, a network fetch, a progress backfill and
+     three <code>setState</code> calls in one function; splitting them means each can be read on
+     its own.</p>
+</div>
+
+<div class="layer">
+  <h3>3 · Contexts — split by lifetime, not by data source</h3>
+  <p class="sub">SessionProvider (app-wide) · UnitProvider (per unit route)</p>
+  <p><strong>Session</strong> owns auth and profile as a single discriminated union, replacing
+     <code>AuthProvider</code> plus half of <code>FirebaseProvider</code> and both loading flags.
+     <strong>Unit</strong> is mounted by the unit route layout, so unit content lives exactly as
+     long as the screens that use it — no global slot, no manual clearing.</p>
+  <p><code>ThemeProvider</code> and <code>SpeechProvider</code> stay as they are; they are already
+     single-purpose.</p>
+</div>
+
+<h2>Session as one union</h2>
+<p class="lede">Four booleans and two optionals become one value</p>
+
+<div class="cols2">
+  <div>
+    <h4><span class="badnow">Now</span></h4>
+    <pre class="sm"><code><span class="c">// AuthProvider</span>
+initializing: boolean
+setInitializing: (b: boolean) =&gt; void  <span class="c">// mutated by child</span>
+user: User | null | undefined
+
+<span class="c">// FirebaseProvider</span>
+userData: UserData | undefined
+loading: boolean
+shouldIncrementStreak: boolean
+
+<span class="c">// 2^4 x 2 x 2 nominal combinations,</span>
+<span class="c">// ~4 of them legal</span></code></pre>
+  </div>
+  <div>
+    <h4><span class="goodnext">Proposed</span></h4>
+    <pre class="sm"><code><span class="k">export type</span> Session =
+  | { status: <span class="s">"loading"</span> }
+  | { status: <span class="s">"signedOut"</span> }
+  | { status: <span class="s">"ready"</span>; user: User; profile: Profile };
+
+<span class="c">// Consumers destructure once and the compiler</span>
+<span class="c">// guarantees the rest:</span>
+<span class="k">const</span> session = useSession();
+<span class="k">if</span> (session.status !== <span class="s">"ready"</span>) <span class="k">return</span> &lt;Loading /&gt;;
+session.profile.streak  <span class="c">// no optional chaining</span></code></pre>
+  </div>
+</div>
+<p>The streak then reads off <code>profile</code>, and <code>shouldIncrementStreak</code> is
+   replaced by a function call at the point of use.</p>
+
+<h2>The streak, as a pure function</h2>
+<p class="lede">This is the fix for the infinite loop, and it removes the state entirely</p>
+
+<pre><code><span class="c">// domain/streak.ts — no React, no Firestore, no clock reads</span>
+<span class="k">export type</span> StreakState = <span class="s">"countedToday"</span> | <span class="s">"continues"</span> | <span class="s">"broken"</span>;
+
+<span class="k">export const</span> streakState = (lastExerciseDate: string, today: string): StreakState =&gt; {
+  <span class="k">if</span> (lastExerciseDate === today) <span class="k">return</span> <span class="s">"countedToday"</span>;
+  <span class="k">if</span> (lastExerciseDate === previousDay(today)) <span class="k">return</span> <span class="s">"continues"</span>;
+  <span class="k">return</span> <span class="s">"broken"</span>;
+};
+
+<span class="c">// The only place a streak number is produced.</span>
+<span class="k">export const</span> nextStreak = (current: number, state: StreakState): number =&gt;
+  state === <span class="s">"countedToday"</span> ? current : state === <span class="s">"continues"</span> ? current + 1 : 1;</code></pre>
+
+<p>Two things fall out of this for free:</p>
+<ul>
+  <li><strong>The loop cannot happen.</strong> Nothing writes to the database while deriving, so
+      there is no effect to re-trigger. The reset stops being a side effect and becomes part of
+      <code>nextStreak</code> returning <code>1</code>.</li>
+  <li><strong>Day one works.</strong> <code>"broken"</code> yields <code>1</code>, not
+      <code>0 + 1</code> gated on a flag, so a brand-new account scores on its first exercise —
+      the second streak bug, fixed by the same three lines.</li>
+</ul>
+<p>And it is testable without a single mock: three input pairs cover every branch.</p>
+
+<h2>Exercise state as one union plus one reducer</h2>
+<p class="lede">15 <code>useState</code> calls and a 40-line manual reset, replaced</p>
+
+<div class="cols2">
+  <div>
+    <h4><span class="badnow">Now</span></h4>
+    <pre class="sm"><code><span class="c">// 15 useState, 3 mutually exclusive</span>
+wordsExerciseData | <span class="k">null</span>
+sentencesExerciseData | <span class="k">null</span>
+storiesExerciseData | <span class="k">null</span>
+matchedKeys, matchedVals, activeKey, activeVal
+buttonAction, answerArray, optionsMap
+currentPhraseId, isSubmitting,
+unitDataLoading, round
+
+<span class="c">// plus an effect that hand-resets ten of</span>
+<span class="c">// them whenever the lesson changes</span>
+setWordsExerciseData(<span class="k">null</span>);
+setSentencesExerciseData(<span class="k">null</span>);
+setStoriesExerciseData(<span class="k">null</span>);
+setOptionsMap(<span class="k">undefined</span>);
+setAnswerArray([]);
+setButtonAction(...);
+setCurrentPhraseId(0);
+setMatchedKeys(<span class="k">new</span> Set());
+setMatchedVals(<span class="k">new</span> Set());
+setActiveKey(<span class="s">""</span>); setActiveVal(<span class="s">""</span>);</code></pre>
+  </div>
+  <div>
+    <h4><span class="goodnext">Proposed</span></h4>
+    <pre class="sm"><code><span class="c">// one union — the type rules out the</span>
+<span class="c">// impossible combinations</span>
+<span class="k">type</span> Exercise =
+  | { kind: <span class="s">"words"</span>; pairs: Map&lt;string, string&gt;;
+      matched: Set&lt;string&gt;; picked: Picked }
+  | { kind: <span class="s">"prompt"</span>; assignment: Assignment;
+      answer: number[]; options: OptionsMap }
+  | { kind: <span class="s">"story"</span>; phrases: string[];
+      phraseId: number; answer: number[] };
+
+<span class="c">// the reset is a remount, not ten setters</span>
+&lt;ExerciseRound
+  <span class="k">key</span>={`${lessonId}-${round}`}
+  ...
+/&gt;</code></pre>
+  </div>
+</div>
+
+<div class="note">
+  <h4>The remount is the part worth stealing</h4>
+  <p>That 40-line reset effect exists only because the component outlives the thing it
+     represents. Giving the round its own component and a <code>key</code> deletes the effect
+     outright — React discards the state for you. It is the single largest readability win here
+     per line changed, and it removes a whole class of "stale state from the previous round" bug.</p>
+</div>
+
+<h2>The button machine as a table</h2>
+<p class="lede">Four switches become one lookup</p>
+
+<pre><code><span class="c">// domain/exercise.ts — what each state looks like and where it goes next.</span>
+<span class="c">// One row per state; adding a state is one row, not five edits.</span>
+<span class="k">export const</span> BUTTON: Record&lt;Phase, { textKey: string; variant: ButtonType; next: Move }&gt; = {
+  idle:    { textKey: <span class="s">"common.buttonContinue"</span>, variant: <span class="s">"default"</span>, next: <span class="s">"advance"</span> },
+  confirm: { textKey: <span class="s">"common.buttonConfirm"</span>,  variant: <span class="s">"default"</span>, next: <span class="s">"check"</span> },
+  correct: { textKey: <span class="s">"common.buttonSuccess"</span>,  variant: <span class="s">"success"</span>, next: <span class="s">"nextRound"</span> },
+  failed:  { textKey: <span class="s">"common.buttonWrong"</span>,    variant: <span class="s">"danger"</span>,  next: <span class="s">"leave"</span> },
+  end:     { textKey: <span class="s">"common.buttonSuccess"</span>,  variant: <span class="s">"success"</span>, next: <span class="s">"leave"</span> },
+  loading: { textKey: <span class="s">"common.buttonConfirm"</span>,  variant: <span class="s">"default"</span>, next: <span class="s">"none"</span> },
+};</code></pre>
+<p>The <code>"failed"</code> row is the argument for this shape: text and colour disagreeing was
+   possible precisely because they were decided in two different switches.</p>
+
+<h2>The route as an orchestrator</h2>
+<p class="lede">Your CLAUDE.md asks for a top-level handler whose structure explains itself</p>
+
+<pre><code><span class="c">// app/.../[exerciseType].tsx — the whole route</span>
+<span class="k">const</span> ExerciseScreen = () =&gt; {
+  <span class="k">const</span> { unitId, lessonId, kind } = useExerciseParams();
+  <span class="k">const</span> session = useSession();
+  <span class="k">const</span> lesson = useLesson(unitId, lessonId);
+
+  <span class="k">if</span> (session.status !== <span class="s">"ready"</span>) <span class="k">return</span> &lt;LoadingScreen /&gt;;
+  <span class="k">if</span> (!lesson) <span class="k">return</span> &lt;LoadingScreen /&gt;;
+
+  <span class="k">return</span> &lt;ExerciseRound <span class="k">key</span>={lesson.roundKey} kind={kind} lesson={lesson} /&gt;;
+};</code></pre>
+<p>Everything else moves behind three names — <code>useExerciseParams</code>,
+   <code>useLesson</code>, <code>ExerciseRound</code> — and the per-kind logic sits in
+   <code>useWordsRound</code> / <code>usePromptRound</code> / <code>useStoryRound</code>, each
+   owning only its own state. The route reads as a sentence; no section comments needed, because
+   nothing unrelated shares the scope.</p>
+
+<h2>What this deletes</h2>
+<p class="lede">The clearest measure of whether it worked</p>
+<div class="kill">
+  <span>shouldIncrementStreak</span>
+  <span>clearUnitData()</span>
+  <span>setInitializing</span>
+  <span>initializing</span>
+  <span>loading</span>
+  <span>unitDataLoading</span>
+  <span>the 40-line reset effect</span>
+  <span>3 nullable data slots</span>
+  <span>4 switch statements</span>
+  <span>getUserUnitData() guards</span>
+</div>
+<p><code>getUserUnitData</code> is worth calling out: it exists because <code>UserData</code> is a
+   <code>Record</code> mixing <code>_meta</code>, <code>activity</code> and per-unit progress
+   under one index signature, so every read needs a runtime narrowing helper. Splitting progress
+   into its own field removes the helper and the <code>"streak" in value</code> sniffing with it.</p>
+
+<h2>Against your stated preferences</h2>
+
+<div class="pref">
+  <strong>Simple solutions, not grandiose piles</strong>
+  <p>Net effect is subtraction: no state library, no new abstractions beyond three plain files
+     and one extra context. The two biggest wins — a remount key and a lookup table — are both
+     smaller than what they replace.</p>
+</div>
+<div class="pref">
+  <strong>Readable to the point comments are unnecessary</strong>
+  <p>The current exercise route needs <code>// Words exercise state</code>,
+     <code>// Stories exercise state</code>, <code>// Button state</code>. Those comments are
+     load-bearing because unrelated things share one scope. Split by kind and they become
+     redundant.</p>
+</div>
+<div class="pref">
+  <strong>Top-down modular; the handler orchestrates</strong>
+  <p>Right now the route is state at the top, handlers around line 320, JSX at 540. Inverted.
+     Afterwards the first function is the whole story in eight lines.</p>
+</div>
+<div class="pref">
+  <strong>Less mainstream data structures where they earn it</strong>
+  <p>You already use <code>Map</code> and <code>Set</code> well for word pairs and matches — kept
+     as-is. The addition is discriminated unions, which is the same instinct applied to control
+     flow: make the wrong state unrepresentable rather than guarding against it.</p>
+</div>
+<div class="pref">
+  <strong>Typesafe, no <code>any</code></strong>
+  <p>No <code>any</code> anywhere today, so this is about the weaker failure: types that permit
+     nonsense. Both unions above remove whole families of impossible values, and
+     <code>getUserUnitData</code>'s runtime narrowing disappears.</p>
+</div>
+<div class="pref">
+  <strong>Tests useful, but don't test types</strong>
+  <p>Layers 1 and 2 are plain functions, so the tests worth having become cheap: streak
+     transitions, progress math, answer checking. No provider mounting, no Firestore mocks, and
+     nothing asserting on shapes the compiler already guarantees.</p>
+</div>
+
+<h2>Order I'd do it in</h2>
+<p class="lede">Each step ships on its own and leaves the app working</p>
+<div class="phase">
+  <div class="phase-h"><span class="n">1</span><strong>Extract domain/streak.ts and fix both streak bugs</strong><span class="eff">~2 hours</span></div>
+  <div class="phase-b"><ul>
+    <li>Pure functions plus tests; delete <code>shouldIncrementStreak</code> and the looping effect.</li>
+    <li>Highest value first — it stops unbounded Firestore writes and probably unblocks Home.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">2</span><strong>Repositories</strong><span class="eff">~half a day</span></div>
+  <div class="phase-b"><ul>
+    <li>Move Firestore/AsyncStorage calls out of the provider unchanged, no behaviour change.</li>
+    <li>Mechanical and low risk; makes step 3 mostly deletion.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">3</span><strong>SessionProvider</strong><span class="eff">~half a day</span></div>
+  <div class="phase-b"><ul>
+    <li>Collapse <code>AuthProvider</code> + profile half of <code>FirebaseProvider</code> into the union; remove the upward <code>setInitializing</code> dependency.</li>
+    <li>Touches every screen's loading guard, but each one gets shorter.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">4</span><strong>UnitProvider on the unit route</strong><span class="eff">~2 hours</span></div>
+  <div class="phase-b"><ul>
+    <li>Mount it in <code>unit/_layout.tsx</code>; delete <code>clearUnitData</code> and Home's cleanup effect.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">5</span><strong>Split the exercise route</strong><span class="eff">~1 day</span></div>
+  <div class="phase-b"><ul>
+    <li>Union + reducer + button table + the remount key; three per-kind hooks.</li>
+    <li>Biggest single change, and the one that most needs the earlier steps in place.</li>
+  </ul></div>
+</div>
+<div class="phase">
+  <div class="phase-h"><span class="n">6</span><strong>Reshape UserData</strong><span class="eff">~2 hours</span></div>
+  <div class="phase-b"><ul>
+    <li>Progress into its own field; delete <code>getUserUnitData</code>. Needs a migration read-path for existing documents.</li>
+  </ul></div>
+</div>
+
+<div class="warn">
+  <h4>Where I'd push back on myself</h4>
+  <p>Steps 5 and 6 are the expensive ones and the least forced. If you only ever do 1 to 4, you
+     have removed the loop, the inverted dependency and the manual cleanup, and the exercise route
+     is untouched but no worse. I would not start 5 without wanting the exercise screens changed
+     for their own sake.</p>
+  <p>Step 6 also touches stored data, which is the only part of this that cannot be rolled back
+     with a revert.</p>
+</div>
+
+<footer>
+  <p><strong>Slovenčina na mieru</strong> — state and context refactor proposal, 11 September 2026.
+     Line references are against <code>t3code/modernize-color-scheme</code> at <code>704fbf1</code>.
+     No code has been changed.</p>
+</footer>
+
+</div>
+</body>
+</html>
