@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IDS Východ — Design System sketch v0.3</title>
+<title>IDS Východ — Design System sketch v0.4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
 <style>
@@ -400,28 +400,27 @@ section,[id]{scroll-margin-top:84px}
 /* ---------- v0.3: dock, places, trip ---------- */
 @property --p{syntax:'<percentage>';inherits:true;initial-value:40%}
 .demo .view{position:absolute;inset:0;opacity:0;transform:translateY(14px) scale(.985);transition:opacity .35s ease,transform .5s cubic-bezier(.2,.8,.2,1);pointer-events:none;overflow:hidden;background:var(--surface)}
-.demo[data-view=map] .v-map,.demo[data-view=dep] .v-dep,.demo[data-view=ticket] .v-ticket{opacity:1;transform:none;pointer-events:auto}
+.demo[data-view=map] .v-map,.demo[data-view=dep] .v-dep,.demo[data-view=ticket] .v-ticket,.demo[data-view=ride] .v-ride{opacity:1;transform:none;pointer-events:auto}
 .demo .v-ticket{background:var(--surface-2)}
-.dock{position:absolute;left:10px;right:10px;bottom:20px;display:flex;gap:8px;z-index:8;align-items:center}
-.dock-search{height:56px;border-radius:28px;display:flex;align-items:center;gap:8px;padding:0 16px;overflow:hidden;white-space:nowrap;flex:1 1 auto;min-width:56px;max-width:400px;transition:max-width .5s cubic-bezier(.3,1.3,.4,1),padding .5s;font-size:16px;color:var(--text-2);cursor:pointer}
+.dock{position:absolute;left:10px;right:10px;bottom:20px;display:flex;gap:8px;z-index:8;align-items:center;transition:opacity .3s,transform .45s}
+.dock-search{height:56px;border-radius:28px;display:flex;align-items:center;gap:8px;padding:0 18px;overflow:hidden;white-space:nowrap;flex:1 1 auto;min-width:56px;max-width:56px;margin-left:auto;transition:max-width .5s cubic-bezier(.3,1.3,.4,1);font-size:16px;color:var(--text-2);cursor:pointer}
 .dock-search svg{flex:none;width:20px;height:20px;fill:var(--text)}
-.dock-search .ds-net{margin-left:auto;font-size:11px;font-weight:900;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:3px 8px;transition:opacity .25s}
-.dock-search .ds-t{transition:opacity .25s}
-.demo:not([data-view=map]) .dock-search{max-width:56px;padding:0 18px}
-.demo:not([data-view=map]) .dock-search .ds-t,.demo:not([data-view=map]) .dock-search .ds-net{opacity:0}
-.dock-tabs{height:56px;border-radius:28px;display:flex;align-items:center;padding:0 4px;flex:none;transition:all .5s}
-.dock-tabs button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;height:48px;border-radius:24px;padding:0 7px;max-width:80px;color:var(--text-2);font:700 9.5px var(--font);transition:max-width .5s cubic-bezier(.3,1.3,.4,1),padding .5s,opacity .3s,background .3s,color .3s;overflow:hidden}
+.dock-search .ds-t{opacity:0;transition:opacity .25s}
+.demo[data-view=map] .dock-search{max-width:400px}
+.demo[data-view=map] .dock-search .ds-t{opacity:1;transition-delay:.15s}
+.dock-tabs{height:56px;border-radius:28px;display:flex;align-items:center;padding:0 4px;flex:none}
+.dock-tabs button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;height:48px;border-radius:24px;padding:0 9px;max-width:80px;color:var(--text-2);font:700 9.5px var(--font);transition:max-width .5s cubic-bezier(.3,1.3,.4,1),padding .5s,opacity .3s,background .3s,color .3s;overflow:hidden}
 .dock-tabs button svg{width:22px;height:22px;fill:currentColor;flex:none}
-.dock-tabs button span{max-height:0;max-width:0;opacity:0;white-space:nowrap;transition:max-height .4s,max-width .45s,opacity .3s}
-.demo:not([data-view=map]) .dock-tabs button span{max-height:14px;max-width:60px;opacity:1}
-.demo[data-view=map] .dock-tabs button{padding:0 6px}
+.dock-tabs button span{max-height:14px;max-width:60px;opacity:1;white-space:nowrap;transition:max-height .4s,max-width .45s,opacity .3s}
 .dock-tabs button.on{color:var(--accent);background:color-mix(in srgb,var(--accent) 13%,transparent)}
-.demo[data-view=map] .dock-tabs button[data-go=map]{max-width:0;padding:0;opacity:0}
+.demo[data-view=map] .dock-tabs button:not(.last){max-width:0;padding:0;opacity:0}
+.demo[data-view=map] .dock-tabs button span{max-height:0;max-width:0;opacity:0}
+.demo[data-view=map] .dock-tabs button.last{padding:0 13px}
 .dock-tabs button:focus-visible,.dock-search:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.demo[data-view=ride] .dock,.demo[data-view=ride] .acc,.demo[data-view=map] .acc{opacity:0;transform:translateY(16px) scale(.96);pointer-events:none}
 .acc{position:absolute;left:14px;right:14px;bottom:86px;height:50px;border-radius:25px;display:flex;align-items:center;gap:10px;padding:0 14px 0 10px;z-index:7;cursor:pointer;transition:opacity .3s,transform .45s cubic-bezier(.3,1.3,.4,1)}
 .acc.static{position:static;width:100%;max-width:380px;height:auto;min-height:54px;padding:8px 10px;cursor:default}
 .st:has(.live)::before{display:none}
-.demo[data-view=ticket] .acc{opacity:0;transform:translateY(16px) scale(.96);pointer-events:none}
 .acc-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;font-size:13px}
 .acc-t span{font-size:12px;color:var(--text-2)}
 .acc-m{font-size:16px;font-weight:900;color:var(--ok);font-variant-numeric:tabular-nums}
@@ -430,9 +429,6 @@ section,[id]{scroll-margin-top:84px}
 .mini-track::before{top:0}.mini-track::after{top:4px}
 .faces{display:flex;gap:4px}
 .faces i{font-style:normal;font-size:20px;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--surface-2)}
-.places{position:absolute;left:12px;right:12px;bottom:146px;display:flex;gap:6px;z-index:6;transition:opacity .3s,transform .45s}
-.places span{height:36px;border-radius:18px;padding:0 12px;display:flex;align-items:center;gap:5px;font-size:13px;font-weight:700;white-space:nowrap}
-.places b{color:var(--accent);font-weight:900}
 .pcard{margin:0 12px 10px;background:var(--surface-2);border-radius:18px;padding:10px 14px 4px}
 .pcard.dim{padding-bottom:10px}
 .pc-h{display:flex;align-items:center;gap:10px;padding-bottom:4px}
@@ -472,8 +468,8 @@ section,[id]{scroll-margin-top:84px}
 .tgl{display:inline-block;width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;vertical-align:middle}
 .tgl::after{content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .tgl.on{background:#34C759}.tgl.on::after{left:20px}
-.a-sheet{position:absolute;left:0;right:0;bottom:80px;background:var(--surface);border-radius:28px 28px 0 0;padding:8px 0 6px;box-shadow:0 -6px 24px rgba(0,0,0,.18);z-index:5;animation:sheetup 7s ease infinite}
-@keyframes sheetup{0%,4%{transform:translateY(70%)}14%,100%{transform:none}}
+.a-sheet{position:absolute;left:0;right:0;bottom:80px;background:var(--surface);border-radius:28px 28px 0 0;padding:8px 0 6px;box-shadow:0 -6px 24px rgba(0,0,0,.18);z-index:5;animation:sheetup .8s cubic-bezier(.2,.9,.3,1.1) .6s both}
+@keyframes sheetup{from{transform:translateY(70%)}to{transform:none}}
 .a-route{display:flex;align-items:center;gap:8px;margin:0 12px 8px;height:48px;border-radius:24px;background:var(--surface-2);padding:0 16px;font-size:15px;font-weight:700}
 .a-route .dot{width:10px;height:10px;border-radius:50%;border:2.5px solid var(--accent)}
 .a-route .sep{color:var(--text-3)}
@@ -488,6 +484,48 @@ section,[id]{scroll-margin-top:84px}
 @keyframes draw{0%,8%{stroke-dashoffset:1}20%,100%{stroke-dashoffset:0}}
 @keyframes draw2{0%,18%{stroke-dashoffset:1}28%,100%{stroke-dashoffset:0}}
 @media (prefers-reduced-motion:reduce){.draw path{stroke-dashoffset:0}.a-sheet{transform:none}.trip-track{--p:45%}}
+
+.planner{position:absolute;left:10px;right:10px;bottom:86px;border-radius:26px;padding:10px 12px 6px;z-index:6;transition:opacity .35s,transform .5s cubic-bezier(.3,1.2,.4,1)}
+.demo:not([data-view=map]) .planner{opacity:0;transform:translateY(30px)}
+.planner.static{position:static;background:var(--surface-2);border-radius:20px}
+.pl-row{display:flex;align-items:center;gap:8px;height:42px;padding:0 12px;border-radius:14px;background:color-mix(in srgb,var(--surface) 70%,transparent);font-size:14px;margin-bottom:6px}
+.pl-row .muted{width:44px;font-size:12px}
+.pl-row.focus{outline:2px solid var(--accent)}
+.pl-row .dot,.a-od .dot{width:10px;height:10px;border-radius:50%;border:2.5px solid var(--accent);flex:none}
+.pl-swap{margin-left:auto;color:var(--text-2);display:flex}
+.caret::after{content:"";display:inline-block;width:2px;height:16px;background:var(--accent);vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.pl-chips{display:flex;gap:6px;margin:2px 0 4px;flex-wrap:wrap}
+.pl-sug{display:flex;align-items:center;gap:10px;padding:6px 2px;border-top:.5px solid var(--line);font-size:14px}
+.pl-sug > div{flex:1;min-width:0}
+.pl-t{color:var(--accent);font-weight:900}
+.ride-h{padding:6px 16px 4px}
+.ride-big{font-size:26px;font-weight:900;letter-spacing:-.01em;margin:10px 0 2px;line-height:1.1}
+.vtl{position:relative;margin:12px 16px 0;padding-left:28px}
+.vs{position:relative;padding:7px 0;font-size:14px;min-height:34px}
+.vs::before{content:"";position:absolute;left:-23px;top:10px;width:13px;height:13px;border-radius:50%;background:var(--surface);border:3px solid var(--c,var(--text-3));box-sizing:border-box;z-index:1}
+.vs::after{content:"";position:absolute;left:-19.5px;top:22px;bottom:-12px;width:6px;background:linear-gradient(90deg,var(--c,var(--line)) 0 2px,transparent 2px 4px,var(--c,var(--line)) 4px)}
+.vs:last-child::after{display:none}
+.vs.past{color:var(--text-3)}
+.vs.past::before{background:var(--c)}
+.vs.past::after{opacity:.45}
+.vs.walk::before{width:8px;height:8px;left:-20.5px;top:13px;border:0;background:var(--text-3)}
+.vs.walk::after{background:repeating-linear-gradient(var(--text-3) 0 3px,transparent 3px 7px);width:2px;left:-17.5px}
+.vs.dest::before{width:17px;height:17px;left:-25px;top:8px;border-width:4px;animation:destp 1.6s ease-in-out infinite}
+@keyframes destp{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--c) 25%,transparent)}}
+.vs .tm{float:right;font-weight:900;font-variant-numeric:tabular-nums;font-size:13px;color:var(--text)}
+.vs.past .tm{color:var(--text-3)}
+.vveh{position:absolute;left:-26.5px;width:20px;height:20px;border-radius:50%;background:var(--c);border:3px solid #fff;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,.35);z-index:2;animation:vride 7s ease-in-out infinite}
+@keyframes vride{0%{top:6px}85%,100%{top:36px}}
+.ride-cta{position:absolute;left:14px;right:14px;bottom:30px;display:flex;flex-direction:column;gap:4px;z-index:3}
+.ride-sec{text-align:center;color:var(--text-2);font-weight:700;font-size:14px;padding:8px}
+.a-od{position:relative;margin:0 12px 8px;background:var(--surface-2);border-radius:20px;padding:2px 44px 2px 14px}
+.a-od div{display:flex;align-items:center;gap:8px;height:38px;font-size:15px;font-weight:700}
+.a-od div+div{border-top:1px solid var(--line)}
+.a-od .pl-swap{position:absolute;right:14px;top:50%;transform:translateY(-50%)}
+.a-back{position:absolute;top:40px;left:12px;width:40px;height:40px;border-radius:50%;background:var(--surface);display:grid;place-items:center;box-shadow:var(--shadow);z-index:6;font-size:18px}
+.a-fab{position:absolute;right:16px;bottom:96px;width:56px;height:56px;border-radius:16px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:6}
+@media (prefers-reduced-motion:reduce){.vveh{top:20px}}
 
 footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:13px}
 </style>
@@ -514,7 +552,7 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
 </svg>
 
 <header class="top"><div class="top-in">
-  <div class="brand"><img class="logo-light" data-img="logo" alt="IDS Východ — doprava bez hraníc"><img class="logo-dark" data-img="logo-inv" alt="IDS Východ — doprava bez hraníc"><span class="tag">Design System · v0.3 sketch</span></div>
+  <div class="brand"><img class="logo-light" data-img="logo" alt="IDS Východ — doprava bez hraníc"><img class="logo-dark" data-img="logo-inv" alt="IDS Východ — doprava bez hraníc"><span class="tag">Design System · v0.4 sketch</span></div>
   <nav>
     <a href="#brand">Brand</a><a href="#foundations">Foundations</a><a href="#ia">IA &amp; platforms</a>
     <a href="#components">Components</a><a href="#screens">Screens</a><a href="#arch">Architecture</a><a href="#trace">Spec map</a><a href="#tokens">Tokens</a>
@@ -547,13 +585,12 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
 </div>
 
 <div class="callout" style="margin-bottom:14px">
-  <h4 style="margin-bottom:6px">v0.3: restructured for speed</h4>
+  <h4 style="margin-bottom:6px">v0.4: speed-first structure</h4>
   <ul class="clean small muted">
-    <li>The map isn't a tab any more. It's the home canvas under a <b>Liquid Glass search dock</b> that's expanded by default and shrinks to a circle on other tabs.</li>
-    <li><b>Odchody</b> replaces "Zastávky": your places (Domov, Práca, Škola) with chosen stops, nearest first. <b>You choose the default view</b>: map or departures.</li>
-    <li>All navigation is at the bottom: Mapa · Odchody · Lístky · Ďalšie.</li>
-    <li><b>Lístky</b> now includes the live trip (delay, current position, stops until you get off). The same trip rides along as a mini bar above the dock.</li>
-    <li><b>Hodnotenie</b> becomes a one-tap prompt when the ride ends. A motion catalogue was added.</li>
+    <li><b>Bottom bar:</b> Odchody · Lístky · Ďalšie, with <b>search in the bottom-right corner</b> (iOS trailing search tab / Android FAB). Search and map are <b>one destination, Spojenia</b>. The field opens a full planner: Odkiaľ, Kam, time, network, filters, suggestions.</li>
+    <li><b>Odchody</b>: your places (Domov, Práca, Škola) with chosen stops, nearest first. <b>You choose the default view.</b></li>
+    <li><b>Ride and ticket are separate.</b> The live trip strip opens <b>Jazda</b> (timeline, delay, stops until you get off), which links to the ticket. <b>Lístky</b> stays a dedicated tab for active and upcoming tickets.</li>
+    <li><b>Hodnotenie</b> is a one-tap prompt when the ride ends. A motion catalogue was added.</li>
   </ul>
 </div>
 <div class="callout">
@@ -680,53 +717,59 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
 <section id="ia">
   <div class="eyebrow">03 · Information architecture</div>
   <h2>Built for the 30-second trip</h2>
-  <p class="muted">Most people open a transit app for one of three jobs, and they're usually walking or holding something in the other hand. The structure ranks features by how often people need them. It does <i>not</i> mirror the backend modules.</p>
-  <div class="grid g3">
-    <div class="card"><span class="tag red">Daily</span><h4 style="margin-top:8px">① "When does my bus leave?"</h4><p class="small muted" style="margin:0"><b>Odchody</b> shows your places (Domov, Práca, Škola) with their stops, and the place nearest to you comes first. You get the answer in 0 taps if it's your default view, or 1 tap otherwise.</p></div>
-    <div class="card"><span class="tag blue">Weekly</span><h4 style="margin-top:8px">② "How do I get there?"</h4><p class="small muted" style="margin:0">The <b>search dock</b> is always at the bottom, over a live map. Place chips give one-tap routes ("Domov · 24 min"). The map isn't a destination of its own. It's the backdrop for search and results.</p></div>
-    <div class="card"><span class="tag">Per ride</span><h4 style="margin-top:8px">③ "Show my ticket. Where am I?"</h4><p class="small muted" style="margin:0"><b>Lístky</b> combines the ticket with the live trip. The same trip also rides along as a mini bar above the navigation on every screen, like a "now playing" bar.</p></div>
+  <p class="muted">Most people open a transit app for one of a few jobs, and they're usually walking or holding something in the other hand. The structure ranks features by how often people need them. It does <i>not</i> mirror the backend modules.</p>
+  <div class="grid g4">
+    <div class="card"><span class="tag red">Daily</span><h4 style="margin-top:8px">"When does my bus leave?"</h4><p class="small muted" style="margin:0"><b>Odchody</b>: your places (Domov, Práca, Škola) with their stops, nearest first.</p></div>
+    <div class="card"><span class="tag blue">Weekly</span><h4 style="margin-top:8px">"How do I get there?"</h4><p class="small muted" style="margin:0"><b>Spojenia</b>: one destination that combines search and the live map. Search sits in the bottom-right corner.</p></div>
+    <div class="card"><span class="tag">Per ride</span><h4 style="margin-top:8px">"Where am I? When do I get off?"</h4><p class="small muted" style="margin:0"><b>Jazda</b>: opens from the live trip strip. It's a screen of its own, not a tab.</p></div>
+    <div class="card"><span class="tag">Per check</span><h4 style="margin-top:8px">"Show my ticket."</h4><p class="small muted" style="margin:0"><b>Lístky</b>: always a dedicated tab, so nobody panics hunting for it. It holds active, upcoming and future prepaid tickets.</p></div>
   </div>
 
-  <h3>Navigation lives at the bottom</h3>
+  <h3>The bottom bar</h3>
   <div class="grid g2">
     <div class="card small">
       <ul class="clean muted">
-        <li><b>Four destinations</b>: Mapa · Odchody · Lístky · Ďalšie, plus the search dock. Everything you can tap sits in the lower 40 % of the screen, in thumb reach. The top of the screen only shows status and titles.</li>
-        <li><b>The dock morphs.</b> On Mapa, search is the hero: a wide glass field, with the other tabs shrunk to icons. On any other tab, search shrinks to a circle and the tab bar spreads out with labels. Tap the circle and it grows back.</li>
-        <li><b>Active-trip mini bar</b> above the dock while a ticket is valid. Tap it to open Lístky.</li>
-        <li><b>Ďalšie</b> is the last tab, not an avatar in the corner: Dobiť kredit, Výluky, Účet, Aktuality, Mapy a schémy, Kontakty, Nastavenia, O aplikácii.</li>
+        <li><b>iOS</b>: a tab bar with <b>Odchody · Lístky · Ďalšie</b>, plus the <b>search tab at the trailing edge</b>, as a separate glass circle (<code>Tab(role: .search)</code>, the iOS 26 convention). Selecting it shows Spojenia: the map appears, the search circle grows into a field, and the other tabs collapse into a circle on the left. Pick a tab and it reverses.</li>
+        <li><b>Android</b>: a navigation bar with <b>Odchody · Lístky · Ďalšie</b> and a <b>search FAB at bottom right</b>, the primary action in its Material position. It expands into Spojenia with a container transform, and back returns.</li>
+        <li><b>Live trip strip</b> above the bar whenever you're tracking a ride (iOS <code>tabViewBottomAccessory</code>). Tap it to open <b>Jazda</b>.</li>
+        <li>Nothing you can tap lives at the top of the screen. It only shows titles and status.</li>
       </ul>
     </div>
     <div class="card small">
-      <h4>Your default view</h4>
-      <p class="muted">Onboarding asks one question: <b>"Čo chcete vidieť po otvorení aplikácie?"</b> The answer is <i>Mapa a vyhľadávanie</i> or <i>Moje odchody</i>. You can change it later in Ďalšie › Prispôsobiť. If someone opens Odchody first 4 out of 5 times, the app offers to switch, once, as a dismissible card.</p>
-      <h4>Places (Domov, Práca, Škola, or your own)</h4>
-      <p class="muted" style="margin:0">A place is a name plus 1–4 stops, each with optional line and direction filters ("only R4, R6 toward the centre"). Places are sorted by <b>walking time from where you are</b>. Location is asked only when you turn on "Najbližšie navrchu"; without it, your manual order is used. Places and their timetables are saved for offline use (§4.3).</p>
+      <h4>Search is a planner, not a single line</h4>
+      <p class="muted">The field in the bar is only the entry point. Tapping it opens the <b>planner sheet</b> above the keyboard:</p>
+      <ul class="clean muted">
+        <li><b>Odkiaľ</b>: "Moja poloha" by default; tap to change; ⇅ swaps. <b>Kam</b> has the focus.</li>
+        <li>Chips: <b>Odchod teraz ▾</b> (departure or arrival, time) · <b>Spoje IDS ▾</b> (network) · <b>Filtre</b> (max transfers, transfer time, travel time, step-free).</li>
+        <li>Suggestions: <b>your places</b> with live travel times, then favourites and history. One tap on "Práca" → results.</li>
+        <li>On the map: long-press drops a pin with "Odtiaľto" / "Sem" (§3.1: choosing a place on the map).</li>
+      </ul>
     </div>
   </div>
 
+  <h3>Default view</h3>
+  <p class="muted small">Onboarding asks <b>"Čo chcete vidieť po otvorení aplikácie?"</b> The answer is <i>Moje odchody</i> or <i>Spojenia a mapa</i>. You can change it in Ďalšie › Prispôsobiť. If someone always goes to the other one first, the app suggests switching, once.</p>
+
   <h3>How this still satisfies §4.6</h3>
-  <p class="muted small">The spec requires five sections "on the main screen". All five are there, but each one is placed by how often it's used instead of each getting a tab. This is a reading of the spec that <b>needs IDS sign-off</b>. The fallback is a "Hodnotenie dopravy" row pinned at the top of Ďalšie.</p>
+  <p class="muted small">All five required sections are on the main screen, each placed by how often it's used. This reading of the spec <b>needs IDS sign-off</b>. The fallback is a "Hodnotenie dopravy" row pinned at the top of Ďalšie.</p>
   <div class="tbl-wrap"><table>
     <tr><th>Required (§4.6)</th><th>Where it lives</th><th>Why</th></tr>
-    <tr><td>Vyhľadať spojenie</td><td>Search dock, visible on every screen; place chips on Mapa</td><td>The most important action is never more than one tap away</td></tr>
-    <tr><td>Mapa</td><td>Home canvas behind search and results; live vehicles</td><td>A map is context, not a destination people go to on purpose</td></tr>
-    <tr><td>Zastávky a linky</td><td><b>Odchody</b> tab (your stops); any stop or line through search ("R6", "Hlavná")</td><td>Nobody browses a stop catalogue. People check <i>their</i> stops.</td></tr>
-    <tr><td>Cestovné lístky</td><td><b>Lístky</b> tab + the active-trip mini bar</td><td>Ticket and live trip belong together</td></tr>
-    <tr><td>Hodnotenie dopravy</td><td><b>Prompt after the ride ends</b> (mini bar + notification), the ticket detail, a stop's detail, and Ďalšie</td><td>Nobody goes to rate a ride on their own; people answer at the moment it ends. This also gives the rating module better data (§5: GPS and time are fresh).</td></tr>
+    <tr><td>Vyhľadať spojenie</td><td>Search tab / FAB, bottom right, on every tab</td><td>The main action is always one tap away, in thumb reach</td></tr>
+    <tr><td>Mapa</td><td>The canvas of Spojenia: live vehicles, picking a point, results</td><td>A map is useful when planning, and rarely on its own</td></tr>
+    <tr><td>Zastávky a linky</td><td><b>Odchody</b> (your stops); any stop or line through search</td><td>People check <i>their</i> stops; nobody browses a catalogue</td></tr>
+    <tr><td>Cestovné lístky</td><td><b>Lístky</b> tab</td><td>A ticket check has to be predictable, so it stays in one fixed place</td></tr>
+    <tr><td>Hodnotenie dopravy</td><td>Prompt when the ride ends (in the live trip strip), plus Jazda, ticket detail and Ďalšie</td><td>People rate when asked at the right moment; the GPS and time are fresh (§5)</td></tr>
   </table></div>
 
   <h3>Platform translation</h3>
   <div class="tbl-wrap"><table>
     <tr><th>Concern</th><th>iOS 26 · SwiftUI</th><th>Android · Material 3 Expressive</th><th>Web</th></tr>
-    <tr><td><b>Dock</b></td><td><code>GlassEffectContainer</code> with a search field and tab capsule; <code>.glassEffectID</code> drives the morph between states</td><td>Bottom <code>SearchBar</code> + <code>ShortNavigationBar</code>; <code>SharedTransitionLayout</code> morphs the field into a circle</td><td>Floating search card over the map (desktop); bottom dock (mobile web)</td></tr>
-    <tr><td><b>Active trip</b></td><td><code>tabViewBottomAccessory</code> + Live Activity</td><td>Persistent bar above the navigation + Live Update notification</td><td>Banner in the planner</td></tr>
-    <tr><td><b>Map</b></td><td>MapKit; results in a sheet with detents</td><td><b>MapLibre</b> (same for GMS and HMS) + <code>BottomSheetScaffold</code></td><td>MapLibre GL</td></tr>
-    <tr><td><b>Network switch</b></td><td colspan="3">A chip inside search ("Spoje IDS ▾"). The default is set in Prispôsobiť, and the state is global.</td></tr>
-    <tr><td><b>Widgets</b></td><td>Home and Lock Screen widget per place; Siri: "Kedy mi ide autobus do práce?"</td><td>Glance widget per place; App Actions</td><td>—</td></tr>
-    <tr><td><b>Pay</b></td><td colspan="2">From credit; top-up through the bank gateway (Apple Pay / Google Pay only if the gateway supports them)</td><td>—</td></tr>
-    <tr><td><b>Push</b></td><td>APNs</td><td>FCM / HMS Push Kit</td><td>e-mail</td></tr>
-    <tr><td><b>Permissions</b></td><td colspan="3">Just in time (§4.1): location when you turn on "Najbližšie navrchu" or tap "Moja poloha"; camera when rating with a paper ticket</td></tr>
+    <tr><td><b>Search entry</b></td><td><code>Tab(role: .search)</code>: trailing circle → bottom field; the other tabs collapse</td><td>FAB bottom right → container transform to Spojenia</td><td>Search card over the map, top left (desktop convention); bottom on mobile web</td></tr>
+    <tr><td><b>Planner</b></td><td>Sheet above the keyboard; detents for results</td><td><code>SearchView</code> + <code>BottomSheetScaffold</code></td><td>Side panel</td></tr>
+    <tr><td><b>Live trip</b></td><td><code>tabViewBottomAccessory</code> → Jazda (full-screen sheet) + Live Activity</td><td>Bar above the navigation → Jazda + Live Update</td><td>Banner in the planner</td></tr>
+    <tr><td><b>Map</b></td><td>MapKit</td><td>MapLibre (same for GMS and HMS)</td><td>MapLibre GL</td></tr>
+    <tr><td><b>Widgets</b></td><td>A widget per place; Siri: "Kedy mi ide autobus do práce?"</td><td>Glance widget per place; App Actions</td><td>—</td></tr>
+    <tr><td><b>Pay · Push · Permissions</b></td><td colspan="3">From credit, topped up through the gateway · APNs / FCM / HMS Push Kit · location and camera asked just in time (§4.1)</td></tr>
   </table></div>
 </section>
 
@@ -735,7 +778,7 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
   <div class="eyebrow">04 · Components</div>
   <h2>The network vocabulary</h2>
 
-  <h3>Live trip strip: ticket and ride together</h3>
+  <h3>Live trip strip → Jazda</h3>
   <div class="grid g2">
     <div class="card">
       <div class="trip">
@@ -749,13 +792,54 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
       </div>
     </div>
     <div class="card small muted">
-      <h4 style="color:var(--text)">One component, three sizes</h4>
+      <h4 style="color:var(--text)">One component, three sizes, one destination</h4>
       <ul class="clean">
-        <li><b>Full</b> (above): at the top of the active ticket in Lístky.</li>
-        <li><b>Mini bar</b>: line badge, "Vystúpte o 2 zast.", minutes, and a thin double track. It floats above the dock on every tab.</li>
-        <li><b>System</b>: Live Activity / Dynamic Island on iOS, Live Update on Android. Same data, same wording.</li>
-        <li>The track is <b>the red double line from the logo</b>, in the colour of the current mode. Covered distance is solid, the rest is faded, and the vehicle glides between stops. At a transfer, the strip swaps to the next leg with a short cross-fade.</li>
-        <li>VoiceOver / TalkBack read it as one sentence: "Električka R6, mešká 2 minúty, vystúpte o 2 zastávky, Staničné námestie, o 6 minút."</li>
+        <li><b>Mini bar</b> (above the tab bar): line badge, "Vystúpte o 2 zast.", minutes, and a thin double track. <b>Tap it → Jazda.</b></li>
+        <li><b>Full</b> (above): the header of the Jazda screen.</li>
+        <li><b>System</b>: Live Activity / Dynamic Island on iOS, Live Update on Android. Same data and wording, and tapping it also opens Jazda.</li>
+        <li>The track is <b>the red double line from the logo</b>, in the colour of the current mode. Covered distance is solid and the vehicle glides between stops.</li>
+        <li>Tracking a ride and holding a ticket are <b>separate</b>. You can track a ride without a ticket (time ticket, or none yet), and own a ticket for a later trip.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Jazda (ride screen)</h3>
+  <div class="grid g2">
+    <div class="card small muted">
+      <h4 style="color:var(--text)">What it answers, from top to bottom</h4>
+      <ol style="padding-left:18px;margin:0">
+        <li><b>When do I get off?</b> "Vystúpte o 2 zastávky · Staničné nám. · 6 min", in large type with the live delay.</li>
+        <li><b>Where am I?</b> A vertical timeline on the double track. Passed stops are greyed out and the vehicle glides between the current stops.</li>
+        <li><b>What's next?</b> The transfer block: walking time, "Garantovaný prestup", platform, and the next leg with its own colour.</li>
+        <li><b>Actions</b>, docked at the bottom: <b>Zobraziť lístok</b> (the ticket bought for this route), or <b>Kúpiť lístok na túto cestu</b> if there's none. A secondary "Ukončiť sledovanie" stops tracking.</li>
+      </ol>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">States</h4>
+      <p style="margin-bottom:6px"><span class="chipx ok">naživo</span> GPS data from the operator · <span class="chipx">podľa CP</span> no live data, position estimated from the timetable and labelled as such</p>
+      <p style="margin-bottom:6px"><span class="chipx warn">Tesný prestup</span> A delay eats the buffer: the app offers the next connection, which the ticket covers too (same zones and time)</p>
+      <p style="margin:0"><span class="chipx blue">Vystúpte na ďalšej</span> One stop before yours: haptic, pin pulse, and a Live Activity alert</p>
+    </div>
+  </div>
+
+  <h3>Planner sheet</h3>
+  <div class="grid g2">
+    <div class="card">
+      <div class="planner static">
+        <div class="pl-row"><span class="dot"></span><span class="muted">Odkiaľ</span><b>Moja poloha</b><span class="pl-swap"><svg width="16" height="16" fill="currentColor"><use href="#i-swap"/></svg></span></div>
+        <div class="pl-row focus"><img data-img="pin" alt="" style="height:14px"><span class="muted">Kam</span><b class="caret">Prá</b></div>
+        <div class="pl-chips"><span class="chipx blue">Odchod teraz ▾</span><span class="chipx">Spoje IDS ▾</span><span class="chipx">Filtre · 2</span></div>
+        <div class="pl-sug"><span class="pc-ic">💼</span><div><b>Práca</b><div class="op">Technická univerzita · 12 min</div></div><span class="lb tram sm">R6</span></div>
+        <div class="pl-sug"><span class="pc-ic">🕘</span><div><b>Prešov, žel. st.</b><div class="op">včera</div></div></div>
+      </div>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Speed and power in one sheet</h4>
+      <ul class="clean">
+        <li>Common case: tap search → tap "Práca" → results. <b>Two taps</b>, with Odkiaľ = Moja poloha.</li>
+        <li>All of §3.1 is there without a separate "advanced" screen: departure or arrival time, network, max transfers, transfer time, travel time.</li>
+        <li>The <b>Filtre</b> chip shows how many filters are active ("Filtre · 2"), so a forgotten filter never hides results.</li>
+        <li>Places appear here as suggestions with live travel times. That's where they help, rather than floating over the map.</li>
       </ul>
     </div>
   </div>
@@ -797,7 +881,8 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
   <p class="muted small">Motion explains what changed. Text never moves while you're trying to read it. Everything below respects Reduce Motion: the time lock falls back to the seconds clock and the colour of the day, and other transitions become cross-fades.</p>
   <div class="tbl-wrap"><table>
     <tr><th>Moment</th><th>Motion</th><th>Timing</th></tr>
-    <tr><td>Dock: search ↔ tabs</td><td>Glass morph; the field shrinks into a circle as labels unfold</td><td>450 ms spring with slight overshoot</td></tr>
+    <tr><td>Search tab ↔ tabs</td><td>Glass morph: the trailing circle grows into a field while the tabs collapse into a circle (Android: FAB container transform)</td><td>450 ms spring with slight overshoot</td></tr>
+    <tr><td>Strip → Jazda</td><td>The mini bar expands into the Jazda header; the timeline slides in under it</td><td>400 ms</td></tr>
     <tr><td>Route selected</td><td><b>Double line draws itself</b> from origin to destination; alternatives fade to grey</td><td>700 ms ease-out</td></tr>
     <tr><td>Vehicles</td><td>Glide between GPS updates along the route; a stale marker fades to a dashed outline</td><td>linear, matched to the update interval</td></tr>
     <tr><td>Departure leaves</td><td>Row collapses, the list slides up; "teraz" pulses before that</td><td>300 ms; pulse at 1 Hz</td></tr>
@@ -907,13 +992,13 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
 <!-- ============ SCREENS ============ -->
 <section id="screens">
   <div class="eyebrow">05 · Key screens</div>
-  <h2>Map, departures, ticket: one dock</h2>
-  <p class="muted">The first phone is interactive. Tap the dock or wait for it to cycle: <b>Mapa</b> (search expanded) → <b>Odchody</b> → <b>Lístky</b>. Watch how the search field gives up its space to the tab labels.</p>
+  <h2>Departures, planner, ride, ticket</h2>
+  <p class="muted">The first phone is interactive. Tap around or wait for it to cycle: <b>Odchody</b> → tap 🔍 in the corner (<b>Spojenia</b>: the map appears, search grows into a field above the planner, the tabs collapse) → tap the live trip strip (<b>Jazda</b>) → <b>Zobraziť lístok</b> (<b>Lístky</b>).</p>
 
   <div class="devices phones">
     <!-- A · iOS interactive -->
     <div class="dev-col">
-      <div class="phone ios"><div class="screen demo" id="demo" data-view="map">
+      <div class="phone ios"><div class="screen demo" id="demo" data-view="dep">
 
         <div class="view v-map">
           <div class="map">
@@ -931,8 +1016,12 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
               <circle cx="150" cy="215" r="18" fill="#0066B3" opacity=".18"/><circle cx="150" cy="215" r="7" fill="#0066B3" stroke="#fff" stroke-width="3"/>
             </svg>
           </div>
-          <div class="places">
-            <span class="glass">🏠 Domov <b>24 min</b></span><span class="glass">💼 Práca <b>12 min</b></span><span class="glass">🎓 Škola</span>
+          <div class="planner glass">
+            <div class="pl-row"><span class="dot"></span><span class="muted">Odkiaľ</span><b>Moja poloha</b><span class="pl-swap"><svg width="16" height="16" fill="currentColor"><use href="#i-swap"/></svg></span></div>
+            <div class="pl-chips"><span class="chipx blue">Odchod teraz ▾</span><span class="chipx">Spoje IDS ▾</span><span class="chipx">Filtre</span></div>
+            <div class="pl-sug"><span class="pc-ic">💼</span><div><b>Práca</b><div class="op">Technická univerzita</div></div><b class="pl-t">12 min</b></div>
+            <div class="pl-sug"><span class="pc-ic">🏠</span><div><b>Domov</b><div class="op">Sídlisko KVP</div></div><b class="pl-t">24 min</b></div>
+            <div class="pl-sug"><span class="pc-ic">🕘</span><div><b>Prešov, žel. st.</b><div class="op">včera</div></div></div>
           </div>
         </div>
 
@@ -941,7 +1030,7 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
           <div class="ios-nav" style="padding-bottom:2px"><span></span><span style="color:var(--accent);font-weight:700;font-size:15px">Upraviť</span></div>
           <div class="ios-large">Odchody</div>
           <div class="pcard">
-            <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 🚶 3 min</div><b>Technická univerzita</b></div><span class="pc-dir">→ centrum</span></div>
+            <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 3 min</div><b>Technická univ.</b></div><span class="pc-dir">→ centrum</span></div>
             <div class="deplist" id="deplist">
               <div class="dep"><span class="lb tram">R4</span><div class="dest"><b>Nám. osloboditeľov</b></div><div class="t"><b class="rt now">teraz</b></div></div>
               <div class="dep"><span class="lb tram">R6</span><div class="dest"><b>Ťahanovce</b></div><div class="t"><b class="rt">4 min</b></div></div>
@@ -949,7 +1038,7 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
             </div>
           </div>
           <div class="pcard">
-            <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Práca · 🚶 5 min</div><b>Letná</b></div><span class="pc-dir">→ KVP</span></div>
+            <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Práca · 5 min</div><b>Letná</b></div><span class="pc-dir">→ KVP</span></div>
             <div class="dep"><span class="lb trolley">71</span><div class="dest"><b>Prešov, nám.</b></div><div class="t"><b class="rt">7 min</b></div></div>
           </div>
           <div class="pcard dim">
@@ -957,43 +1046,64 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
           </div>
         </div>
 
+        <div class="view v-ride">
+          <div style="height:44px"></div>
+          <div class="ios-nav"><span class="grab" style="margin:0 auto"></span></div>
+          <div class="ride-h">
+            <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">R6</span><b>smer Ťahanovce</b><span class="st warn" style="margin-left:auto">+2 min</span></div>
+            <div class="ride-big">Vystúpte o 2 zastávky</div>
+            <div class="muted small">Staničné námestie · 14:21 · o 6 min</div>
+          </div>
+          <div class="vtl">
+            <div class="vs past" style="--c:var(--mode-tram)"><span class="tm">14:06</span>Námestie osloboditeľov</div>
+            <div class="vs cur" style="--c:var(--mode-tram)"><span class="tm">14:12</span>Hlavná<span class="vveh"></span></div>
+            <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Dom umenia</div>
+            <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b> <span class="chipx blue" style="height:20px">vystúpte</span></div>
+            <div class="vs walk"><span class="chipx ok" style="height:20px">✓ Garantovaný prestup</span> <span class="muted">🚶 6 min</span></div>
+            <div class="vs" style="--c:var(--mode-train)"><span class="tm">14:27</span><span class="lb train sm">Os 8813</span> → <b>Prešov</b></div>
+          </div>
+          <div class="ride-cta">
+            <div class="ios-btn" data-go="ticket" style="margin:0"><svg width="18" height="18" fill="currentColor"><use href="#i-ticket"/></svg>Zobraziť lístok</div>
+            <div class="ride-sec">Ukončiť sledovanie</div>
+          </div>
+        </div>
+
         <div class="view v-ticket">
           <div style="height:44px"></div>
-          <div class="ios-large" style="padding-bottom:4px">Lístky</div>
-          <div class="trip" style="margin:0 12px 10px">
-            <div class="trip-h"><span class="lb tram">R6</span><b>smer Ťahanovce</b><span class="st warn" style="margin-left:auto">+2 min</span></div>
-            <div class="trip-track" style="--c:var(--mode-tram)"><i style="left:0"></i><i style="left:33%"></i><i style="left:66%"></i><img data-img="pin" alt="" class="trip-pin"><span class="trip-veh"></span></div>
-            <div class="trip-f"><b>Vystúpte o 2 zastávky</b><span>Staničné nám. · 6 min</span></div>
-          </div>
+          <div class="ios-nav"><span></span><span style="color:var(--accent);font-weight:700;font-size:14px">Kredit 11,40 €</span></div>
+          <div class="ios-large" style="padding-bottom:6px">Lístky</div>
           <div class="ticket" style="margin:0 12px">
             <div class="lock"><div class="code" style="background:#5B3A9B">K</div><div style="font-size:11px;font-weight:900;letter-spacing:.08em">ČASOVÁ ZÁMKA · PIATOK</div><div class="lock-clock js-clock">14:21:07</div><div class="runner"></div></div>
             <div class="ticket-body" style="display:flex;gap:12px;align-items:center">
               <div class="qr js-qr" style="width:92px;height:92px;margin:0;flex:none"></div>
-              <div class="small"><span class="chipx ok">● Platný · <span class="js-left">58:12</span></span><div class="muted" style="margin-top:6px">Žiak/študent · 1,20 €<br>Zóny 100 · 101 · 200</div><div style="color:var(--accent);font-weight:700;margin-top:4px">Detail cesty ›</div></div>
+              <div class="small"><span class="chipx ok">● Platný · <span class="js-left">58:12</span></span><div class="muted" style="margin-top:6px">Študent · 1,20 €<br>Zóny 100·101·200</div></div>
             </div>
+          </div>
+          <div class="m-label" style="padding-top:12px">Nadchádzajúce</div>
+          <div class="ios-group" style="background:var(--surface-2)">
+            <div class="ios-row"><span class="lb bus sm">23</span><div><b style="font-size:14px">Dnes 17:40 · Práca → Domov</b><div class="op">aktivuje sa o 17:35</div></div><span class="r">›</span></div>
           </div>
         </div>
 
         <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
 
-        <div class="acc glass" data-go="ticket">
+        <div class="acc glass" data-go="ride">
           <span class="lb tram sm">R6</span>
           <div class="acc-t"><b>Vystúpte o 2 zast.</b><span class="mini-track"><span></span></span></div>
           <b class="acc-m">6 min</b>
         </div>
 
         <div class="dock">
-          <div class="dock-search glass" data-go="map"><svg><use href="#i-search"/></svg><span class="ds-t">Kam idete?</span></div>
           <div class="dock-tabs glass">
-            <button data-go="map" aria-label="Mapa"><svg><use href="#i-map"/></svg><span>Mapa</span></button>
-            <button data-go="dep" aria-label="Odchody"><svg><use href="#i-dep"/></svg><span>Odchody</span></button>
+            <button data-go="dep" class="last" aria-label="Odchody"><svg><use href="#i-dep"/></svg><span>Odchody</span></button>
             <button data-go="ticket" aria-label="Lístky"><svg><use href="#i-ticket"/></svg><span>Lístky</span></button>
             <button data-go="more" aria-label="Ďalšie"><svg><use href="#i-more"/></svg><span>Ďalšie</span></button>
           </div>
+          <div class="dock-search glass" data-go="map" role="button" aria-label="Spojenia"><svg><use href="#i-search"/></svg><span class="ds-t">Kam idete?</span></div>
         </div>
         <div class="home-ind"></div>
       </div></div>
-      <div class="dev-cap"><b>iOS · The dock (interactive)</b>On Mapa, search is the hero and place chips give one-tap routes. On other tabs it shrinks to a circle. The active-trip mini bar floats above the dock everywhere except Lístky, which shows the full trip.</div>
+      <div class="dev-cap"><b>iOS · Interactive</b>Search is the trailing tab. On Spojenia it grows into the field above a planner sheet, and the tabs collapse into a circle showing your last tab. The live trip strip opens Jazda, which links to the ticket.</div>
     </div>
 
     <!-- B · iOS customise -->
@@ -1005,8 +1115,8 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
           <div class="ios-nav"><span></span><b>Prispôsobiť</b><span style="color:var(--accent);font-weight:700">Hotovo</span></div>
           <div class="m-label" style="padding-top:14px">Po otvorení zobraziť</div>
           <div class="pick">
-            <div class="on"><div class="pk-art map-art"><span></span></div>Mapa a vyhľadávanie</div>
-            <div><div class="pk-art list-art"><i></i><i></i><i></i></div>Moje odchody</div>
+            <div class="on"><div class="pk-art list-art"><i></i><i></i><i></i></div>Moje odchody</div>
+            <div><div class="pk-art map-art"><span></span></div>Spojenia a mapa</div>
           </div>
           <div class="m-label">Moje miesta</div>
           <div class="ios-group" style="background:var(--surface-2)">
@@ -1017,15 +1127,15 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
           </div>
           <div class="ios-group" style="background:var(--surface-2)">
             <div class="ios-row">Najbližšie miesto navrchu<span class="r"><span class="tgl on"></span></span></div>
-            <div class="ios-row">Predvolená sieť<span class="r">Spoje IDS Východ ›</span></div>
+            <div class="ios-row">Predvolená sieť<span class="r">Spoje IDS ›</span></div>
           </div>
         </div>
         <div class="home-ind"></div>
       </div></div>
-      <div class="dev-cap"><b>iOS · Prispôsobiť</b>Pick the default view, manage places (each one a set of stops with line and direction filters), choose nearest-first sorting and the default network.</div>
+      <div class="dev-cap"><b>iOS · Prispôsobiť</b>The default view, places (each a set of stops with line and direction filters), nearest-first sorting and the default network.</div>
     </div>
 
-    <!-- C · Android map + results -->
+    <!-- C · Android Spojenia results -->
     <div class="dev-col">
       <div class="phone android"><div class="screen">
         <div class="map">
@@ -1046,10 +1156,14 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
           </svg>
         </div>
         <div class="sbar" style="position:relative"><span>9:41</span><span class="ic"><i></i></span></div>
-        <div class="a-sheet">
+        <div class="a-sheet" style="bottom:0;padding-bottom:20px">
           <div class="grab"></div>
-          <div class="a-route"><span class="dot"></span>Moja poloha <span class="sep">→</span> 💼 Práca<span style="margin-left:auto;color:var(--text-2)"><svg width="18" height="18" fill="currentColor"><use href="#i-swap"/></svg></span></div>
-          <div style="display:flex;gap:6px;padding:0 14px 6px"><span class="chipx blue">Teraz ▾</span><span class="chipx">Spoje IDS ▾</span><span class="chipx">Filtre</span></div>
+          <div class="a-od">
+            <div><span class="dot"></span>Moja poloha</div>
+            <div><img data-img="pin" alt="" style="height:13px">💼 Práca</div>
+            <span class="pl-swap"><svg width="18" height="18" fill="currentColor"><use href="#i-swap"/></svg></span>
+          </div>
+          <div style="display:flex;gap:6px;padding:0 14px 6px"><span class="chipx blue">Odchod teraz ▾</span><span class="chipx">Spoje IDS ▾</span><span class="chipx">Filtre</span></div>
           <div class="m-card sel" style="margin:6px 12px">
             <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:19px;font-weight:900;font-variant-numeric:tabular-nums">14:02 – 14:24</b><b>22 min</b></div>
             <div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>3</span><span class="sep">›</span><span class="lb tram sm">R6</span><span class="sep">›</span><span class="lb train sm">Os 8813</span></div>
@@ -1059,39 +1173,61 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
           <div class="m-card" style="margin:6px 12px;padding:10px 15px">
             <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px;font-weight:900;font-variant-numeric:tabular-nums">14:08 – 14:31</b><span class="legs" style="margin:0"><span class="lb bus sm">23</span></span></div>
           </div>
+          <div style="display:flex;gap:8px;padding:6px 12px 0"><div class="m-btn tonal" style="margin:0;flex:1;height:48px">Sledovať</div><div class="m-btn" style="margin:0;flex:1.4;height:48px">Kúpiť · 1,20 €</div></div>
         </div>
-        <div class="a-nav">
-          <div class="on"><i><svg><use href="#i-map"/></svg></i>Mapa</div><div><i><svg><use href="#i-dep"/></svg></i>Odchody</div><div><i><svg><use href="#i-ticket"/></svg></i>Lístky</div><div><i><svg><use href="#i-more"/></svg></i>Ďalšie</div>
-        </div>
+        <div class="a-back">←</div>
       </div></div>
-      <div class="dev-cap"><b>Android · From a place chip to results</b>One tap on "Práca": the selected route draws itself as the double line, the alternative fades to grey, and the results sheet comes up from the bottom search. Navigation stays in the short bottom bar.</div>
+      <div class="dev-cap"><b>Android · Spojenia (from the search FAB)</b>The FAB expands into this screen. Odkiaľ and Kam are separate fields with swap, plus time, network and filter chips. The selected route draws itself as the double line. From a result you can track it or buy a ticket.</div>
     </div>
 
-    <!-- D · Android ticket + live trip -->
+    <!-- D · Android Jazda -->
+    <div class="dev-col">
+      <div class="phone android"><div class="screen">
+        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
+        <div class="m-tbar"><span>✕</span><b style="font-size:18px">Jazda</b><span class="chipx ok" style="height:22px">naživo</span></div>
+        <div class="ride-h" style="padding-top:2px">
+          <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">R6</span><b>smer Ťahanovce</b><span class="st warn" style="margin-left:auto">+2 min</span></div>
+          <div class="ride-big">Vystúpte o 2 zastávky</div>
+          <div class="muted small">Staničné námestie · 14:21 · o 6 min</div>
+        </div>
+        <div class="vtl">
+          <div class="vs past" style="--c:var(--mode-tram)"><span class="tm">14:06</span>Námestie osloboditeľov</div>
+          <div class="vs cur" style="--c:var(--mode-tram)"><span class="tm">14:12</span>Hlavná<span class="vveh"></span></div>
+          <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Dom umenia</div>
+          <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
+          <div class="vs walk"><span class="chipx ok" style="height:20px">✓ Garantovaný prestup</span> <span class="muted">🚶 6 min</span></div>
+          <div class="vs" style="--c:var(--mode-train)"><span class="tm">14:27</span><span class="lb train sm">Os 8813</span> → <b>Prešov</b></div>
+        </div>
+        <div class="ride-cta" style="bottom:20px">
+          <div class="m-btn" style="margin:0"><svg width="20" height="20" fill="currentColor"><use href="#i-ticket"/></svg>Zobraziť lístok</div>
+          <div class="ride-sec">Ukončiť sledovanie</div>
+        </div>
+      </div></div>
+      <div class="dev-cap"><b>Android · Jazda</b>Opens from the live trip strip or the Live Update. The answer comes first ("Vystúpte o 2 zastávky"), then the timeline with the vehicle gliding along the double track. The ticket is one tap away but is a separate screen.</div>
+    </div>
+
+    <!-- E · Android Lístky -->
     <div class="dev-col">
       <div class="phone android"><div class="screen" style="background:var(--surface-2)">
         <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
         <div class="m-tbar"><b style="font-size:24px;font-weight:900">Lístky</b><span style="font-size:14px;color:var(--accent);font-weight:700">Kredit 11,40 €</span></div>
-        <div class="trip" style="margin:4px 12px 10px">
-          <div class="trip-h"><span class="lb tram">R6</span><b>smer Ťahanovce</b><span class="st warn" style="margin-left:auto">+2 min</span></div>
-          <div class="trip-track" style="--c:var(--mode-tram)"><i style="left:0"></i><i style="left:33%"></i><i style="left:66%"></i><img data-img="pin" alt="" class="trip-pin"><span class="trip-veh"></span></div>
-          <div class="trip-stops"><span>Nám. oslob.</span><span>Hlavná</span><span>Dom umenia</span><span><b>Staničné</b></span></div>
-          <div class="trip-f"><b>Vystúpte o 2 zastávky</b><span>6 min</span></div>
-          <div class="small muted" style="margin-top:4px">Potom <span class="lb train sm">Os 8813</span> z koľaje 3 · prestup 6 min</div>
-        </div>
+        <div class="m-label" style="padding-top:2px">Aktívny</div>
         <div class="ticket" style="margin:0 12px">
           <div class="lock"><div class="code" style="background:#5B3A9B">K</div><div style="font-size:11px;font-weight:900;letter-spacing:.08em">ČASOVÁ ZÁMKA · PIATOK</div><div class="lock-clock js-clock">14:21:07</div><div class="runner"></div></div>
           <div class="ticket-body">
             <div style="display:flex;justify-content:space-between;align-items:center"><span class="chipx ok">● Platný · <span class="js-left">58:12</span></span><span class="small muted">do 15:31</span></div>
             <div class="qr js-qr" style="margin-top:8px"></div>
-            <div class="small muted" style="text-align:center">Platí aj na iné spoje v rámci zón a času</div>
+            <div class="small" style="text-align:center;color:var(--accent);font-weight:700">🚋 Sledovať jazdu R6 → Os 8813 ›</div>
           </div>
         </div>
+        <div class="m-label">Nadchádzajúce</div>
+        <div class="m-card" style="display:flex;gap:10px;align-items:center;margin-top:0"><span class="lb bus">23</span><div style="flex:1"><b style="font-size:14px">Dnes 17:40 · Práca → Domov</b><div class="op">aktivuje sa o 17:35</div></div>›</div>
+        <div class="a-fab"><svg width="22" height="22" fill="currentColor"><use href="#i-search"/></svg></div>
         <div class="a-nav">
-          <div><i><svg><use href="#i-map"/></svg></i>Mapa</div><div><i><svg><use href="#i-dep"/></svg></i>Odchody</div><div class="on"><i><svg><use href="#i-ticket"/></svg></i>Lístky</div><div><i><svg><use href="#i-more"/></svg></i>Ďalšie</div>
+          <div><i><svg><use href="#i-dep"/></svg></i>Odchody</div><div class="on"><i><svg><use href="#i-ticket"/></svg></i>Lístky</div><div><i><svg><use href="#i-more"/></svg></i>Ďalšie</div>
         </div>
       </div></div>
-      <div class="dev-cap"><b>Android · Lístok + live trip</b>The trip strip sits above the ticket: delay, where you are, stops until you get off, and the next connection. The ticket stays calm below: time lock, QR, validity. The full timeline is one tap away.</div>
+      <div class="dev-cap"><b>Android · Lístky</b>A dedicated, predictable place: the active ticket (time lock, QR), then upcoming tickets. The link to the live ride is a quiet text line. The search FAB sits bottom right on every tab.</div>
     </div>
     <!-- iOS purchase -->
     <div class="dev-col">
@@ -1123,26 +1259,7 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
       <div class="dev-cap"><b>iOS · Buy (sheet)</b>The ticket is tied to the selected route. Only the basic and the student fare are offered. Paid from credit, with the balance change shown before confirming.</div>
     </div>
 
-    <!-- Android rating -->
-    <div class="dev-col">
-      <div class="phone android"><div class="screen">
-        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
-        <div class="m-tbar"><span>✕</span><b style="font-size:22px;font-weight:900">Ohodnotiť jazdu</b></div>
-        <div class="m-seg"><div class="on">✓ Preprava</div><div>Zastávka</div></div>
-        <div class="m-card" style="display:flex;gap:10px;align-items:center">
-          <span class="lb regional">701</span><div style="flex:1"><b style="font-size:14px">SAD Prešov, a.s.</b><div class="op">Priradený platný e-lístok · 14:32 · 📍 GPS</div></div>
-        </div>
-        <div style="padding:2px 16px">
-          <div class="rate">Správanie vodiča<span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
-          <div class="rate">Čistota vozidla<span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
-          <div class="rate">Teplota vo vozidle<span class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
-                    <div class="rate" style="color:var(--text-2)">+ 8 ďalších kritérií ›</div>
-        </div>
-        <div style="padding:4px 12px"><div class="m-btn tonal" style="margin:0;height:44px;font-size:14px"><svg width="20" height="20" fill="currentColor"><use href="#i-cam"/></svg>Papierový lístok? Odfotiť</div></div>
-        <div style="position:absolute;bottom:24px;left:0;right:0"><div class="m-btn">Odoslať hodnotenie</div></div>
-      </div></div>
-      <div class="dev-cap"><b>Android · Ohodnotiť jazdu (from the prompt)</b>Opens from the post-ride prompt or the ticket detail. Time, GPS, the e-ticket and the operator are already filled in. With a paper ticket, photograph it instead.</div>
-    </div>
+
   </div>
 
   <h3>Glanceable</h3>
@@ -1317,7 +1434,7 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
     <tr><td>4.1</td><td>Native; Google Play, App Store, <b>AppGallery</b>; SK + EN; just-in-time permissions; crash reporting</td><td>GMS/HMS flavours with MapLibre; SK/EN copy decks; explanation screen before each permission prompt</td></tr>
     <tr><td>4.3 / 4.4</td><td>Search online only; offline saved stops, timetables and messages; update "always" or "Wi-Fi only"</td><td>Offline banners; "Uložiť offline" on stops; a setting in Nastavenia</td></tr>
     <tr><td>4.5</td><td>Registration (name, surname, e-mail, password); forgot password; remember me</td><td>Native auth forms with password-manager autofill (<code>textContentType</code> / autofill hints)</td></tr>
-    <tr><td>4.6</td><td>Five main sections, Ďalšie menu, onboarding with "preskočiť"</td><td>All five placed by how often they are used: search dock over the map, Odchody, Lístky, contextual rating, Ďalšie tab. Onboarding includes the default-view choice. <b>Needs IDS sign-off.</b></td></tr>
+    <tr><td>4.6</td><td>Five main sections, Ďalšie menu, onboarding with "preskočiť"</td><td>All five on the main screen, placed by how often they are used: search (bottom right) with the map, Odchody, Lístky, contextual rating, Ďalšie tab. Onboarding includes the default-view choice. <b>Needs IDS sign-off.</b></td></tr>
     <tr><td>5</td><td>Rating of trips and stops, GPS required, photo of paper ticket or stop, configurable criteria, feature flag</td><td>Post-ride prompt (one tap) + full form; behind a feature flag; scale driven by the admin</td></tr>
   </table></div>
 </section>
@@ -1396,11 +1513,14 @@ setInterval(()=>{
 document.querySelectorAll('.lock').forEach(l=>l.onclick=()=>l.style.filter=l.style.filter?'':'invert(1)');
 
 const demo=document.getElementById('demo');
-const order=['map','dep','ticket'];
-const show=v=>{if(!order.includes(v))return;demo.dataset.view=v;demo.querySelectorAll('.dock-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.go===v))};
-let auto=reduced?null:setInterval(()=>show(order[(order.indexOf(demo.dataset.view)+1)%order.length]),3800);
+const order=['dep','map','ride','ticket'];
+const show=v=>{if(!order.includes(v))return;demo.dataset.view=v;
+  if(v==='dep'||v==='ticket')demo.querySelectorAll('.dock-tabs button').forEach(b=>b.classList.toggle('last',b.dataset.go===v));
+  demo.querySelectorAll('.dock-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.go===v))};
+let auto=reduced?null:setInterval(()=>show(order[(order.indexOf(demo.dataset.view)+1)%order.length]),4200);
 demo.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',()=>{clearInterval(auto);auto=null;show(el.dataset.go)}));
-show('map');
+const qv=new URLSearchParams(location.search).get('view');
+if(qv){clearInterval(auto);auto=null;show(qv)}else show('dep');
 
 const list=document.getElementById('deplist');
 const next=[['tram','R4','Nám. osloboditeľov','16 min'],['trolley','71','Prešov, nám.','19 min'],['tram','R6','Ťahanovce','22 min']];
