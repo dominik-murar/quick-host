@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDS Východ — Design System sketch</title>
+<style>
+/* ---------- Tokens ---------- */
+:root{
+  --brand-900:#062F57; --brand-700:#0A4D8C; --brand-500:#1F6FD1; --brand-100:#E3EEFB;
+  --dawn-600:#D9530F; --dawn-500:#F26B1D; --dawn-100:#FEEBDD;
+
+  --mode-tram:#C8202A; --mode-trolley:#17804A; --mode-bus:#1F63C4;
+  --mode-regional:#9A5B00; --mode-train:#6A3FB5; --mode-night:#2B2F6B;
+
+  --ok:#14804A; --warn:#B25E00; --crit:#C11F2A; --info:#1F63C4;
+
+  --bg:#F6F7F9; --surface:#FFFFFF; --surface-2:#EEF1F5; --line:#D9DEE5;
+  --text:#0E1726; --text-2:#4A5568; --text-3:#6B7686;
+
+  --r-xs:4px; --r-s:8px; --r-m:12px; --r-l:20px; --r-xl:28px;
+  --sp:4px;
+  --shadow:0 1px 2px rgba(14,23,38,.06),0 4px 16px rgba(14,23,38,.06);
+  --doc-font:system-ui,-apple-system,"Segoe UI",Roboto,"Inter",sans-serif;
+  --ios-font:-apple-system,"SF Pro Text","SF Pro",system-ui,sans-serif;
+  --and-font:"Google Sans","Roboto Flex",Roboto,system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+}
+[data-theme=dark]{
+  --brand-100:#13253D; --dawn-100:#3A2214;
+  --bg:#0B1018; --surface:#141B26; --surface-2:#1C2533; --line:#2A3546;
+  --text:#EEF2F7; --text-2:#B4BFCD; --text-3:#8A96A8;
+  --mode-tram:#E5484D; --mode-trolley:#2EA866; --mode-bus:#4C8DF0;
+  --mode-regional:#D08A1E; --mode-train:#9B7BE0; --mode-night:#6C72C8;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.55 var(--doc-font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+a{color:var(--brand-500)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+code{background:var(--surface-2);padding:1px 5px;border-radius:4px}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em}
+h2{font-size:28px;letter-spacing:-.01em;margin-top:8px}
+h3{font-size:18px;margin-top:28px}
+p{margin:0 0 1em;max-width:72ch}
+.muted{color:var(--text-2)}
+.small{font-size:13px}
+
+/* ---------- Layout ---------- */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px;margin:auto;display:flex;align-items:center;gap:20px;padding:10px 24px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em}
+.logo-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(160deg,var(--dawn-500) 0 38%,var(--brand-700) 38%);position:relative;overflow:hidden}
+.logo-mark::after{content:"";position:absolute;left:5px;right:5px;top:6px;height:10px;border-radius:10px 10px 0 0;background:#FFD7B8}
+.top nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
+.top nav a{color:var(--text-2);text-decoration:none}
+.top nav a:hover{color:var(--text)}
+.toggle{margin-left:auto;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+main{max-width:1240px;margin:auto;padding:0 24px 80px}
+section{padding:56px 0 8px;border-bottom:1px solid var(--line)}
+section:last-child{border:0}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dawn-600)}
+[data-theme=dark] .eyebrow{color:var(--dawn-500)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);padding:18px;box-shadow:var(--shadow)}
+.card h4{font-size:15px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2);letter-spacing:.02em}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2)}
+tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto}
+
+/* ---------- Hero ---------- */
+.hero{padding:64px 0 40px;display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(36px,5vw,58px);letter-spacing:-.03em;margin:.2em 0 .3em}
+.hero h1 span{background:linear-gradient(90deg,var(--dawn-500),var(--brand-500));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:18px;color:var(--text-2)}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.hero-art{aspect-ratio:1.1;border-radius:var(--r-xl);overflow:hidden;background:linear-gradient(180deg,#FFB27A 0%,#F26B1D 30%,#0A4D8C 70%,#062F57 100%);position:relative;box-shadow:var(--shadow)}
+.hero-art svg{position:absolute;inset:0;width:100%;height:100%}
+@media(max-width:860px){.hero{grid-template-columns:1fr}}
+
+/* ---------- Swatches ---------- */
+.sw{border-radius:var(--r-m);overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.sw .chip{height:72px;display:flex;align-items:flex-end;padding:8px 10px;color:#fff;font-weight:700;font-size:13px}
+.sw .meta{padding:8px 10px;font-size:12px;color:var(--text-2)}
+.sw .meta b{color:var(--text);display:block;font-size:13px}
+
+/* ---------- Line badges (core component) ---------- */
+.lb{--c:var(--mode-bus);display:inline-flex;align-items:center;justify-content:center;gap:3px;min-width:34px;height:24px;padding:0 7px;font:700 14px/1 var(--doc-font);color:#fff;background:var(--c);font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
+.lb.tram{--c:var(--mode-tram);border-radius:12px}
+.lb.trolley{--c:var(--mode-trolley);border-radius:6px}
+.lb.bus{--c:var(--mode-bus);border-radius:2px}
+.lb.regional{--c:var(--mode-regional);border-radius:2px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
+.lb.train{--c:var(--mode-train);border-radius:2px;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);padding:0 11px}
+.lb.night{--c:var(--mode-night);border-radius:12px;outline:2px solid #FFD54A;outline-offset:-2px}
+.lb.sm{height:20px;min-width:28px;font-size:12px;padding:0 6px}
+.lb.lg{height:32px;min-width:44px;font-size:17px}
+.lb svg{width:12px;height:12px;fill:currentColor}
+
+/* ---------- Status chips ---------- */
+.st{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st.ok{color:var(--ok)} .st.warn{color:var(--warn)} .st.crit{color:var(--crit)}
+[data-theme=dark] .st.ok{color:#3DD68C}[data-theme=dark] .st.warn{color:#F5A524}[data-theme=dark] .st.crit{color:#FF6369}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion:reduce){.live,.holo,.ticket-live::before{animation:none!important}}
+
+/* ---------- Occupancy ---------- */
+.occ{display:inline-flex;gap:2px;align-items:flex-end}
+.occ i{width:4px;border-radius:1px;background:var(--line)}
+.occ i:nth-child(1){height:6px}.occ i:nth-child(2){height:9px}.occ i:nth-child(3){height:12px}
+.occ[data-l="1"] i:nth-child(-n+1),.occ[data-l="2"] i:nth-child(-n+2){background:var(--text-2)}
+.occ[data-l="3"] i{background:var(--warn)}
+
+/* ---------- Device frames ---------- */
+.devices{display:flex;gap:28px;flex-wrap:wrap;justify-content:center;align-items:flex-start;padding:16px 0}
+.devices.phones{max-width:700px;margin:auto}
+@media(min-width:1340px){.devices.phones{max-width:none}}
+.dev-col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.dev-cap{font-size:13px;color:var(--text-2);text-align:center;max-width:300px}
+.dev-cap b{color:var(--text);display:block}
+.phone{width:300px;height:640px;border-radius:46px;padding:10px;background:#111;box-shadow:0 0 0 1px #333,0 20px 50px rgba(0,0,0,.25);position:relative;flex:none}
+.phone.android{border-radius:34px}
+.screen{width:100%;height:100%;border-radius:37px;overflow:hidden;position:relative;background:var(--surface);color:var(--text)}
+.android .screen{border-radius:26px}
+.ios .screen{font-family:var(--ios-font)}
+.android .screen{font-family:var(--and-font)}
+.sbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 30px;font-size:14px;font-weight:600;position:relative;z-index:5}
+.ios .sbar::after{content:"";position:absolute;left:50%;top:10px;transform:translateX(-50%);width:92px;height:27px;border-radius:20px;background:#000}
+.android .sbar{height:32px;font-size:12px;padding:0 18px;font-weight:500}
+.android .sbar::after{content:"";position:absolute;left:50%;top:9px;width:12px;height:12px;border-radius:50%;background:#000;transform:translateX(-50%)}
+.sbar .ic{display:flex;gap:4px;align-items:center}
+.sbar .ic i{display:block;width:16px;height:9px;border-radius:2px;border:1.5px solid currentColor;opacity:.9}
+.home-ind{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:110px;height:4px;border-radius:3px;background:var(--text);opacity:.85;z-index:9}
+
+/* map */
+.map{position:absolute;inset:0;background:#E8EDE6}
+[data-theme=dark] .map{background:#151C24}
+.map svg{width:100%;height:100%}
+.m-water{fill:#B9D7F0}[data-theme=dark] .m-water{fill:#1B3550}
+.m-park{fill:#D3E7CC}[data-theme=dark] .m-park{fill:#1A2A22}
+.m-road{stroke:#fff;fill:none;stroke-linecap:round}[data-theme=dark] .m-road{stroke:#2A3442}
+.m-road2{stroke:#F7F3E8;fill:none}[data-theme=dark] .m-road2{stroke:#232C38}
+.m-blk{fill:#DDE2DA}[data-theme=dark] .m-blk{fill:#1A222C}
+.m-label{font:600 9px var(--doc-font);fill:#5E6B78;letter-spacing:.05em;text-transform:uppercase}
+.veh circle{stroke:#fff;stroke-width:2}
+.veh text{font:800 9px var(--doc-font);fill:#fff;text-anchor:middle;dominant-baseline:central}
+.veh path{fill:#fff}
+
+/* iOS (Liquid Glass era) */
+.glass{background:color-mix(in srgb,var(--surface) 72%,transparent);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);border:1px solid color-mix(in srgb,#fff 45%,transparent);box-shadow:0 8px 30px rgba(0,0,0,.14)}
+[data-theme=dark] .glass{border-color:rgba(255,255,255,.12)}
+.ios-search{position:absolute;top:52px;left:12px;right:12px;height:44px;border-radius:22px;display:flex;align-items:center;gap:8px;padding:0 14px;font-size:16px;color:var(--text-3);z-index:4}
+.ios-search .av{margin-left:auto;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--dawn-500),var(--brand-700));color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+.ios-sheet{position:absolute;left:8px;right:8px;bottom:92px;border-radius:30px;padding:8px 16px 12px;z-index:4}
+.grab{width:36px;height:5px;border-radius:3px;background:var(--text-3);opacity:.45;margin:0 auto 10px}
+.ios-tabs{position:absolute;left:14px;right:14px;bottom:22px;height:62px;border-radius:31px;display:flex;justify-content:space-around;align-items:center;z-index:6;font-size:10px;font-weight:600}
+.ios-tabs div{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--text-2);padding:6px 12px;border-radius:24px}
+.ios-tabs div.on{color:var(--brand-500);background:color-mix(in srgb,var(--brand-500) 12%,transparent)}
+[data-theme=dark] .ios-tabs div.on{color:#7FB0FF}
+.ios-tabs svg{width:22px;height:22px;fill:currentColor}
+.ios-large{font-size:32px;font-weight:700;letter-spacing:-.02em;padding:4px 18px 8px}
+.ios-group{margin:0 14px 14px;background:var(--surface-2);border-radius:14px;overflow:hidden}
+.ios-row{display:flex;align-items:center;gap:10px;padding:11px 14px;font-size:15px;border-bottom:.5px solid var(--line)}
+.ios-row:last-child{border:0}
+.ios-row .chev{margin-left:auto;color:var(--text-3)}
+.ios-btn{display:block;margin:0 14px;text-align:center;border-radius:999px;padding:14px;font-weight:600;font-size:16px;background:var(--brand-500);color:#fff}
+.ios-btn.apple{background:#000;color:#fff}
+[data-theme=dark] .ios-btn.apple{background:#fff;color:#000}
+
+.dep{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--line)}
+.dep:last-child{border:0}
+.dep .dest{flex:1;min-width:0}
+.dep .dest b{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dep .dest span{font-size:12px;color:var(--text-2)}
+.dep .t{text-align:right;font-variant-numeric:tabular-nums}
+.dep .t b{display:block;font-size:17px;font-weight:700}
+.dep .t b.rt{color:var(--ok)}[data-theme=dark] .dep .t b.rt{color:#3DD68C}
+
+/* Android (Material 3 Expressive) */
+.m-top{padding:6px 12px 10px}
+.m-search{height:56px;border-radius:28px;background:var(--surface-2);display:flex;align-items:center;gap:12px;padding:0 16px;color:var(--text-2);font-size:16px}
+.m-search .av{margin-left:auto;width:30px;height:30px;border-radius:50%;background:var(--brand-700);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+.m-chips{display:flex;gap:8px;padding:10px 12px 4px;overflow:hidden}
+.m-chip{height:32px;border-radius:8px;border:1px solid var(--line);display:flex;align-items:center;gap:6px;padding:0 12px;font-size:13px;font-weight:500;white-space:nowrap;color:var(--text-2)}
+.m-chip.on{background:var(--brand-100);border-color:transparent;color:var(--text)}
+.m-card{margin:8px 12px;background:var(--surface-2);border-radius:20px;padding:14px 16px}
+.m-card.sel{background:var(--brand-100);outline:2px solid var(--brand-500)}
+.m-nav{position:absolute;left:0;right:0;bottom:0;height:80px;background:var(--surface-2);display:flex;justify-content:space-around;align-items:flex-start;padding-top:12px;font-size:12px;font-weight:500;z-index:6}
+.m-nav div{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text-2)}
+.m-nav i{width:56px;height:32px;border-radius:16px;display:grid;place-items:center;font-style:normal}
+.m-nav div.on{color:var(--text);font-weight:700}
+.m-nav div.on i{background:color-mix(in srgb,var(--brand-500) 22%,transparent)}
+.m-nav svg{width:22px;height:22px;fill:currentColor}
+.m-fab{position:absolute;right:16px;bottom:96px;height:56px;padding:0 20px;border-radius:16px;background:var(--dawn-500);color:#1B0A00;display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;box-shadow:0 6px 16px rgba(0,0,0,.2);z-index:6}
+.m-btn{display:flex;justify-content:center;align-items:center;height:56px;border-radius:28px;background:var(--brand-700);color:#fff;font-weight:600;font-size:16px;margin:0 12px}
+[data-theme=dark] .m-btn{background:#7FB0FF;color:#062F57}
+.m-seg{display:flex;margin:4px 12px 12px;border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.m-seg div{flex:1;text-align:center;padding:9px 4px;font-size:13px;font-weight:500;border-right:1px solid var(--line)}
+.m-seg div:last-child{border:0}
+.m-seg div.on{background:var(--brand-100);font-weight:700}
+.m-title{font-size:24px;font-weight:500;padding:8px 16px 4px;letter-spacing:-.01em}
+.m-label{font-size:12px;font-weight:600;color:var(--text-2);padding:10px 16px 4px;letter-spacing:.04em}
+
+.legs{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:6px 0}
+.legs .walk{font-size:12px;color:var(--text-2);display:inline-flex;align-items:center;gap:2px}
+.legs .sep{color:var(--text-3);font-size:11px}
+.bar{height:6px;border-radius:3px;display:flex;overflow:hidden;gap:2px;margin:8px 0 2px}
+.bar span{display:block;height:100%}
+
+/* Ticket */
+.ticket{margin:6px 14px;border-radius:24px;overflow:hidden;background:var(--surface);box-shadow:0 10px 30px rgba(0,0,0,.18);position:relative}
+.ticket-live{height:120px;background:linear-gradient(115deg,var(--brand-700),var(--brand-500) 45%,var(--dawn-500));position:relative;overflow:hidden;color:#fff;padding:14px 16px}
+.ticket-live::before{content:"";position:absolute;inset:-50%;background:repeating-linear-gradient(60deg,rgba(255,255,255,.0) 0 18px,rgba(255,255,255,.14) 18px 22px);animation:slide 6s linear infinite}
+@keyframes slide{to{transform:translateX(44px)}}
+.holo{position:absolute;right:14px;top:14px;width:46px;height:46px;border-radius:50%;background:conic-gradient(#FFD7B8,#9FD0FF,#C9B6FF,#FFD7B8);animation:spin 4s linear infinite;opacity:.95}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ticket-live > :not(.holo){position:relative}
+.ticket-clock{font:700 30px var(--mono);letter-spacing:.02em}
+.ticket-body{padding:14px 16px}
+.ticket-body .kv{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.ticket-body .kv:last-child{border:0}
+.ticket-body .kv span{color:var(--text-2)}
+.qr{width:100px;height:100px;margin:4px auto 2px;display:grid;grid-template-columns:repeat(21,1fr);background:#fff;padding:6px;border-radius:8px}
+.qr i{background:#0E1726}
+.qr i.o{background:transparent}
+
+/* Web frame */
+.browser{width:100%;max-width:1080px;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.15);background:var(--surface)}
+.b-chrome{height:38px;background:var(--surface-2);display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line)}
+.b-chrome i{width:11px;height:11px;border-radius:50%;background:#FF5F57}.b-chrome i:nth-child(2){background:#FEBC2E}.b-chrome i:nth-child(3){background:#28C840}
+.b-url{margin-left:12px;flex:1;max-width:420px;height:24px;border-radius:6px;background:var(--surface);font-size:12px;display:flex;align-items:center;padding:0 10px;color:var(--text-2)}
+.w-app{display:grid;grid-template-columns:380px 1fr;height:560px}
+.w-head{grid-column:1/-1;height:56px;display:flex;align-items:center;gap:24px;padding:0 20px;border-bottom:1px solid var(--line)}
+.w-head nav{display:flex;gap:4px}
+.w-head nav a{padding:8px 12px;border-radius:8px;font-size:14px;color:var(--text-2);text-decoration:none;font-weight:500}
+.w-head nav a.on{background:var(--brand-100);color:var(--text)}
+.w-head .lang{margin-left:auto;font-size:13px;color:var(--text-2)}
+.w-btn{display:inline-flex;align-items:center;height:36px;padding:0 14px;border-radius:8px;background:var(--brand-700);color:#fff;font-size:14px;font-weight:600}
+[data-theme=dark] .w-btn{background:#7FB0FF;color:#062F57}
+.w-side{border-right:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.w-form{padding:16px;display:grid;gap:8px;border-bottom:1px solid var(--line)}
+.w-in{height:40px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:14px;background:var(--surface)}
+.w-in .dot{width:10px;height:10px;border-radius:50%;border:2.5px solid var(--brand-500)}
+.w-in .dot.end{border-radius:2px;background:var(--dawn-500);border-color:var(--dawn-500)}
+.w-in:focus-within,.w-in.focus{outline:3px solid color-mix(in srgb,var(--brand-500) 40%,transparent);border-color:var(--brand-500)}
+.w-res{padding:8px;overflow:hidden}
+.w-item{padding:12px;border-radius:10px;border:1px solid transparent}
+.w-item.sel{background:var(--brand-100);border-color:color-mix(in srgb,var(--brand-500) 40%,transparent)}
+.w-map{position:relative;overflow:hidden}
+.w-map .map{position:absolute}
+.w-pop{position:absolute;left:46%;top:24%;width:230px;padding:12px 14px;border-radius:12px;background:var(--surface);box-shadow:var(--shadow);border:1px solid var(--line);font-size:13px}
+.w-zoom{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.w-zoom b{width:34px;height:34px;display:grid;place-items:center;border-bottom:1px solid var(--line);font-weight:500}
+.w-zoom b:last-child{border:0}
+@media(max-width:860px){.w-app{grid-template-columns:1fr}.w-map{display:none}}
+
+/* Glance surfaces */
+.lock{width:300px;border-radius:24px;padding:14px 16px;color:#fff;background:rgba(30,30,34,.72);backdrop-filter:blur(20px)}
+.lock-bg{background:linear-gradient(160deg,#F26B1D,#0A4D8C 60%,#062F57);border-radius:28px;padding:40px 16px 24px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.island{background:#000;color:#fff;border-radius:22px;height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;width:250px;font:600 13px var(--ios-font)}
+.notif{width:320px;border-radius:24px;background:var(--surface-2);padding:14px 16px;font-family:var(--and-font);border:1px solid var(--line)}
+.prog{position:relative;height:8px;border-radius:4px;background:var(--line);margin:12px 0 6px}
+.prog b{position:absolute;left:0;top:0;bottom:0;width:62%;border-radius:4px;background:var(--mode-tram)}
+.prog i{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--mode-tram);transform:translate(-50%,-50%)}
+
+/* Leg timeline */
+.tl{position:relative;padding-left:26px}
+.tl-step{position:relative;padding:0 0 14px}
+.tl-step::before{content:"";position:absolute;left:-19px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2.5px solid var(--c,var(--text-3))}
+.tl-step::after{content:"";position:absolute;left:-15px;top:18px;bottom:-4px;width:3px;background:var(--c,var(--line))}
+.tl-step.walk::after{background:repeating-linear-gradient(var(--text-3) 0 3px,transparent 3px 7px);width:2px;left:-14.5px}
+.tl-step:last-child::after{display:none}
+.tl-step b{font-size:14px}
+.tl-step .tm{float:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:13px}
+
+/* Banner */
+.banner{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:var(--r-m);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);background:color-mix(in srgb,var(--warn) 10%,var(--surface));font-size:14px}
+.banner.crit{border-color:color-mix(in srgb,var(--crit) 35%,transparent);background:color-mix(in srgb,var(--crit) 9%,var(--surface))}
+.banner .bi{flex:none;width:20px;height:20px;border-radius:50%;background:var(--warn);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+.banner.crit .bi{background:var(--crit)}
+
+.typescale div{display:flex;align-items:baseline;gap:16px;padding:8px 0;border-bottom:1px solid var(--line)}
+.typescale span.k{width:110px;flex:none;font-size:12px;color:var(--text-2);font-family:var(--mono)}
+.spacing{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.spacing div{display:flex;flex-direction:column;align-items:center;font-size:11px;color:var(--text-2);gap:6px}
+.spacing div i{display:block;background:var(--dawn-500);border-radius:2px;opacity:.85}
+pre{background:#0B1220;color:#D6E2F2;border-radius:var(--r-m);padding:16px;overflow:auto;font:12.5px/1.6 var(--mono)}
+pre .k{color:#7FB0FF}pre .s{color:#FFB27A}pre .c{color:#6B7A90}
+.dodont{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.do,.dont{border-radius:var(--r-m);padding:14px;font-size:14px;background:var(--surface);border:1px solid var(--line)}
+.do{border-top:4px solid var(--ok)}.dont{border-top:4px solid var(--crit)}
+.do b{color:var(--ok)}.dont b{color:var(--crit)}
+footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:13px}
+</style>
+</head>
+<body>
+
+<!-- SVG symbol library (icon stand-ins for SF Symbols / Material Symbols) -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M15 5.1 9 3 3 5v16l6-2.1 6 2.1 6-2V3l-6 2.1Zm-1 13.6-4-1.4V5.3l4 1.4v12Z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><path d="M6 3a3 3 0 0 0-1 5.83V15a5 5 0 0 0 5 5h4.17A3 3 0 1 0 14.17 18H10a3 3 0 0 1-3-3V8.83A3 3 0 0 0 6 3Zm12-1a3 3 0 0 0-3 3c0 2.2 3 5 3 5s3-2.8 3-5a3 3 0 0 0-3-3Z"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2.5a2.5 2.5 0 0 0 0 5V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2.5a2.5 2.5 0 0 0 0-5V7Zm11 0v2h2V7h-2Zm0 4v2h2v-2h-2Zm0 4v2h2v-2h-2Z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.4 0-8 2.2-8 5v2h16v-2c0-2.8-3.6-5-8-5Z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></symbol>
+  <symbol id="i-tram" viewBox="0 0 24 24"><path d="M9 2h6v2h-2v1h3a3 3 0 0 1 3 3v8a3 3 0 0 1-2 2.83L18 21h-2l-1-2H9l-1 2H6l1-2.17A3 3 0 0 1 5 16V8a3 3 0 0 1 3-3h3V4H9V2Zm-2 6v4h10V8H7Zm1.5 6a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm7 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"/></symbol>
+  <symbol id="i-bus" viewBox="0 0 24 24"><path d="M6 3h12a2 2 0 0 1 2 2v12a2 2 0 0 1-1 1.73V21h-3v-2H8v2H5v-2.27A2 2 0 0 1 4 17V5a2 2 0 0 1 2-2Zm0 3v5h12V6H6Zm1.5 8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"/></symbol>
+  <symbol id="i-trolley" viewBox="0 0 24 24"><path d="m8 1 4 4 4-4 1 1-4 3.5h5a2 2 0 0 1 2 2V17a2 2 0 0 1-1 1.73V21h-3v-2H8v2H5v-2.27A2 2 0 0 1 4 17V7.5a2 2 0 0 1 2-2h5L7 2l1-1ZM6 8v4h12V8H6Zm1.5 6a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"/></symbol>
+  <symbol id="i-train" viewBox="0 0 24 24"><path d="M12 2c4 0 8 .5 8 4v9.5A3.5 3.5 0 0 1 16.5 19l1.5 1.5v.5h-2l-2-2h-4l-2 2H6v-.5L7.5 19A3.5 3.5 0 0 1 4 15.5V6c0-3.5 4-4 8-4ZM6 7v4h5V7H6Zm7 0v4h5V7h-5ZM7.5 14a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"/></symbol>
+  <symbol id="i-walk" viewBox="0 0 24 24"><path d="M13.5 5.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6A2 2 0 0 0 12 6c-.3 0-.5 0-.8.1L6 8.3V13h2V9.6l1.8-.7Z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m12 3 7 18-7-4-7 4 7-18Z"/></symbol>
+</svg>
+
+<header class="top"><div class="top-in">
+  <div class="logo"><div class="logo-mark"></div>IDS Východ <span class="tag">Design System · v0.1 sketch</span></div>
+  <nav>
+    <a href="#principles">Principles</a><a href="#foundations">Foundations</a><a href="#platforms">Platforms</a>
+    <a href="#components">Components</a><a href="#screens">Screens</a><a href="#a11y">Accessibility</a><a href="#tokens">Tokens</a>
+  </nav>
+  <button class="toggle" id="themeBtn">◐ Dark</button>
+</div></header>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div>
+    <div class="eyebrow">Integrovaný dopravný systém Východ</div>
+    <h1>One network.<br><span>One sunrise.</span></h1>
+    <p>A design-system sketch for the integrated public-transport app of the Košice and Prešov regions — city trams and trolleybuses, regional buses and trains under one fare. One shared token core, three fully native shells: <b>SwiftUI</b>, <b>Jetpack Compose</b> and the <b>web</b>.</p>
+    <div class="pill-row">
+      <span class="lb tram">R6</span><span class="lb trolley">38</span><span class="lb bus">23</span>
+      <span class="lb regional">701</span><span class="lb train">Os 8813</span><span class="lb night">N1</span>
+    </div>
+    <p class="small muted" style="margin-top:16px">Concept work. Line numbers, operators and fares are illustrative — not official IDS Východ data or branding.</p>
+  </div>
+  <div class="hero-art">
+    <svg viewBox="0 0 400 360" preserveAspectRatio="xMidYMid slice">
+      <circle cx="200" cy="190" r="70" fill="#FFD7B8" opacity=".95"/>
+      <path d="M0 230 L60 175 L110 205 L170 140 L230 200 L290 150 L350 195 L400 170 V360 H0Z" fill="#0A4D8C" opacity=".85"/>
+      <path d="M0 260 L80 215 L150 245 L220 205 L300 240 L400 215 V360 H0Z" fill="#062F57"/>
+      <path d="M-10 320 C80 290 140 330 220 300 S350 280 410 300" stroke="#F26B1D" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M-10 336 C90 310 160 345 240 318 S360 300 410 318" stroke="#FFD7B8" stroke-width="2" fill="none" stroke-dasharray="2 8" stroke-linecap="round"/>
+      <g class="veh"><circle r="11" fill="#C8202A"><animateMotion dur="9s" repeatCount="indefinite" path="M-10 320 C80 290 140 330 220 300 S350 280 410 300"/></circle></g>
+    </svg>
+  </div>
+</div>
+
+<!-- ============ PRINCIPLES ============ -->
+<section id="principles">
+  <div class="eyebrow">01 · Principles</div>
+  <h2>What the app has to be good at</h2>
+  <div class="grid g3">
+    <div class="card"><h4>⏱ Time is the hero</h4><p class="small muted">Every screen answers "when?" first. Minutes-to-departure are the largest number on screen, tabular figures, real-time vs. scheduled always distinguishable without color.</p></div>
+    <div class="card"><h4>🧭 Native first, brand second</h4><p class="small muted">Navigation, sheets, gestures, typography and haptics belong to the platform. The brand lives in the network itself: line badges, mode colours, the ticket, the map.</p></div>
+    <div class="card"><h4>🤲 One-hand, one-glance</h4><p class="small muted">Primary actions in the thumb zone. Live Activities, widgets and lock-screen tickets mean most journeys never require opening the app.</p></div>
+    <div class="card"><h4>📶 Works in Slanec, not just Košice</h4><p class="small muted">Rural coverage is patchy. Tickets, timetables and the last search are offline-first; live data degrades gracefully to "scheduled".</p></div>
+    <div class="card"><h4>♿ Everyone rides</h4><p class="small muted">WCAG 2.2 AA minimum, largest text sizes supported, low-floor & step-free info as first-class data, Slovak / English / Hungarian / Ukrainian.</p></div>
+    <div class="card"><h4>🎟 Honest fares</h4><p class="small muted">Show the total price before the pay button, recommend the cheapest valid ticket for the planned trip, never dark-pattern upsells.</p></div>
+  </div>
+</section>
+
+<!-- ============ FOUNDATIONS ============ -->
+<section id="foundations">
+  <div class="eyebrow">02 · Foundations</div>
+  <h2>Colour</h2>
+  <p class="muted">Brand palette is "Tatra Dawn": the east is where the sun rises. Ink blue carries interaction, dawn orange is reserved for one hero accent per screen (buy, active ticket, destination pin).</p>
+  <h3>Brand</h3>
+  <div class="grid g4">
+    <div class="sw"><div class="chip" style="background:var(--brand-900)">brand.900</div><div class="meta"><b>#062F57</b>Headers, dark surfaces</div></div>
+    <div class="sw"><div class="chip" style="background:var(--brand-700)">brand.700</div><div class="meta"><b>#0A4D8C</b>Primary action (light)</div></div>
+    <div class="sw"><div class="chip" style="background:var(--brand-500)">brand.500</div><div class="meta"><b>#1F6FD1</b>Links, selection, tint</div></div>
+    <div class="sw"><div class="chip" style="background:var(--dawn-500);color:#1B0A00">dawn.500</div><div class="meta"><b>#F26B1D</b>Hero accent · dark text only</div></div>
+  </div>
+  <h3>Transport modes — the core of the visual language</h3>
+  <p class="muted small">Mode is always encoded three ways: <b>colour + badge shape + glyph</b>. All white-on-mode pairs ≥ 4.5:1 in light theme; dark theme uses lifted tints with ≥ 4.5:1 against surface.</p>
+  <div class="grid g3">
+    <div class="sw"><div class="chip" style="background:var(--mode-tram)">Električka · Tram</div><div class="meta"><b>#C8202A · pill</b><span class="lb tram sm">R6</span> &nbsp;5.6:1 on white</div></div>
+    <div class="sw"><div class="chip" style="background:var(--mode-trolley)">Trolejbus · Trolleybus</div><div class="meta"><b>#17804A · soft square</b><span class="lb trolley sm">38</span> &nbsp;5.0:1</div></div>
+    <div class="sw"><div class="chip" style="background:var(--mode-bus)">MHD autobus · City bus</div><div class="meta"><b>#1F63C4 · square</b><span class="lb bus sm">23</span> &nbsp;5.5:1</div></div>
+    <div class="sw"><div class="chip" style="background:var(--mode-regional)">Prímestský · Regional bus</div><div class="meta"><b>#9A5B00 · square + base</b><span class="lb regional sm">701</span> &nbsp;5.3:1</div></div>
+    <div class="sw"><div class="chip" style="background:var(--mode-train)">Vlak · Train</div><div class="meta"><b>#6A3FB5 · slanted</b><span class="lb train sm">Os</span> &nbsp;6.8:1</div></div>
+    <div class="sw"><div class="chip" style="background:var(--mode-night)">Nočná · Night</div><div class="meta"><b>#2B2F6B · pill + moon ring</b><span class="lb night sm">N1</span> &nbsp;11:1</div></div>
+  </div>
+  <h3>Semantic</h3>
+  <div class="grid g4">
+    <div class="sw"><div class="chip" style="background:var(--ok)">status.onTime</div><div class="meta"><b>#14804A</b>Real-time, on time, valid</div></div>
+    <div class="sw"><div class="chip" style="background:var(--warn)">status.delayed</div><div class="meta"><b>#B25E00</b>Delay ≥ 2 min, crowding</div></div>
+    <div class="sw"><div class="chip" style="background:var(--crit)">status.disrupted</div><div class="meta"><b>#C11F2A</b>Cancelled, expired, closure</div></div>
+    <div class="sw"><div class="chip" style="background:var(--info)">status.info</div><div class="meta"><b>#1F63C4</b>Diversions, notices</div></div>
+  </div>
+
+  <h2 style="margin-top:48px">Typography</h2>
+  <p class="muted">No custom typeface in product UI — system fonts render best, support Dynamic Type / font scaling, and cover Slovak, Hungarian and Cyrillic diacritics out of the box. A brand display face is permitted only in marketing.</p>
+  <div class="grid g2">
+    <div class="card typescale">
+      <div><span class="k">display / time</span><span style="font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em">4 min</span></div>
+      <div><span class="k">title.l</span><span style="font-size:28px;font-weight:700;letter-spacing:-.01em">Spojenia</span></div>
+      <div><span class="k">title.m</span><span style="font-size:20px;font-weight:600">Hlavná stanica</span></div>
+      <div><span class="k">body</span><span style="font-size:16px">smer Ťahanovce, nástupište B</span></div>
+      <div><span class="k">caption</span><span style="font-size:12px;color:var(--text-2)">Aktualizované pred 12 s</span></div>
+      <div><span class="k">badge</span><span class="lb tram">R6</span> <span class="lb bus">23</span></div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <tr><th>Role</th><th>iOS (SF Pro)</th><th>Android (Roboto Flex)</th><th>Web</th></tr>
+      <tr><td>display / time</td><td>.largeTitle bold, <code>.monospacedDigit()</code></td><td>displaySmall, <code>tnum</code></td><td>clamp(28–36px), <code>tabular-nums</code></td></tr>
+      <tr><td>title.l</td><td>.largeTitle</td><td>headlineMedium</td><td>28/34</td></tr>
+      <tr><td>title.m</td><td>.title3 semibold</td><td>titleLarge</td><td>20/26</td></tr>
+      <tr><td>body</td><td>.body (17)</td><td>bodyLarge (16)</td><td>16/24</td></tr>
+      <tr><td>caption</td><td>.caption</td><td>labelMedium</td><td>12/16</td></tr>
+      <tr><td>Scaling</td><td>Dynamic Type up to AX5</td><td>Font scale up to 200 %, non-linear</td><td><code>rem</code>, 200 % zoom reflow</td></tr>
+    </table></div>
+  </div>
+
+  <h2 style="margin-top:48px">Space, shape, elevation, motion</h2>
+  <div class="grid g2">
+    <div class="card">
+      <h4>Spacing — 4 pt base</h4>
+      <div class="spacing">
+        <div><i style="width:4px;height:4px"></i>1 · 4</div><div><i style="width:8px;height:8px"></i>2 · 8</div>
+        <div><i style="width:12px;height:12px"></i>3 · 12</div><div><i style="width:16px;height:16px"></i>4 · 16</div>
+        <div><i style="width:24px;height:24px"></i>6 · 24</div><div><i style="width:32px;height:32px"></i>8 · 32</div>
+        <div><i style="width:48px;height:48px"></i>12 · 48</div>
+      </div>
+      <p class="small muted" style="margin-top:12px">Touch targets: 44 pt (iOS), 48 dp (Android), 24 px minimum / 44 px recommended (web, WCAG 2.5.8).</p>
+    </div>
+    <div class="card">
+      <h4>Shape &amp; elevation are platform-owned</h4>
+      <p class="small muted">Tokens are <i>semantic</i> (<code>shape.card</code>, <code>shape.sheet</code>) and resolve per platform: iOS uses concentric continuous corners and Liquid Glass materials; Android maps to the Material 3 shape scale and tonal elevation; web uses 8–12 px radii with shadow elevation.</p>
+      <h4 style="margin-top:12px">Motion</h4>
+      <p class="small muted">Vehicles interpolate smoothly between GPS pings (no teleporting), 150–250 ms UI transitions, springs on iOS, Material motion on Android. <code>prefers-reduced-motion</code> / Reduce Motion stop ticket animation loops and vehicle tweening.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLATFORMS ============ -->
+<section id="platforms">
+  <div class="eyebrow">03 · Platform translation</div>
+  <h2>Same product, three native dialects</h2>
+  <p class="muted">Shared: tokens, information architecture, copy, data models, component <i>anatomy</i>. Native: chrome, navigation, controls, system integrations. If a user can tell the app is cross-platform, we have failed.</p>
+  <div class="tbl-wrap"><table>
+    <tr><th>Concern</th><th>iOS · SwiftUI (iOS 26 Liquid Glass)</th><th>Android · Compose (Material 3 Expressive)</th><th>Web · responsive PWA</th></tr>
+    <tr><td><b>Primary nav</b></td><td>Floating glass <code>TabView</code>, 4 tabs; tab bar minimises on scroll</td><td><code>NavigationBar</code> (compact), <code>NavigationRail</code> (medium+)</td><td>Top bar ≥ 960 px, bottom bar on mobile web</td></tr>
+    <tr><td><b>Map + content</b></td><td>MapKit + <code>.sheet</code> with detents (peek / medium / large)</td><td>Google Maps / MapLibre + <code>BottomSheetScaffold</code></td><td>MapLibre GL, left side panel (380 px) on desktop</td></tr>
+    <tr><td><b>Search</b></td><td><code>.searchable</code>, search in tab bar</td><td><code>SearchBar</code> → <code>SearchView</code> full-screen</td><td>Combobox (ARIA 1.2) with live region results</td></tr>
+    <tr><td><b>Back</b></td><td>Edge swipe, nav-bar back button</td><td>Predictive back gesture (enabled)</td><td>Browser history; every state is a URL</td></tr>
+    <tr><td><b>Payments</b></td><td>Apple Pay (<code>PKPaymentButton</code>)</td><td>Google Pay button</td><td>Payment Request API, card fallback</td></tr>
+    <tr><td><b>Ticket on the go</b></td><td>Apple Wallet pass, Live Activity with countdown</td><td>Google Wallet pass, Live Update notification</td><td>Installable PWA, offline ticket via Service Worker</td></tr>
+    <tr><td><b>Glanceable</b></td><td>Widgets (Lock / Home / StandBy), Dynamic Island, Siri App Intents</td><td>Glance widgets, Quick Settings tile, App Actions</td><td>Web Push for disruptions</td></tr>
+    <tr><td><b>Feedback</b></td><td><code>.sensoryFeedback</code>: success on purchase, alignment tick on map snap</td><td><code>HapticFeedbackConstants.CONFIRM</code>, ripple</td><td>Visible focus, toasts via <code>aria-live</code></td></tr>
+    <tr><td><b>Icons</b></td><td>SF Symbols (+ custom mode glyphs as symbol templates)</td><td>Material Symbols Rounded, weight-matched to text</td><td>Material Symbols as SVG sprite</td></tr>
+    <tr><td><b>Dark / colour</b></td><td>System appearance, brand tint</td><td>Dynamic Color <i>off</i> for mode colours, allowed for neutral surfaces</td><td><code>prefers-color-scheme</code></td></tr>
+  </table></div>
+  <p class="small muted" style="margin-top:10px">Note: Android Dynamic Color may tint surfaces, but <b>mode and status colours are fixed</b> — a tram must look like a tram on every phone and on the platform signage.</p>
+</section>
+
+<!-- ============ COMPONENTS ============ -->
+<section id="components">
+  <div class="eyebrow">04 · Components</div>
+  <h2>The network vocabulary</h2>
+
+  <h3>Line badge</h3>
+  <div class="grid g2">
+    <div class="card">
+      <p style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <span class="lb tram lg">R6</span><span class="lb trolley lg">38</span><span class="lb bus lg">23</span><span class="lb regional lg">701</span><span class="lb train lg">REX</span><span class="lb night lg">N1</span>
+      </p>
+      <p style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <span class="lb tram"><svg><use href="#i-tram"/></svg>R6</span><span class="lb trolley"><svg><use href="#i-trolley"/></svg>38</span><span class="lb bus"><svg><use href="#i-bus"/></svg>23</span><span class="lb train"><svg><use href="#i-train"/></svg>Os</span>
+        <span class="lb tram sm">4</span><span class="lb bus sm">72</span>
+      </p>
+      <p class="small muted">Sizes sm / md / lg. Glyph variant used where the badge appears alone (map callouts, widgets). Shape differs per mode so colour-blind riders and greyscale e-ink signage still work. Text never truncates; long train numbers grow horizontally.</p>
+    </div>
+    <div class="card">
+      <h4>Anatomy</h4>
+      <p class="small muted">container (mode shape) · optional glyph · label (bold, tabular) · optional accessibility suffix.</p>
+      <p class="small"><b>VoiceOver / TalkBack label:</b> "Električka R6" — never just "R6". Night lines add "nočná linka".</p>
+      <div class="dodont">
+        <div class="do"><b>Do</b><br>Use the badge everywhere a line is referenced — departures, map, tickets, alerts.</div>
+        <div class="dont"><b>Don't</b><br>Recolour badges for brand/marketing, or use mode colours for non-mode UI.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Departure row &amp; real-time status</h3>
+  <div class="grid g2">
+    <div class="card">
+      <div class="dep"><span class="lb tram">R6</span><div class="dest"><b>Ťahanovce</b><span>nástupište B · <span class="occ" data-l="1"><i></i><i></i><i></i></span> voľno</span></div><div class="t"><b class="rt">2 min</b><span class="st ok small"><span class="live"></span>&nbsp;naživo</span></div></div>
+      <div class="dep"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP</b><span>nástupište A · <span class="occ" data-l="3"><i></i><i></i><i></i></span> plno</span></div><div class="t"><b>7 min</b><span class="st warn">+3 min</span></div></div>
+      <div class="dep"><span class="lb regional">701</span><div class="dest"><b>Prešov, AS</b><span>nástupište 12 · ♿ nízkopodlažný</span></div><div class="t"><b>14:20</b><span class="st crit">zrušený</span></div></div>
+    </div>
+    <div class="card small">
+      <h4>Rules</h4>
+      <ul class="muted" style="padding-left:18px;margin:0">
+        <li>&lt; 60 min → relative ("2 min", "teraz"); ≥ 60 min → clock time.</li>
+        <li>Real-time shown in <b>green + pulsing dot + "naživo" text</b>; scheduled in neutral text. Never colour alone.</li>
+        <li>Delay shows <i>both</i> new time and delta when tapped/expanded.</li>
+        <li>Cancelled rows stay visible with strike-through planned time and a suggested alternative.</li>
+        <li>Occupancy uses 3 bars + word (voľno / stredne / plno).</li>
+        <li>Rows update in place — no list jumps; VoiceOver announces only when a <i>followed</i> departure changes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Live vehicle marker</h3>
+  <div class="grid g2">
+    <div class="card" style="display:flex;gap:28px;align-items:center;flex-wrap:wrap">
+      <svg width="260" height="90" viewBox="0 0 260 90">
+        <g class="veh" transform="translate(30 45)"><circle r="14" fill="#C8202A"/><text>R6</text><path d="M0 -24 l5 7 h-10z" fill="#C8202A"/></g>
+        <g class="veh" transform="translate(90 45)"><rect x="-14" y="-14" width="28" height="28" rx="7" fill="#17804A" stroke="#fff" stroke-width="2"/><text>38</text><path d="M24 0 l-7 5 v-10z" fill="#17804A"/></g>
+        <g class="veh" transform="translate(150 45)"><rect x="-14" y="-14" width="28" height="28" rx="3" fill="#1F63C4" stroke="#fff" stroke-width="2"/><text>23</text></g>
+        <g class="veh" transform="translate(210 45)" opacity=".45"><rect x="-14" y="-14" width="28" height="28" rx="3" fill="#1F63C4" stroke="#fff" stroke-width="2" stroke-dasharray="3 3"/><text>16</text></g>
+      </svg>
+      <p class="small muted" style="flex:1;min-width:200px">Shape matches badge. Heading arrow appears when speed &gt; 3 km/h. Stale position (&gt; 90 s since ping) fades to 45 % with dashed outline and is labelled "posledná poloha pred 2 min". Clusters at low zoom show a mode-mixed count.</p>
+    </div>
+    <div class="card small">
+      <h4>Data honesty</h4>
+      <p class="muted">Positions are dead-reckoned along the route shape between pings and snapped to track. If a ping contradicts the estimate by &gt; 150 m, ease to the new point over 600 ms rather than jumping. Never extrapolate beyond the next stop.</p>
+    </div>
+  </div>
+
+  <h3>Journey leg timeline</h3>
+  <div class="grid g2">
+    <div class="card">
+      <div class="tl">
+        <div class="tl-step walk" style="--c:var(--text-3)"><span class="tm">14:02</span><b>Moja poloha</b><div class="small muted">🚶 4 min · 280 m</div></div>
+        <div class="tl-step" style="--c:var(--mode-tram)"><span class="tm">14:06</span><b>Námestie osloboditeľov</b> <span class="lb tram sm">R6</span><div class="small muted">smer Ťahanovce · 6 zastávok · <span class="st ok small">naživo</span></div></div>
+        <div class="tl-step walk" style="--c:var(--mode-tram)"><span class="tm">14:19</span><b>Staničné námestie</b><div class="small muted">Prestup 6 min · ♿ bezbariérový</div></div>
+        <div class="tl-step" style="--c:var(--mode-train)"><span class="tm">14:25</span><b>Košice, hl. st.</b> <span class="lb train sm">Os 8813</span><div class="small muted">koľaj 3 · nástupište 2</div></div>
+        <div class="tl-step" style="--c:var(--mode-train)"><span class="tm">15:12</span><b>Prešov</b></div>
+      </div>
+    </div>
+    <div class="card small"><h4>Transfer safety</h4><p class="muted">Each transfer shows walking time vs. buffer. Buffer &lt; walking time + 2 min → warning chip "tesný prestup". If the inbound vehicle is delayed in real time, the app checks the connection and offers the next one before the user notices.</p>
+      <div class="banner" style="margin-top:10px"><div class="bi">!</div><div><b>Tesný prestup</b><br><span class="muted">R6 mešká 3 min. Ďalší vlak o 15:25 — uložiť alternatívu?</span></div></div>
+    </div>
+  </div>
+
+  <h3>Disruption banner</h3>
+  <div class="grid g2">
+    <div class="banner crit"><div class="bi">×</div><div><b>Výluka: Hlavná ulica</b> &nbsp;<span class="lb tram sm">R3</span> <span class="lb tram sm">R6</span><br><span class="muted">Do 18:00 náhradná autobusová doprava <span class="lb bus sm">N</span> zo zastávky Dom umenia.</span></div></div>
+    <div class="banner"><div class="bi">i</div><div><b>Zmenené cestovné poriadky od 1. 11.</b><br><span class="muted">Linky 701 – 712 · Zobraziť zmeny</span></div></div>
+  </div>
+</section>
+
+<!-- ============ SCREENS ============ -->
+<section id="screens">
+  <div class="eyebrow">05 · Key screens</div>
+  <h2>Live tracking, journey finding, tickets</h2>
+  <p class="muted">Four tabs everywhere: <b>Mapa</b> (live map + nearby departures) · <b>Spojenia</b> (journey planner) · <b>Lístky</b> (buy &amp; active tickets) · <b>Profil</b>. Same IA, native chrome.</p>
+
+  <div class="devices phones">
+    <!-- iOS map -->
+    <div class="dev-col">
+      <div class="phone ios"><div class="screen">
+        <div class="map">
+          <svg viewBox="0 0 280 620" preserveAspectRatio="xMidYMid slice">
+            <rect class="m-blk" x="20" y="120" width="70" height="60" rx="4"/><rect class="m-blk" x="110" y="90" width="80" height="70" rx="4"/><rect class="m-blk" x="200" y="140" width="70" height="80" rx="4"/>
+            <rect class="m-blk" x="30" y="220" width="60" height="90" rx="4"/><rect class="m-blk" x="180" y="250" width="90" height="60" rx="4"/>
+            <path class="m-park" d="M100 200 h70 v90 h-70z"/>
+            <path class="m-water" d="M-10 380 C60 360 120 420 190 400 S280 360 300 380 V420 C240 410 200 450 130 440 S30 410 -10 420Z"/>
+            <path class="m-road" stroke-width="10" d="M140 -10 V640"/><path class="m-road" stroke-width="7" d="M-10 200 H290"/><path class="m-road2" stroke-width="5" d="M-10 90 L290 60 M60 -10 L80 640 M220 -10 L240 640"/>
+            <path d="M140 -10 V200 H290" stroke="#C8202A" stroke-width="4" fill="none" opacity=".55"/>
+            <text class="m-label" x="150" y="128">Hlavná</text><text class="m-label" x="104" y="250">Mestský park</text><text class="m-label" x="90" y="415">Hornád</text>
+            <g class="veh"><circle r="12" fill="#C8202A"/><text>R6</text><animateMotion dur="14s" repeatCount="indefinite" path="M140 -10 V200 H290"/></g>
+            <g class="veh" transform="translate(70 300)"><rect x="-12" y="-12" width="24" height="24" rx="6" fill="#17804A" stroke="#fff" stroke-width="2"/><text>38</text></g>
+            <g class="veh" transform="translate(230 280)"><rect x="-12" y="-12" width="24" height="24" rx="2" fill="#1F63C4" stroke="#fff" stroke-width="2"/><text>23</text></g>
+            <circle cx="150" cy="220" r="18" fill="#1F6FD1" opacity=".18"/><circle cx="150" cy="220" r="7" fill="#1F6FD1" stroke="#fff" stroke-width="3"/>
+          </svg>
+        </div>
+        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
+        <div class="ios-search glass"><svg width="18" height="18" fill="currentColor"><use href="#i-search"/></svg>Kam idete?<span class="av">DM</span></div>
+        <div class="ios-sheet glass">
+          <div class="grab"></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:20px">Hlavná stanica</b><span class="small muted">120 m</span></div>
+          <div class="dep"><span class="lb tram">R6</span><div class="dest"><b>Ťahanovce</b><span>nást. B</span></div><div class="t"><b class="rt">2 min</b></div></div>
+          <div class="dep"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP</b><span>nást. A</span></div><div class="t"><b>7 min</b><span class="st warn small">+3</span></div></div>
+        </div>
+        <div class="ios-tabs glass">
+          <div class="on"><svg><use href="#i-map"/></svg>Mapa</div><div><svg><use href="#i-route"/></svg>Spojenia</div><div><svg><use href="#i-ticket"/></svg>Lístky</div><div><svg><use href="#i-user"/></svg>Profil</div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="dev-cap"><b>iOS · Live map</b>MapKit, glass search & floating tab bar, sheet at medium detent with nearest-stop departures.</div>
+    </div>
+
+    <!-- Android journey -->
+    <div class="dev-col">
+      <div class="phone android"><div class="screen">
+        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
+        <div class="m-top"><div class="m-search"><svg width="22" height="22" fill="currentColor"><use href="#i-route"/></svg><span style="color:var(--text)">Námestie → Prešov</span><span class="av">DM</span></div></div>
+        <div class="m-chips"><div class="m-chip on">✓ Odchod teraz</div><div class="m-chip">♿ Bezbariérovo</div><div class="m-chip">Menej prestupov</div></div>
+        <div class="m-card sel">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:20px;font-variant-numeric:tabular-nums">14:02 – 15:12</b><b>1 h 10</b></div>
+          <div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>4</span><span class="sep">›</span><span class="lb tram sm">R6</span><span class="sep">›</span><span class="lb train sm">Os 8813</span></div>
+          <div class="bar"><span style="flex:4;background:var(--text-3)"></span><span style="flex:13;background:var(--mode-tram)"></span><span style="flex:6;background:var(--line)"></span><span style="flex:47;background:var(--mode-train)"></span></div>
+          <div style="display:flex;justify-content:space-between" class="small"><span class="st ok">R6 o 2 min · naživo</span><b>2,40 €</b></div>
+        </div>
+        <div class="m-card">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:20px;font-variant-numeric:tabular-nums">14:10 – 15:25</b><b>1 h 15</b></div>
+          <div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>9</span><span class="sep">›</span><span class="lb regional sm">701</span></div>
+          <div class="bar"><span style="flex:9;background:var(--text-3)"></span><span style="flex:66;background:var(--mode-regional)"></span></div>
+          <div style="display:flex;justify-content:space-between" class="small"><span class="muted">Bez prestupu</span><b>2,10 €</b></div>
+        </div>
+        <div class="m-card">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:20px;font-variant-numeric:tabular-nums">14:31 – 15:40</b><b>1 h 09</b></div>
+          <div class="legs"><span class="lb trolley sm">71</span><span class="sep">›</span><span class="lb train sm">REX</span></div>
+          <div style="display:flex;justify-content:space-between" class="small"><span class="st warn">Tesný prestup</span><b>2,40 €</b></div>
+        </div>
+        <div class="m-fab"><svg width="22" height="22" fill="currentColor"><use href="#i-ticket"/></svg>Kúpiť lístok</div>
+        <div class="m-nav">
+          <div><i><svg><use href="#i-map"/></svg></i>Mapa</div><div class="on"><i><svg><use href="#i-route"/></svg></i>Spojenia</div><div><i><svg><use href="#i-ticket"/></svg></i>Lístky</div><div><i><svg><use href="#i-user"/></svg></i>Profil</div>
+        </div>
+      </div></div>
+      <div class="dev-cap"><b>Android · Journey results</b>Material 3 search bar, filter chips, tonal cards with a proportional leg bar; extended FAB buys the exact fare.</div>
+    </div>
+
+    <!-- Android buy -->
+    <div class="dev-col">
+      <div class="phone android"><div class="screen">
+        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
+        <div style="padding:6px 8px;font-size:22px">←</div>
+        <div class="m-title">Kúpiť lístok</div>
+        <div class="m-label">TYP CESTUJÚCEHO</div>
+        <div class="m-seg"><div class="on">✓ Dospelý</div><div>Študent</div><div>Senior</div></div>
+        <div class="m-label">PLATNOSŤ · <span style="font-weight:500;letter-spacing:0">odporúčame jednorazový</span></div>
+        <div class="m-card sel" style="display:flex;justify-content:space-between;align-items:center"><div><b>Na túto cestu</b><div class="small muted">Zóny 100, 101, 200 · 90 min</div></div><b style="font-size:18px;white-space:nowrap">2,40 €</b></div>
+        <div class="m-card" style="display:flex;justify-content:space-between;align-items:center"><div><b>24 hodín</b><div class="small muted">Všetky zóny Košice + Prešov</div></div><b style="font-size:18px;white-space:nowrap">6,50 €</b></div>
+        <div style="position:absolute;bottom:20px;left:0;right:0">
+          <div style="display:flex;justify-content:space-between;padding:0 16px 10px"><span class="muted">Spolu</span><b style="font-size:20px">2,40 €</b></div>
+          <div class="m-btn" style="background:#000;color:#fff">Zaplatiť cez <b style="margin-left:6px">G Pay</b></div>
+        </div>
+      </div></div>
+      <div class="dev-cap"><b>Android · Ticket purchase</b>Fare pre-filled from the planned trip. Segmented button for passenger type, total above a native Google Pay button.</div>
+    </div>
+
+    <!-- iOS ticket -->
+    <div class="dev-col">
+      <div class="phone ios"><div class="screen" style="background:var(--surface-2)">
+        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
+        <div class="ios-large">Lístky</div>
+        <div class="ticket">
+          <div class="ticket-live">
+            <div class="holo"></div>
+            <div class="small" style="opacity:.9;font-weight:600">PLATNÝ · ZÓNY 100 · 101 · 200</div>
+            <div class="ticket-clock" id="tclock">00:58:12</div>
+            <div class="small" style="opacity:.9">zostáva · do 15:32</div>
+          </div>
+          <div class="ticket-body">
+            <div class="qr" id="qr"></div>
+            <div class="kv"><span>Typ</span><b>Jednorazový · Dospelý</b></div>
+            <div class="kv"><span>Cena</span><b>2,40 €</b></div>
+            <div class="kv"><span>Kontrola</span><b class="mono">IDS-7K2Q-91</b></div>
+          </div>
+        </div>
+        <div class="ios-btn apple" style="margin-top:10px;padding:11px"> Pridať do Apple Wallet</div>
+        <div class="ios-tabs glass">
+          <div><svg><use href="#i-map"/></svg>Mapa</div><div><svg><use href="#i-route"/></svg>Spojenia</div><div class="on"><svg><use href="#i-ticket"/></svg>Lístky</div><div><svg><use href="#i-user"/></svg>Profil</div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="dev-cap"><b>iOS · Active ticket</b>Live anti-screenshot band (moving guilloche, spinning seal, ticking seconds) + rotating TOTP QR for validators. Works offline.</div>
+    </div>
+  </div>
+
+  <h3>Glanceable surfaces</h3>
+  <div class="devices">
+    <div class="dev-col">
+      <div class="lock-bg">
+        <div class="island"><span style="display:flex;gap:6px;align-items:center"><span class="lb tram sm">R6</span></span><span>Ťahanovce</span><span style="color:#3DD68C">2 min</span></div>
+        <div class="lock" style="font-family:var(--ios-font)">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span class="lb tram">R6</span><span style="font-size:12px;opacity:.75">IDS Východ</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px"><b style="font-size:17px">Vystúpte o 3 zastávky</b><b style="font-size:22px;color:#3DD68C">8 min</b></div>
+          <div style="font-size:13px;opacity:.8">Staničné námestie · prestup na Os 8813, koľaj 3</div>
+          <div class="prog" style="background:rgba(255,255,255,.25)"><b></b><i style="left:62%"></i></div>
+        </div>
+      </div>
+      <div class="dev-cap"><b>iOS · Live Activity + Dynamic Island</b>Starts automatically when the user boards (geofence + motion) or taps "Sledovať".</div>
+    </div>
+    <div class="dev-col">
+      <div class="notif">
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text-2)"><span style="width:18px;height:18px;border-radius:50%;background:var(--brand-700)"></span>IDS Východ · teraz</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px"><b style="font-size:16px">Vystúpte o 3 zastávky</b><b style="font-size:20px;color:var(--ok)">8 min</b></div>
+        <div class="small muted">Staničné námestie · prestup na <span class="lb train sm">Os 8813</span></div>
+        <div class="prog"><b></b><i style="left:62%"></i></div>
+        <div style="display:flex;gap:8px;margin-top:10px"><span class="m-chip">Zobraziť lístok</span><span class="m-chip">Ukončiť</span></div>
+      </div>
+      <div class="dev-cap"><b>Android · Live Update (progress-centric notification)</b>Segmented progress with stop points; actions open the ticket directly.</div>
+    </div>
+  </div>
+
+  <h3>Web · desktop planner</h3>
+  <div class="devices">
+    <div class="browser">
+      <div class="b-chrome"><i></i><i></i><i></i><div class="b-url">🔒 idsvychod.sk/spojenia?z=Namestie&amp;do=Presov</div></div>
+      <div class="w-app">
+        <div class="w-head">
+          <div class="logo"><div class="logo-mark"></div>IDS Východ</div>
+          <nav><a href="#screens">Mapa</a><a class="on" href="#screens">Spojenia</a><a href="#screens">Lístky</a><a href="#screens">Cestovné poriadky</a></nav>
+          <span class="lang">SK · EN · HU · UK</span><span class="w-btn">Prihlásiť</span>
+        </div>
+        <div class="w-side">
+          <div class="w-form">
+            <div class="w-in"><span class="dot"></span>Námestie osloboditeľov, Košice</div>
+            <div class="w-in focus"><span class="dot end"></span>Prešov, železničná stanica</div>
+            <div style="display:flex;gap:8px"><div class="w-in" style="flex:1">🕑 Odchod teraz</div><span class="w-btn" style="height:40px">Hľadať</span></div>
+          </div>
+          <div class="w-res">
+            <div class="w-item sel">
+              <div style="display:flex;justify-content:space-between"><b style="font-variant-numeric:tabular-nums">14:02 – 15:12</b><b>1 h 10 · 2,40 €</b></div>
+              <div class="legs"><span class="walk">🚶4</span><span class="sep">›</span><span class="lb tram sm">R6</span><span class="sep">›</span><span class="lb train sm">Os 8813</span></div>
+              <span class="st ok small">naživo · 1 prestup</span>
+            </div>
+            <div class="w-item">
+              <div style="display:flex;justify-content:space-between"><b style="font-variant-numeric:tabular-nums">14:10 – 15:25</b><b>1 h 15 · 2,10 €</b></div>
+              <div class="legs"><span class="walk">🚶9</span><span class="sep">›</span><span class="lb regional sm">701</span></div>
+              <span class="small muted">Bez prestupu</span>
+            </div>
+            <div class="w-item">
+              <div style="display:flex;justify-content:space-between"><b style="font-variant-numeric:tabular-nums">14:31 – 15:40</b><b>1 h 09 · 2,40 €</b></div>
+              <div class="legs"><span class="lb trolley sm">71</span><span class="sep">›</span><span class="lb train sm">REX</span></div>
+              <span class="st warn small">Tesný prestup</span>
+            </div>
+          </div>
+        </div>
+        <div class="w-map">
+          <div class="map">
+            <svg viewBox="0 0 700 500" preserveAspectRatio="xMidYMid slice">
+              <path class="m-park" d="M380 40 h140 v110 h-140z"/>
+              <path class="m-water" d="M-10 330 C120 300 220 370 340 340 S560 290 720 320 V360 C560 340 450 400 330 390 S120 350 -10 370Z"/>
+              <path class="m-road" stroke-width="10" d="M-10 220 H720 M300 -10 V520"/><path class="m-road2" stroke-width="5" d="M-10 100 L720 70 M150 -10 L170 520 M560 -10 L590 520 M-10 440 H720"/>
+              <path d="M120 420 L300 420 L300 220 L560 220" stroke="#C8202A" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M560 220 L620 120 L680 40" stroke="#6A3FB5" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="1 0"/>
+              <path d="M90 450 L120 420" stroke="#6B7686" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/>
+              <circle cx="300" cy="420" r="6" fill="#fff" stroke="#C8202A" stroke-width="3"/><circle cx="560" cy="220" r="7" fill="#fff" stroke="#6A3FB5" stroke-width="3"/>
+              <circle cx="90" cy="450" r="8" fill="#1F6FD1" stroke="#fff" stroke-width="3"/>
+              <g class="veh"><circle r="13" fill="#C8202A"/><text>R6</text><animateMotion dur="12s" repeatCount="indefinite" path="M120 420 L300 420 L300 220 L560 220"/></g>
+              <g class="veh" transform="translate(220 140)" opacity=".9"><rect x="-12" y="-12" width="24" height="24" rx="6" fill="#17804A" stroke="#fff" stroke-width="2"/><text>71</text></g>
+              <text class="m-label" x="560" y="250">Hlavná stanica</text>
+            </svg>
+          </div>
+          <div class="w-pop"><div style="display:flex;gap:8px;align-items:center"><span class="lb tram">R6</span><b>Ťahanovce</b><span class="live" style="margin-left:auto"></span></div><div class="small muted" style="margin-top:6px">Ďalšia: Hlavná · o 1 min<br>Vozidlo 612 · nízkopodlažné · <span class="occ" data-l="2"><i></i><i></i><i></i></span> stredne</div></div>
+          <div class="w-zoom"><b>+</b><b>−</b><b>◎</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="small muted" style="text-align:center">Every planner state is a shareable URL. Below 960 px the side panel becomes a bottom sheet and nav moves to a bottom bar.</p>
+</section>
+
+<!-- ============ A11Y ============ -->
+<section id="a11y">
+  <div class="eyebrow">06 · Accessibility &amp; inclusion</div>
+  <h2>Non-negotiables</h2>
+  <div class="grid g3">
+    <div class="card small"><h4>Perception</h4><ul class="muted" style="padding-left:18px;margin:0"><li>WCAG 2.2 AA, 4.5:1 text, 3:1 UI</li><li>Mode = colour + shape + glyph</li><li>Real-time = colour + dot + word</li><li>Map has a list-view equivalent</li></ul></div>
+    <div class="card small"><h4>Operation</h4><ul class="muted" style="padding-left:18px;margin:0"><li>Dynamic Type AX5 / 200 % font scale without truncating times</li><li>Full VoiceOver, TalkBack, keyboard &amp; Switch Control paths</li><li>No time-limited flows except the ticket itself</li></ul></div>
+    <div class="card small"><h4>Mobility data</h4><ul class="muted" style="padding-left:18px;margin:0"><li>Step-free routing filter</li><li>Low-floor vehicle flag on every departure</li><li>Lift / escalator outage alerts at stations</li></ul></div>
+    <div class="card small"><h4>Language</h4><ul class="muted" style="padding-left:18px;margin:0"><li>Slovenčina (default), English, Magyar, Українська</li><li>Stop names never translated</li><li>Layouts tested at +40 % string length</li></ul></div>
+    <div class="card small"><h4>Low connectivity</h4><ul class="muted" style="padding-left:18px;margin:0"><li>Timetables cached per region</li><li>Tickets valid offline (signed, time-based QR)</li><li>"Offline · podľa CP" state, never a blank screen</li></ul></div>
+    <div class="card small"><h4>Low-tech riders</h4><ul class="muted" style="padding-left:18px;margin:0"><li>Buy without an account (guest + receipt e-mail)</li><li>Senior/student discounts verified once</li><li>Large "Kúpiť lístok" path from app launch in 2 taps</li></ul></div>
+  </div>
+</section>
+
+<!-- ============ TOKENS ============ -->
+<section id="tokens">
+  <div class="eyebrow">07 · Tokens &amp; delivery</div>
+  <h2>One source, three outputs</h2>
+  <div class="grid g2">
+    <div>
+      <p class="muted">Tokens are authored in the <a href="https://www.designtokens.org/" target="_blank">W3C Design Tokens</a> format and compiled with Style Dictionary into Swift <code>Color</code>/<code>ShapeStyle</code> extensions, a Compose <code>IdsTheme</code>, and CSS custom properties. Three tiers:</p>
+      <ol class="muted small" style="padding-left:18px">
+        <li><b>Primitive</b> — raw values (<code>blue.700</code>, <code>red.600</code>).</li>
+        <li><b>Semantic</b> — intent (<code>mode.tram</code>, <code>status.delayed</code>, <code>surface.raised</code>). Light &amp; dark resolve here.</li>
+        <li><b>Platform</b> — mapped onto native systems (Material color roles, iOS semantic colours). Components only consume tiers 2–3.</li>
+      </ol>
+      <p class="muted small">Components are specified once (anatomy, states, a11y labels, copy) and implemented natively: <code>LineBadge</code> in SwiftUI, <code>@Composable LineBadge</code>, and a <code>&lt;ids-line-badge&gt;</code> web component. Shared logic (fare engine, GTFS-RT parsing, ticket signing) lives in Kotlin Multiplatform; UI never does.</p>
+    </div>
+<pre><span class="c">// tokens/semantic/mode.json</span>
+{
+  <span class="k">"mode"</span>: {
+    <span class="k">"tram"</span>: {
+      <span class="k">"$type"</span>: <span class="s">"color"</span>,
+      <span class="k">"$value"</span>: <span class="s">"{red.600}"</span>,
+      <span class="k">"$extensions"</span>: {
+        <span class="k">"ids.dark"</span>: <span class="s">"{red.400}"</span>,
+        <span class="k">"ids.shape"</span>: <span class="s">"pill"</span>,
+        <span class="k">"ids.glyph"</span>: <span class="s">"tram"</span>,
+        <span class="k">"ids.a11yName"</span>: { <span class="k">"sk"</span>: <span class="s">"Električka"</span>, <span class="k">"en"</span>: <span class="s">"Tram"</span> }
+      }
+    }
+  }
+}
+
+<span class="c">// SwiftUI</span>
+LineBadge(line: .init(<span class="s">"R6"</span>, mode: .tram))
+
+<span class="c">// Compose</span>
+LineBadge(line = Line(<span class="s">"R6"</span>, Mode.Tram))
+
+<span class="c">// Web</span>
+&lt;ids-line-badge mode=<span class="s">"tram"</span>&gt;R6&lt;/ids-line-badge&gt;</pre>
+  </div>
+
+  <h3>Open questions for the next iteration</h3>
+  <ul class="muted">
+    <li>Validation model: QR on board validators, NFC (Apple/Google Wallet transit), or EMV contactless tap-in/tap-out with fare capping?</li>
+    <li>Do operators (DPMK, DPMP, regional carriers, ZSSK) provide unified GTFS-RT, or does IDS need to aggregate?</li>
+    <li>Co-branding rules on vehicles and stops — the app's mode colours should match physical signage.</li>
+    <li>Fare-zone map visualisation for regional users who think in towns, not zone numbers.</li>
+  </ul>
+</section>
+</main>
+
+<footer>IDS Východ design-system sketch · concept, not affiliated with or endorsed by IDS Východ · Oct 2026</footer>
+
+<script>
+const root=document.documentElement, btn=document.getElementById('themeBtn');
+const setTheme=t=>{root.dataset.theme=t;btn.textContent=t==='dark'?'☀ Light':'◐ Dark'};
+setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+btn.onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
+
+const qr=document.getElementById('qr');
+const finder=(r,c)=>{for(const [y,x] of [[0,0],[0,14],[14,0]]){const dy=r-y,dx=c-x;if(dy>=0&&dy<7&&dx>=0&&dx<7)return dy===0||dy===6||dx===0||dx===6||(dy>1&&dy<5&&dx>1&&dx<5)?1:0}return -1};
+const drawQr=seed=>{qr.innerHTML='';for(let r=0;r<21;r++)for(let c=0;c<21;c++){const f=finder(r,c);const on=f>=0?f:((r*31+c*17+seed*7)^(r*c+seed))%3===0;qr.insertAdjacentHTML('beforeend',`<i class="${on?'':'o'}"></i>`)}};
+
+let left=58*60+12, seed=1;
+drawQr(seed);
+setInterval(()=>{left=Math.max(0,left-1);const h=String(Math.floor(left/3600)).padStart(2,'0'),m=String(Math.floor(left%3600/60)).padStart(2,'0'),s=String(left%60).padStart(2,'0');document.getElementById('tclock').textContent=`${h}:${m}:${s}`;if(left%15===0)drawQr(++seed)},1000);
+</script>
+</body>
+</html>
