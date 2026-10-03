@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ubian: redesign proposal</title>
+<style>
+/* ---------- Tokens ---------- */
+:root{
+  --ids-red:#FF0000; --ids-blue:#0066B3;           /* logomanuál, HTML values */
+  --red-ui:#D40000; --blue-ui:#0066B3; --blue-ink:#004C8C;
+  --accent:var(--blue-ui); --on-accent:#fff; --accent-soft:#E3EFFA;
+
+  --mode-tram:#D40000; --mode-trolley:#00804A; --mode-bus:#B84A00;
+  --mode-regional:#004C8C; --mode-train:#5B3A9B; --mode-night:#262626;
+
+  --ok:#0B7A3E; --warn:#A35200; --crit:#B3261E; --info:#0066B3;
+
+  --bg:#F5F6F8; --surface:#FFFFFF; --surface-2:#EEF0F3; --line:#D8DCE2;
+  --text:#1A1A1A; --text-2:#4A4F57; --text-3:#6E737B;
+  --badge-ring:transparent;
+
+  --r-s:8px; --r-m:12px; --r-l:20px; --r-xl:28px;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.06);
+  --font:"Lato",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+}
+[data-theme=dark]{
+  --accent:#4DA3FF; --on-accent:#00213F; --accent-soft:#12263D;
+  --red-ui:#FF5A5A;
+  --ok:#3DD68C; --warn:#F5A524; --crit:#FF6B63; --info:#4DA3FF;
+  --bg:#0E1013; --surface:#16191E; --surface-2:#1F232A; --line:#2C323B;
+  --text:#F1F3F5; --text-2:#B8BEC7; --text-3:#8B929C;
+  --badge-ring:rgba(255,255,255,.28);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:16px/1.55 var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono);font-size:.86em}
+code{background:var(--surface-2);padding:1px 5px;border-radius:4px}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em;font-weight:900}
+h2{font-size:30px;letter-spacing:-.01em;margin-top:8px}
+h3{font-size:19px;margin-top:30px}
+h4{font-size:16px}
+p{margin:0 0 1em;max-width:74ch}
+.muted{color:var(--text-2)} .small{font-size:14px}
+ul.clean{padding-left:18px;margin:0}
+
+/* ---------- Layout ---------- */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px;margin:auto;display:flex;align-items:center;gap:20px;padding:10px 24px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:44px;display:block}
+.logo-dark{display:none!important}
+[data-theme=dark] .logo-light{display:none!important}
+[data-theme=dark] .logo-dark{display:block!important}
+.top nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
+.top nav a{color:var(--text-2);text-decoration:none}
+.top nav a:hover{color:var(--text)}
+.toggle{margin-left:auto;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+main{max-width:1240px;margin:auto;padding:0 24px 80px}
+section{padding:56px 0 8px;border-bottom:1px solid var(--line)}
+section:last-child{border:0}
+.eyebrow{font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--red-ui)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);padding:18px;box-shadow:var(--shadow)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2);letter-spacing:.02em}
+.tag.red{background:color-mix(in srgb,var(--red-ui) 14%,transparent);color:var(--red-ui)}
+.tag.blue{background:var(--accent-soft);color:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2)}
+tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto}
+.callout{border-left:4px solid var(--ids-red);background:var(--surface);border-radius:0 var(--r-m) var(--r-m) 0;padding:14px 18px;box-shadow:var(--shadow)}
+
+/* ---------- Hero ---------- */
+.hero{padding:56px 0 40px;display:grid;grid-template-columns:1.15fr 1fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(38px,5vw,60px);letter-spacing:-.025em;margin:.25em 0 .3em}
+.hero h1 em{font-style:normal;color:var(--ids-red)}
+.hero p{font-size:18px;color:var(--text-2)}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.hero-art{aspect-ratio:1.1;border-radius:var(--r-xl);overflow:hidden;background:#fff;position:relative;box-shadow:var(--shadow);border:1px solid var(--line)}
+.hero-art svg{position:absolute;inset:0;width:100%;height:100%}
+.hero-art img{position:absolute;left:9%;top:12%;width:52%}
+@media(max-width:860px){.hero{grid-template-columns:1fr}}
+
+/* ---------- Brand motif: parallel tracks heading east ---------- */
+.tracks{height:14px;position:relative;margin:6px 0}
+.tracks::before,.tracks::after{content:"";position:absolute;left:0;right:10px;height:3px;background:var(--ids-red);border-radius:2px}
+.tracks::before{top:2px}.tracks::after{top:9px}
+.tracks i{position:absolute;right:0;top:0;width:0;height:0;border-left:12px solid var(--ids-red);border-top:7px solid transparent;border-bottom:7px solid transparent}
+
+/* ---------- Swatches ---------- */
+.sw{border-radius:var(--r-m);overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.sw .chip{height:72px;display:flex;align-items:flex-end;padding:8px 10px;color:#fff;font-weight:700;font-size:13px}
+.sw .meta{padding:8px 10px;font-size:12.5px;color:var(--text-2)}
+.sw .meta b{color:var(--text);display:block;font-size:13px}
+
+/* ---------- Line badges ---------- */
+.lb{--c:var(--mode-bus);display:inline-flex;align-items:center;justify-content:center;gap:3px;min-width:34px;height:24px;padding:0 7px;font:900 14px/1 var(--font);color:#fff;background:var(--c);font-variant-numeric:tabular-nums;white-space:nowrap;box-shadow:inset 0 0 0 1px var(--badge-ring)}
+.lb.tram{--c:var(--mode-tram);border-radius:12px}
+.lb.trolley{--c:var(--mode-trolley);border-radius:6px}
+.lb.bus{--c:var(--mode-bus);border-radius:2px}
+.lb.regional{--c:var(--mode-regional);border-radius:2px;box-shadow:inset 0 -3px 0 rgba(255,255,255,.55),inset 0 0 0 1px var(--badge-ring)}
+.lb.train{--c:var(--mode-train);border-radius:2px;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);padding:0 11px}
+.lb.night{--c:var(--mode-night);border-radius:12px;box-shadow:inset 0 0 0 2px #FFD54A}
+.lb.sm{height:20px;min-width:28px;font-size:12px;padding:0 6px}
+.lb.lg{height:32px;min-width:44px;font-size:17px}
+.lb svg{width:12px;height:12px;fill:currentColor}
+
+/* ---------- Status ---------- */
+.st{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st.ok{color:var(--ok)}.st.warn{color:var(--warn)}.st.crit{color:var(--crit)}.st.info{color:var(--info)}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent)}70%,100%{box-shadow:0 0 0 8px transparent}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.occ{display:inline-flex;gap:2px;align-items:flex-end}
+.occ i{width:4px;border-radius:1px;background:var(--line)}
+.occ i:nth-child(1){height:6px}.occ i:nth-child(2){height:9px}.occ i:nth-child(3){height:12px}
+.occ[data-l="1"] i:nth-child(-n+1),.occ[data-l="2"] i:nth-child(-n+2){background:var(--text-2)}
+.occ[data-l="3"] i{background:var(--warn)}
+.chipx{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:700;background:var(--surface-2);color:var(--text-2);white-space:nowrap}
+.chipx.ok{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
+.chipx.warn{background:color-mix(in srgb,var(--warn) 14%,transparent);color:var(--warn)}
+.chipx.blue{background:var(--accent-soft);color:var(--accent)}
+.chipx.crit{background:color-mix(in srgb,var(--crit) 12%,transparent);color:var(--crit)}
+
+/* ---------- Mode switch (IDS vs all) ---------- */
+.modesw{display:inline-flex;padding:3px;border-radius:999px;background:var(--surface-2);font-size:13px;font-weight:700}
+.modesw span{padding:6px 12px;border-radius:999px;color:var(--text-2);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.modesw span.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.modesw img{height:14px}
+
+/* ---------- Device frames ---------- */
+.devices{display:flex;gap:28px;flex-wrap:wrap;justify-content:center;align-items:flex-start;padding:16px 0}
+.devices.phones{max-width:700px;margin:auto}
+@media(min-width:1340px){.devices.phones{max-width:1040px}}
+.dev-col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.dev-cap{font-size:13px;color:var(--text-2);text-align:center;max-width:300px}
+.dev-cap b{color:var(--text);display:block}
+.phone{width:300px;height:640px;border-radius:46px;padding:10px;background:#111;box-shadow:0 0 0 1px #333,0 20px 50px rgba(0,0,0,.25);position:relative;flex:none}
+.phone.android{border-radius:34px}
+.screen{width:100%;height:100%;border-radius:37px;overflow:hidden;position:relative;background:var(--surface);color:var(--text);font-family:var(--font)}
+.android .screen{border-radius:26px}
+.sbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 30px;font-size:14px;font-weight:700;position:relative;z-index:5;font-family:-apple-system,system-ui,sans-serif}
+.ios .sbar::after{content:"";position:absolute;left:50%;top:10px;transform:translateX(-50%);width:92px;height:27px;border-radius:20px;background:#000}
+.android .sbar{height:32px;font-size:12px;padding:0 18px;font-weight:500;font-family:Roboto,system-ui,sans-serif}
+.android .sbar::after{content:"";position:absolute;left:50%;top:9px;width:12px;height:12px;border-radius:50%;background:#000;transform:translateX(-50%)}
+.sbar .ic i{display:block;width:16px;height:9px;border-radius:2px;border:1.5px solid currentColor;opacity:.9}
+.home-ind{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:110px;height:4px;border-radius:3px;background:var(--text);opacity:.85;z-index:9}
+
+/* map */
+.map{position:absolute;inset:0;background:#E9ECE6}
+[data-theme=dark] .map{background:#151A20}
+.map svg{width:100%;height:100%}
+.m-water{fill:#BBD6EE}[data-theme=dark] .m-water{fill:#1A3049}
+.m-park{fill:#D4E6CC}[data-theme=dark] .m-park{fill:#19271F}
+.m-road{stroke:#fff;fill:none;stroke-linecap:round}[data-theme=dark] .m-road{stroke:#2A323D}
+.m-road2{stroke:#F7F3E8;fill:none}[data-theme=dark] .m-road2{stroke:#222A33}
+.m-blk{fill:#DDE1DA}[data-theme=dark] .m-blk{fill:#1A2028}
+.m-label{font:700 9px var(--font);fill:#5E6670;letter-spacing:.05em;text-transform:uppercase}
+.veh text{font:900 9px var(--font);fill:#fff;text-anchor:middle;dominant-baseline:central}
+
+/* iOS */
+.glass{background:color-mix(in srgb,var(--surface) 74%,transparent);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);border:1px solid color-mix(in srgb,#fff 45%,transparent);box-shadow:0 8px 30px rgba(0,0,0,.14)}
+[data-theme=dark] .glass{border-color:rgba(255,255,255,.12)}
+.ios-nav{display:flex;align-items:center;justify-content:space-between;padding:2px 16px 0}
+.ios-large{font-size:32px;font-weight:900;letter-spacing:-.02em;padding:2px 18px 8px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--surface-2);color:var(--text);font-size:12px;font-weight:900;display:grid;place-items:center;border:1px solid var(--line)}
+.ios-tabs{position:absolute;left:10px;right:10px;bottom:22px;height:62px;border-radius:31px;display:flex;justify-content:space-around;align-items:center;z-index:6;font-size:9.5px;font-weight:700}
+.ios-tabs div{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--text-2);padding:6px 6px;border-radius:24px;min-width:50px}
+.ios-tabs div.on{color:var(--accent);background:color-mix(in srgb,var(--accent) 13%,transparent)}
+.ios-tabs svg{width:21px;height:21px;fill:currentColor}
+.ios-group{margin:0 14px 12px;background:var(--surface-2);border-radius:14px;overflow:hidden}
+.ios-row{display:flex;align-items:center;gap:10px;padding:11px 14px;font-size:15px;border-bottom:.5px solid var(--line)}
+.ios-row:last-child{border:0}
+.ios-row .r{margin-left:auto;color:var(--text-2);font-size:14px}
+.ios-btn{display:flex;justify-content:center;align-items:center;gap:8px;margin:0 14px;border-radius:999px;padding:14px;font-weight:900;font-size:16px;background:var(--accent);color:var(--on-accent)}
+.ios-sheet{position:absolute;left:8px;right:8px;bottom:92px;border-radius:30px;padding:8px 16px 12px;z-index:4}
+.grab{width:36px;height:5px;border-radius:3px;background:var(--text-3);opacity:.45;margin:0 auto 10px}
+.ios-search{position:absolute;top:52px;left:12px;right:12px;height:44px;border-radius:22px;display:flex;align-items:center;gap:8px;padding:0 6px 0 14px;font-size:16px;color:var(--text-3);z-index:4}
+.ios-search .av{margin-left:auto}
+.field{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:15px;border-bottom:.5px solid var(--line)}
+.field:last-child{border:0}
+.field .dot{width:10px;height:10px;border-radius:50%;border:2.5px solid var(--accent);flex:none}
+.field .pinx{width:12px;height:12px;flex:none}
+
+.dep{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--line)}
+.dep:last-child{border:0}
+.dep .dest{flex:1;min-width:0}
+.dep .dest b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dep .dest span{font-size:12px;color:var(--text-2)}
+.dep .t{text-align:right;font-variant-numeric:tabular-nums}
+.dep .t b{display:block;font-size:17px;font-weight:900}
+.dep .t b.rt{color:var(--ok)}
+
+/* Android */
+.m-top{padding:6px 12px 8px;display:flex;align-items:center;gap:10px}
+.m-tbar{display:flex;align-items:center;gap:14px;padding:6px 14px;font-size:20px}
+.m-tbar b{font-size:20px;font-weight:700;flex:1}
+.m-card{margin:8px 12px;background:var(--surface-2);border-radius:20px;padding:13px 15px}
+.m-card.sel{background:var(--accent-soft);outline:2px solid var(--accent)}
+.m-nav{position:absolute;left:0;right:0;bottom:0;height:80px;background:var(--surface-2);display:flex;justify-content:space-around;align-items:flex-start;padding-top:12px;font-size:11px;font-weight:700;z-index:6}
+.m-nav div{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text-2);width:58px;text-align:center}
+.m-nav i{width:56px;height:32px;border-radius:16px;display:grid;place-items:center;font-style:normal}
+.m-nav div.on{color:var(--text)}
+.m-nav div.on i{background:color-mix(in srgb,var(--accent) 24%,transparent)}
+.m-nav svg{width:22px;height:22px;fill:currentColor}
+.m-btn{display:flex;justify-content:center;align-items:center;gap:8px;height:56px;border-radius:28px;background:var(--accent);color:var(--on-accent);font-weight:900;font-size:16px;margin:0 12px}
+.m-btn.tonal{background:var(--surface-2);color:var(--text)}
+.m-seg{display:flex;margin:4px 12px 10px;border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.m-seg div{flex:1;text-align:center;padding:9px 4px;font-size:13px;font-weight:700;border-right:1px solid var(--line)}
+.m-seg div:last-child{border:0}
+.m-seg div.on{background:var(--accent-soft)}
+.m-label{font-size:12px;font-weight:900;color:var(--text-2);padding:10px 16px 4px;letter-spacing:.06em;text-transform:uppercase}
+.op{font-size:11.5px;color:var(--text-2);margin-top:2px}
+
+.legs{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:6px 0}
+.legs .walk{font-size:12px;color:var(--text-2);display:inline-flex;align-items:center;gap:2px}
+.legs .sep{color:var(--text-3);font-size:11px}
+.bar{height:6px;border-radius:3px;display:flex;overflow:hidden;gap:2px;margin:8px 0 4px}
+.bar span{display:block;height:100%}
+
+/* Ticket */
+.ticket{margin:6px 14px;border-radius:24px;overflow:hidden;background:var(--surface);box-shadow:0 10px 30px rgba(0,0,0,.18);position:relative;border:1px solid var(--line)}
+.lock{height:112px;background:#fff;position:relative;overflow:hidden;color:#1A1A1A;padding:12px 16px}
+.lock::before{content:"";position:absolute;left:-60px;right:-60px;top:58px;height:30px;background:
+  linear-gradient(var(--ids-red),var(--ids-red)) 0 4px/100% 5px no-repeat,
+  linear-gradient(var(--ids-red),var(--ids-red)) 0 17px/100% 5px no-repeat}
+.lock .runner{position:absolute;top:58px;left:0;width:60px;height:30px;animation:east 3.2s linear infinite}
+.lock .runner::after{content:"";position:absolute;right:0;top:-4px;border-left:20px solid var(--ids-red);border-top:19px solid transparent;border-bottom:19px solid transparent}
+.lock .runner::before{content:"";position:absolute;inset:4px 18px 4px 0;background:repeating-linear-gradient(90deg,#fff 0 4px,transparent 4px 10px)}
+@keyframes east{from{transform:translateX(-60px)}to{transform:translateX(320px)}}
+.lock > *{position:relative}
+.lock .code{position:absolute;right:14px;top:12px;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font:900 15px var(--font);color:#fff}
+.lock-clock{font:900 26px var(--font);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.ticket-body{padding:12px 16px}
+.kv{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.kv:last-child{border:0}
+.kv span{color:var(--text-2)}
+.qr{width:104px;height:104px;margin:4px auto 2px;display:grid;grid-template-columns:repeat(21,1fr);background:#fff;padding:6px;border-radius:8px;border:1px solid var(--line)}
+.qr i{background:#1A1A1A}.qr i.o{background:transparent}
+
+/* Rating */
+.rate{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:.5px solid var(--line);font-size:14px}
+.rate:last-child{border:0}
+.dots{display:flex;gap:5px}
+.dots i{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:block}
+.dots i.on{background:var(--accent);border-color:var(--accent)}
+
+/* Web */
+.browser{width:100%;max-width:1080px;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.15);background:var(--surface)}
+.b-chrome{height:38px;background:var(--surface-2);display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line)}
+.b-chrome i{width:11px;height:11px;border-radius:50%;background:#FF5F57}.b-chrome i:nth-child(2){background:#FEBC2E}.b-chrome i:nth-child(3){background:#28C840}
+.b-url{margin-left:12px;flex:1;max-width:420px;height:24px;border-radius:6px;background:var(--surface);font-size:12px;display:flex;align-items:center;padding:0 10px;color:var(--text-2)}
+.w-app{display:grid;grid-template-columns:390px 1fr;height:580px}
+.w-head{grid-column:1/-1;height:58px;display:flex;align-items:center;gap:24px;padding:0 20px;border-bottom:1px solid var(--line)}
+.w-head img{height:40px}
+.w-head nav{display:flex;gap:4px}
+.w-head nav a{padding:8px 12px;border-radius:8px;font-size:14px;color:var(--text-2);text-decoration:none;font-weight:700}
+.w-head nav a.on{background:var(--accent-soft);color:var(--text)}
+.w-head .lang{margin-left:auto;font-size:13px;color:var(--text-2)}
+.w-btn{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 14px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:900;white-space:nowrap}
+.w-btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+.w-side{border-right:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.w-form{padding:14px 16px;display:grid;gap:8px;border-bottom:1px solid var(--line)}
+.w-in{height:40px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:14px;background:var(--surface)}
+.w-in .dot{width:10px;height:10px;border-radius:50%;border:2.5px solid var(--accent)}
+.w-in.focus{outline:3px solid color-mix(in srgb,var(--accent) 40%,transparent);border-color:var(--accent)}
+.w-res{padding:8px;overflow:hidden}
+.w-item{padding:11px 12px;border-radius:10px;border:1px solid transparent}
+.w-item.sel{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.w-map{position:relative;overflow:hidden}
+.w-pop{position:absolute;left:44%;top:22%;width:250px;padding:12px 14px;border-radius:12px;background:var(--surface);box-shadow:var(--shadow);border:1px solid var(--line);font-size:13px}
+.w-zoom{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.w-zoom b{width:34px;height:34px;display:grid;place-items:center;border-bottom:1px solid var(--line);font-weight:400}
+.w-zoom b:last-child{border:0}
+@media(max-width:860px){.w-app{grid-template-columns:1fr}.w-map{display:none}}
+
+/* Admin */
+.adm{display:grid;grid-template-columns:220px 1fr;height:560px;font-size:14px}
+.adm-side{border-right:1px solid var(--line);padding:14px 10px;background:var(--surface-2)}
+.adm-side img{height:40px;margin:0 6px 16px}
+.adm-side a{display:flex;justify-content:space-between;padding:8px 10px;border-radius:8px;color:var(--text-2);text-decoration:none;font-weight:700;font-size:13.5px}
+.adm-side a.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.adm-side a em{font-style:normal;font-size:11px;background:var(--ids-red);color:#fff;border-radius:999px;padding:1px 7px}
+.adm-main{padding:16px 20px;overflow:hidden}
+.adm-bar{display:flex;gap:8px;align-items:center;margin:12px 0}
+.adm-env{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--warn) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);font-size:13.5px}
+.adm table{font-size:13px;box-shadow:none}
+.adm td,.adm th{padding:8px 10px}
+@media(max-width:860px){.adm{grid-template-columns:1fr}.adm-side{display:none}}
+
+/* Glance */
+.lockscreen{background:linear-gradient(160deg,#5a6b80,#1d2530);border-radius:28px;padding:40px 16px 24px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.la{width:300px;border-radius:24px;padding:14px 16px;color:#fff;background:rgba(20,20,24,.74);backdrop-filter:blur(20px)}
+.island{background:#000;color:#fff;border-radius:22px;height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;width:250px;font-weight:700;font-size:13px}
+.notif{width:320px;border-radius:24px;background:var(--surface-2);padding:14px 16px;border:1px solid var(--line)}
+.prog{position:relative;height:8px;border-radius:4px;background:var(--line);margin:12px 0 6px}
+.prog b{position:absolute;left:0;top:0;bottom:0;width:62%;border-radius:4px;background:var(--mode-tram)}
+.prog i{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--mode-tram);transform:translate(-50%,-50%)}
+
+/* Timeline (double-track connector from the logo) */
+.tl{position:relative;padding-left:28px}
+.tl-step{position:relative;padding:0 0 14px}
+.tl-step::before{content:"";position:absolute;left:-21px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:3px solid var(--c,var(--text-3));z-index:1}
+.tl-step::after{content:"";position:absolute;left:-18px;top:18px;bottom:-4px;width:6px;background:linear-gradient(90deg,var(--c,var(--line)) 0 2px,transparent 2px 4px,var(--c,var(--line)) 4px)}
+.tl-step.walk::after{background:repeating-linear-gradient(var(--text-3) 0 3px,transparent 3px 7px);width:2px;left:-16px}
+.tl-step:last-child::after{display:none}
+.tl-step b{font-size:14px}
+.tl-step .tm{float:right;font-variant-numeric:tabular-nums;font-weight:900;font-size:13px}
+
+/* Banner */
+.banner{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:var(--r-m);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);background:color-mix(in srgb,var(--warn) 10%,var(--surface));font-size:14px}
+.banner.crit{border-color:color-mix(in srgb,var(--crit) 35%,transparent);background:color-mix(in srgb,var(--crit) 9%,var(--surface))}
+.banner.info{border-color:color-mix(in srgb,var(--info) 35%,transparent);background:color-mix(in srgb,var(--info) 9%,var(--surface))}
+.banner .bi{flex:none;width:20px;height:20px;border-radius:50%;background:var(--warn);color:#fff;display:grid;place-items:center;font-weight:900;font-size:13px}
+.banner.crit .bi{background:var(--crit)}.banner.info .bi{background:var(--info)}
+
+/* Arch diagram */
+.arch{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:14px;align-items:stretch}
+.box{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface);font-size:13.5px}
+.box h4{margin:0 0 6px;font-size:14px}
+.box.core{border-color:var(--ids-red);border-width:2px}
+.box.ds{border-style:dashed;border-color:var(--accent)}
+.box.future{opacity:.65;border-style:dashed}
+.box ul{margin:0;padding-left:16px;color:var(--text-2)}
+.stack{display:grid;gap:10px}
+.arrow{font-size:12px;color:var(--text-3);text-align:center}
+@media(max-width:900px){.arch{grid-template-columns:1fr}}
+
+.typescale div{display:flex;align-items:baseline;gap:16px;padding:8px 0;border-bottom:1px solid var(--line)}
+.typescale span.k{width:110px;flex:none;font-size:12px;color:var(--text-2);font-family:var(--mono)}
+.spacing{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.spacing div{display:flex;flex-direction:column;align-items:center;font-size:11px;color:var(--text-2);gap:6px}
+.spacing div i{display:block;background:var(--accent);border-radius:2px;opacity:.85}
+pre{background:#0E1218;color:#D6E2F2;border-radius:var(--r-m);padding:16px;overflow:auto;font:12.5px/1.6 var(--mono)}
+pre .k{color:#7FB8FF}pre .s{color:#FF9A8A}pre .c{color:#6B7A90}
+.dodont{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.do,.dont{border-radius:var(--r-m);padding:14px;font-size:14px;background:var(--surface);border:1px solid var(--line)}
+.do{border-top:4px solid var(--ok)}.dont{border-top:4px solid var(--crit)}
+.do b{color:var(--ok)}.dont b{color:var(--crit)}
+.icons{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end}
+.icons figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;color:var(--text-2)}
+.appicon{width:84px;height:84px;background:#fff;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.18);border:1px solid #e3e3e3}
+.appicon img{width:58%}
+
+section,[id]{scroll-margin-top:84px}
+.top nav::-webkit-scrollbar{display:none}
+@media(max-width:960px){
+  .top-in{flex-wrap:wrap;gap:8px 12px;padding:8px 16px}
+  .brand .tag{display:none}
+  .brand img{height:36px}
+  .top nav{order:3;flex:1 0 100%;flex-wrap:nowrap;overflow-x:auto;gap:6px;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .top nav a{white-space:nowrap;padding:5px 12px;border-radius:999px;background:var(--surface-2);font-size:13px}
+  section,[id]{scroll-margin-top:118px}
+}
+@media(max-width:640px){
+  main{padding:0 16px 60px}
+  section{padding-top:40px}
+  h2{font-size:24px}
+  .hero{padding:32px 0 28px;gap:24px}
+  .hero p{font-size:16px}
+  .dodont{grid-template-columns:1fr}
+  .devices{gap:20px}
+  .phone{transform-origin:top center}
+  .notif,.lockscreen{max-width:100%}
+  .lockscreen{padding:28px 10px 18px}
+  .la{width:100%;max-width:300px}
+  .dev-col{max-width:100%}
+  .w-head{gap:12px;padding:0 12px}
+  .w-head nav,.w-head .lang{display:none}
+  .w-head .w-btn{margin-left:auto}
+  .w-form > div:last-child{flex-wrap:wrap}
+  .adm-main{padding:12px}
+  .adm-bar,.adm-env{flex-wrap:wrap}
+  .adm-bar b{flex-basis:100%}
+  .adm-bar .w-in{width:auto!important;flex:1}
+  .adm{height:auto}
+  .w-app{height:auto}
+  .typescale span.k{width:84px}
+  .callout{padding:12px 14px}
+}
+@media(max-width:360px){
+  .w-head .w-btn{display:none}
+  .b-url{margin-left:4px}
+  .phone{transform:scale(.9);margin-bottom:-64px}
+}
+
+
+/* ---------- v0.3: dock, places, trip ---------- */
+@property --p{syntax:'<percentage>';inherits:true;initial-value:40%}
+.demo .view{position:absolute;inset:0;opacity:0;transform:translateY(14px) scale(.985);transition:opacity .35s ease,transform .5s cubic-bezier(.2,.8,.2,1);pointer-events:none;overflow:hidden;background:var(--surface)}
+.demo[data-view=map] .v-map,.demo[data-view=dep] .v-dep,.demo[data-view=ticket] .v-ticket,.demo[data-view=ride] .v-ride{opacity:1;transform:none;pointer-events:auto}
+.demo .v-ticket{background:var(--surface-2)}
+.dock{position:absolute;left:10px;right:10px;bottom:20px;display:flex;gap:8px;z-index:8;align-items:center;transition:opacity .3s,transform .45s}
+.dock-search{height:56px;border-radius:28px;display:flex;align-items:center;gap:8px;padding:0 18px;overflow:hidden;white-space:nowrap;flex:1 1 auto;min-width:56px;max-width:56px;margin-left:auto;transition:max-width .5s cubic-bezier(.3,1.3,.4,1);font-size:16px;color:var(--text-2);cursor:pointer}
+.dock-search svg{flex:none;width:20px;height:20px;fill:var(--text)}
+.dock-search .ds-t{opacity:0;transition:opacity .25s}
+.demo[data-view=map] .dock-search{max-width:400px}
+.demo[data-view=map] .dock-search .ds-t{opacity:1;transition-delay:.15s}
+.dock-tabs{height:56px;border-radius:28px;display:flex;align-items:center;padding:0 4px;flex:none}
+.dock-tabs button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;height:48px;border-radius:24px;padding:0 9px;max-width:80px;color:var(--text-2);font:700 9.5px var(--font);transition:max-width .5s cubic-bezier(.3,1.3,.4,1),padding .5s,opacity .3s,background .3s,color .3s;overflow:hidden}
+.dock-tabs button svg{width:22px;height:22px;fill:currentColor;flex:none}
+.dock-tabs button span{max-height:14px;max-width:60px;opacity:1;white-space:nowrap;transition:max-height .4s,max-width .45s,opacity .3s}
+.dock-tabs button.on{color:var(--accent);background:color-mix(in srgb,var(--accent) 13%,transparent)}
+.demo[data-view=map] .dock-tabs button:not(.last){max-width:0;padding:0;opacity:0}
+.demo[data-view=map] .dock-tabs button span{max-height:0;max-width:0;opacity:0}
+.demo[data-view=map] .dock-tabs button.last{padding:0 13px}
+.dock-tabs button:focus-visible,.dock-search:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.demo[data-view=ride] .dock,.demo[data-view=ride] .acc,.demo[data-view=map] .acc{opacity:0;transform:translateY(16px) scale(.96);pointer-events:none}
+.acc{position:absolute;left:14px;right:14px;bottom:86px;height:50px;border-radius:25px;display:flex;align-items:center;gap:10px;padding:0 14px 0 10px;z-index:7;cursor:pointer;transition:opacity .3s,transform .45s cubic-bezier(.3,1.3,.4,1)}
+.acc.static{position:static;width:100%;max-width:380px;height:auto;min-height:54px;padding:8px 10px;cursor:default}
+.st:has(.live)::before{display:none}
+.acc-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.acc-t span{font-size:12px;color:var(--text-2)}
+.acc-m{font-size:16px;font-weight:900;color:var(--ok);font-variant-numeric:tabular-nums}
+.mini-track{position:relative;height:6px;display:block}
+.mini-track::before,.mini-track::after{content:"";position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--mode-tram) 0 var(--p),color-mix(in srgb,var(--mode-tram) 25%,transparent) var(--p));animation:ride 9s ease-in-out infinite}
+.mini-track::before{top:0}.mini-track::after{top:4px}
+.faces{display:flex;gap:4px}
+.faces i{font-style:normal;font-size:20px;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--surface-2)}
+.pcard{margin:0 12px 10px;background:var(--surface-2);border-radius:18px;padding:10px 14px 4px}
+.pcard.dim{padding-bottom:10px}
+.pc-h{display:flex;align-items:center;gap:10px;padding-bottom:4px}
+.pc-h b{font-size:15px}
+.pc-ic{width:30px;height:30px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:15px;flex:none}
+.pc-eye{font-size:11px;font-weight:900;letter-spacing:.04em;color:var(--accent);text-transform:uppercase}
+.pc-dir{margin-left:auto;font-size:12px;color:var(--text-2);white-space:nowrap;display:flex;gap:6px;align-items:center}
+.pcard .dep{max-height:64px;overflow:hidden}
+.dep.leave{animation:leave .45s ease forwards}
+.dep.enter{animation:enter .45s ease}
+@keyframes leave{to{opacity:0;max-height:0;padding-top:0;padding-bottom:0;border-width:0}}
+@keyframes enter{from{opacity:0;max-height:0;padding-top:0;padding-bottom:0}}
+.t b.now{animation:nowp 1s ease-in-out infinite alternate}
+@keyframes nowp{from{opacity:1}to{opacity:.45}}
+.trip{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:12px 14px;box-shadow:var(--shadow)}
+.trip-h{display:flex;align-items:center;gap:8px;font-size:14px}
+.trip-track{position:relative;height:22px;margin:12px 10px 4px;--p:40%;animation:ride 9s ease-in-out infinite}
+.trip-track::before,.trip-track::after{content:"";position:absolute;left:0;right:0;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--c) 0 var(--p),color-mix(in srgb,var(--c) 22%,transparent) var(--p))}
+.trip-track::before{top:6px}.trip-track::after{top:13px}
+.trip-track i{position:absolute;top:4px;width:14px;height:14px;border-radius:50%;background:var(--surface);border:3px solid var(--c);transform:translateX(-50%);box-sizing:border-box}
+.trip-pin{position:absolute;left:100%;top:-2px;width:22px;transform:translateX(-50%);animation:pinp 1.6s ease-in-out infinite}
+@keyframes pinp{50%{transform:translateX(-50%) scale(1.15)}}
+.trip-veh{position:absolute;top:1px;left:var(--p);width:20px;height:20px;border-radius:50%;background:var(--c);border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);transform:translateX(-50%);box-sizing:border-box}
+@keyframes ride{0%{--p:28%}85%,100%{--p:58%}}
+.trip-stops{display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-2);margin:2px 0 6px}
+.trip-stops span{width:25%;text-align:center}.trip-stops span:first-child{text-align:left}.trip-stops span:last-child{text-align:right;color:var(--text)}
+.trip-f{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px;color:var(--text-2)}
+.trip-f b{font-size:16px;color:var(--text);font-weight:900}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 6px;font-size:12.5px;font-weight:700;text-align:center}
+.pick > div{border:2px solid var(--line);border-radius:16px;padding:8px;display:flex;flex-direction:column;gap:6px}
+.pick > div.on{border-color:var(--accent);background:var(--accent-soft)}
+.pk-art{height:50px;border-radius:10px;background:var(--surface-2);position:relative;overflow:hidden}
+.map-art{background:linear-gradient(90deg,transparent 46%,var(--line) 46% 54%,transparent 54%),linear-gradient(transparent 40%,var(--line) 40% 48%,transparent 48%),var(--surface-2)}
+.map-art span{position:absolute;left:8px;right:8px;bottom:7px;height:12px;border-radius:6px;background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.list-art{display:flex;flex-direction:column;gap:5px;padding:9px}
+.list-art i{height:12px;border-radius:4px;background:var(--surface)}
+.tgl{display:inline-block;width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;vertical-align:middle}
+.tgl::after{content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.tgl.on{background:#34C759}.tgl.on::after{left:20px}
+.a-sheet{position:absolute;left:0;right:0;bottom:80px;background:var(--surface);border-radius:28px 28px 0 0;padding:8px 0 6px;box-shadow:0 -6px 24px rgba(0,0,0,.18);z-index:5;animation:sheetup .8s cubic-bezier(.2,.9,.3,1.1) .6s both}
+@keyframes sheetup{from{transform:translateY(70%)}to{transform:none}}
+.a-route{display:flex;align-items:center;gap:8px;margin:0 12px 8px;height:48px;border-radius:24px;background:var(--surface-2);padding:0 16px;font-size:15px;font-weight:700}
+.a-route .dot{width:10px;height:10px;border-radius:50%;border:2.5px solid var(--accent)}
+.a-route .sep{color:var(--text-3)}
+.a-nav{position:absolute;left:0;right:0;bottom:0;height:80px;background:var(--surface-2);display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;font-size:12px;font-weight:700;z-index:6}
+.a-nav div{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text-2);width:70px}
+.a-nav i{width:56px;height:32px;border-radius:16px;display:grid;place-items:center;font-style:normal}
+.a-nav div.on{color:var(--text)}
+.a-nav div.on i{background:color-mix(in srgb,var(--accent) 24%,transparent)}
+.a-nav svg{width:22px;height:22px;fill:currentColor}
+.draw path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 7s ease-out infinite}
+.draw path.d2{animation-name:draw2}
+@keyframes draw{0%,8%{stroke-dashoffset:1}20%,100%{stroke-dashoffset:0}}
+@keyframes draw2{0%,18%{stroke-dashoffset:1}28%,100%{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.draw path{stroke-dashoffset:0}.a-sheet{transform:none}.trip-track{--p:45%}}
+
+.planner{position:absolute;left:10px;right:10px;bottom:86px;border-radius:26px;padding:10px 12px 6px;z-index:6;transition:opacity .35s,transform .5s cubic-bezier(.3,1.2,.4,1)}
+.demo:not([data-view=map]) .planner{opacity:0;transform:translateY(30px)}
+.planner.static{position:static;background:var(--surface-2);border-radius:20px}
+.pl-row{display:flex;align-items:center;gap:8px;height:42px;padding:0 12px;border-radius:14px;background:color-mix(in srgb,var(--surface) 70%,transparent);font-size:14px;margin-bottom:6px}
+.pl-row .muted{width:44px;font-size:12px}
+.pl-row.focus{outline:2px solid var(--accent)}
+.pl-row .dot,.a-od .dot{width:10px;height:10px;border-radius:50%;border:2.5px solid var(--accent);flex:none}
+.pl-swap{margin-left:auto;color:var(--text-2);display:flex}
+.caret::after{content:"";display:inline-block;width:2px;height:16px;background:var(--accent);vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.pl-chips{display:flex;gap:6px;margin:2px 0 4px;flex-wrap:wrap}
+.pl-sug{display:flex;align-items:center;gap:10px;padding:6px 2px;border-top:.5px solid var(--line);font-size:14px}
+.pl-sug > div{flex:1;min-width:0}
+.pl-t{color:var(--accent);font-weight:900}
+.ride-h{padding:6px 16px 4px}
+.ride-big{font-size:26px;font-weight:900;letter-spacing:-.01em;margin:10px 0 2px;line-height:1.1}
+.vtl{position:relative;margin:12px 16px 0;padding-left:28px}
+.vs{position:relative;padding:7px 0;font-size:14px;min-height:34px}
+.vs::before{content:"";position:absolute;left:-23px;top:10px;width:13px;height:13px;border-radius:50%;background:var(--surface);border:3px solid var(--c,var(--text-3));box-sizing:border-box;z-index:1}
+.vs::after{content:"";position:absolute;left:-19.5px;top:22px;bottom:-12px;width:6px;background:linear-gradient(90deg,var(--c,var(--line)) 0 2px,transparent 2px 4px,var(--c,var(--line)) 4px)}
+.vs:last-child::after{display:none}
+.vs.past{color:var(--text-3)}
+.vs.past::before{background:var(--c)}
+.vs.past::after{opacity:.45}
+.vs.walk::before{width:8px;height:8px;left:-20.5px;top:13px;border:0;background:var(--text-3)}
+.vs.walk::after{background:repeating-linear-gradient(var(--text-3) 0 3px,transparent 3px 7px);width:2px;left:-17.5px}
+.vs.dest::before{width:17px;height:17px;left:-25px;top:8px;border-width:4px;animation:destp 1.6s ease-in-out infinite}
+@keyframes destp{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--c) 25%,transparent)}}
+.vs .tm{float:right;font-weight:900;font-variant-numeric:tabular-nums;font-size:13px;color:var(--text)}
+.vs.past .tm{color:var(--text-3)}
+.vveh{position:absolute;left:-26.5px;width:20px;height:20px;border-radius:50%;background:var(--c);border:3px solid #fff;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,.35);z-index:2;animation:vride 7s ease-in-out infinite}
+@keyframes vride{0%{top:6px}85%,100%{top:36px}}
+.ride-cta{position:absolute;left:14px;right:14px;bottom:30px;display:flex;flex-direction:column;gap:4px;z-index:3}
+.ride-sec{text-align:center;color:var(--text-2);font-weight:700;font-size:14px;padding:8px}
+.a-od{position:relative;margin:0 12px 8px;background:var(--surface-2);border-radius:20px;padding:2px 44px 2px 14px}
+.a-od div{display:flex;align-items:center;gap:8px;height:38px;font-size:15px;font-weight:700}
+.a-od div+div{border-top:1px solid var(--line)}
+.a-od .pl-swap{position:absolute;right:14px;top:50%;transform:translateY(-50%)}
+.a-back{position:absolute;top:40px;left:12px;width:40px;height:40px;border-radius:50%;background:var(--surface);display:grid;place-items:center;box-shadow:var(--shadow);z-index:6;font-size:18px}
+.a-fab{position:absolute;right:16px;bottom:96px;width:56px;height:56px;border-radius:16px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:6}
+@media (prefers-reduced-motion:reduce){.vveh{top:20px}}
+
+footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:13px}
+
+/* ---------- Ubian overrides ---------- */
+:root{
+  --ub-green:#33B45D; --ub-navy:#152937;
+  --accent:#1E7F3F; --on-accent:#fff; --accent-soft:#E6F5EC; --red-ui:#1E7F3F; --ribbon-case:#fff;
+  --mode-tram:#C8363A; --mode-trolley:#C8363A; --mode-bus:#C8363A; --mode-regional:#1F6FB2; --mode-train:#A85A00; --mode-night:#262626;
+  --ok:#0B7A3E; --info:#1F6FB2;
+  --bg:#F4F5F7; --text:#152937;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;
+}
+[data-theme=dark]{--accent:#33B45D;--on-accent:#152937;--accent-soft:#12291B;--red-ui:#33B45D;--ribbon-case:#0E1013;--bg:#0E1013;--info:#4593D0;--text:#F1F3F5}
+.android .screen{font-family:Roboto,"Google Sans",system-ui,sans-serif}
+h1,h2,h3,h4{font-weight:800}
+.hero h1 em{color:var(--accent)}
+.wordmark{font:900 26px/1 var(--font);letter-spacing:-.04em;color:var(--text);position:relative;padding-right:10px}
+.wordmark i{position:absolute;right:0;top:4px;width:7px;height:7px;border-radius:50%;background:var(--ub-green)}
+.vc-prog{height:5px;border-radius:3px;background:color-mix(in srgb,var(--accent) 18%,transparent);margin-top:6px;overflow:hidden}.vc-prog b{display:block;height:100%;width:8%;background:var(--accent);border-radius:3px}
+.ub-art{background:var(--surface)}
+.ub-cities{font:700 11px var(--font);fill:var(--text-3);letter-spacing:.02em}
+.trip-track::before{top:7px;height:6px;border-radius:3px;box-shadow:0 0 0 2px var(--ribbon-case)}
+.trip-track::after{display:none}
+.trip-track i.end{background:var(--c);border-color:var(--c);animation:destp 1.6s ease-in-out infinite}
+.mini-track::after{display:none}.mini-track::before{height:3px;border-radius:2px;top:1px}
+.vs::after{width:4px;left:-18.5px;background:var(--c,var(--line))}
+.vcard{border-radius:20px;overflow:hidden;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+.vc-band{position:relative;overflow:hidden;height:70px;padding:10px 14px;color:var(--ub-navy);background:linear-gradient(115deg,#33B45D,#5FD083 55%,#A8E6BD);display:flex;flex-direction:column;justify-content:space-between}
+.vc-band::before{content:"";position:absolute;inset:-50%;background:repeating-linear-gradient(60deg,transparent 0 16px,rgba(255,255,255,.16) 16px 20px);animation:slide 5s linear infinite}
+@keyframes slide{to{transform:translateX(40px)}}
+.vc-band > *{position:relative}
+.vc-clock{font:800 24px var(--font);font-variant-numeric:tabular-nums}
+.vc-city{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+.vc-body{display:flex;gap:12px;padding:12px 14px;align-items:center}
+.adapt{display:grid;grid-template-columns:1fr auto 1fr;gap:10px 12px;align-items:center;font-size:13px}
+.adapt > div{display:flex;align-items:center;gap:8px}
+@media(max-width:480px){.adapt{grid-template-columns:1fr;gap:4px}.adapt > span{display:none}.adapt > div:nth-child(3n){margin-bottom:10px}}
+.chipsw{width:22px;height:22px;border-radius:5px;display:inline-block;border:1px solid var(--line)}
+.pl-parse{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 6px}
+.pl-parse .chipx{animation:pop .5s cubic-bezier(.3,1.4,.4,1) both}
+.pl-parse .chipx:nth-child(2){animation-delay:.12s}.pl-parse .chipx:nth-child(3){animation-delay:.24s}.pl-parse .chipx:nth-child(4){animation-delay:.36s}
+@keyframes pop{from{opacity:0;transform:scale(.7)}}
+.callout{border-left-color:var(--accent)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M15 5.1 9 3 3 5v16l6-2.1 6 2.1 6-2V3l-6 2.1Zm-1 13.6-4-1.4V5.3l4 1.4v12Z"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2.5a2.5 2.5 0 0 0 0 5V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2.5a2.5 2.5 0 0 0 0-5V7Zm11 0v2h2V7h-2Zm0 4v2h2v-2h-2Zm0 4v2h2v-2h-2Z"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2h-6a3 3 0 0 1 0-6h6V7a2 2 0 0 0-2-2H4Zm12 6a1 1 0 1 0 0 2h6v-2h-6Z"/></symbol>
+  <symbol id="i-walk" viewBox="0 0 24 24"><path d="M13.5 5.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6A2 2 0 0 0 12 6c-.3 0-.5 0-.8.1L6 8.3V13h2V9.6l1.8-.7Z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 3 3 7l4 4V8h10V6H7V3Zm10 10v3H7v2h10v3l4-4-4-4Z"/></symbol>
+  <symbol id="i-dep" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm-1 3h2v5.2l3.6 2.1-1 1.7L11 13.3V7Z"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2Zm6 11 1 2.8 2.8 1-2.8 1-1 2.8-1-2.8-2.8-1 2.8-1 1-2.8Z"/></symbol>
+  <symbol id="i-p" viewBox="0 0 24 24"><path d="M5 3h8a6 6 0 0 1 0 12H9v6H5V3Zm4 4v4h4a2 2 0 0 0 0-4H9Z"/></symbol>
+</svg>
+
+<header class="top"><div class="top-in">
+  <div class="brand"><span class="wordmark">ubian<i></i></span><span class="tag">Redesign proposal · v0.1</span></div>
+  <nav>
+    <a href="#today">Today</a><a href="#principles">Principles</a><a href="#ia">Structure</a><a href="#foundations">Foundations</a>
+    <a href="#components">Components</a><a href="#screens">Screens</a><a href="#data">Data platform</a><a href="#roadmap">Roadmap</a>
+  </nav>
+  <button class="toggle" id="themeBtn">◐ Dark</button>
+</div></header>
+
+<main>
+<div class="hero">
+  <div>
+    <div class="eyebrow">Návrh redizajnu · Ubian</div>
+    <h1>All of Slovakia's transport.<br><em>One calm app.</em></h1>
+    <p>Ubian already does what no other Slovak app does: timetables and live positions for trains, regional buses and city transport in about 55 cities, plus credit, transport cards, tickets, student passes, parking and bikesharing. This proposal keeps all of that and rebuilds the experience around the few seconds people actually spend in a transit app.</p>
+    <div class="pill-row">
+      <span class="lb tram">2</span><span class="lb trolley">38</span><span class="lb bus">23</span><span class="lb regional">701</span><span class="lb train">Os 8813</span><span class="lb night">N1</span>
+    </div>
+    <p class="small muted" style="margin-top:16px">An unsolicited concept, not affiliated with Ubian. The palette comes from the current Ubian app: green, navy, and the orange / blue / red mode icons. The wordmark is a stand-in for Ubian's logo. The patterns come from my <a href="https://dominik-murar.github.io/quick-host/ids-vychod-design-system.html">IDS Východ design-system work</a>.</p>
+  </div>
+  <div class="hero-art ub-art">
+    <svg viewBox="0 0 400 360" preserveAspectRatio="xMidYMid slice">
+      <path d="M-20 280 C80 280 120 140 220 150 S340 90 420 60" stroke="var(--ribbon-case)" stroke-width="18" fill="none" stroke-linecap="round"/>
+      <path d="M-20 280 C80 280 120 140 220 150 S340 90 420 60" stroke="var(--accent)" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M-20 320 C120 320 200 250 420 240" stroke="var(--ribbon-case)" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <path d="M-20 320 C120 320 200 250 420 240" stroke="var(--mode-train)" stroke-width="7" fill="none" stroke-linecap="round" opacity=".9"/>
+      <g class="veh"><circle r="12" fill="var(--mode-tram)" stroke="#fff" stroke-width="3"/><text>2</text><animateMotion dur="8s" repeatCount="indefinite" path="M-20 280 C80 280 120 140 220 150 S340 90 420 60"/></g>
+      <g class="veh"><rect x="-13" y="-10" width="26" height="20" rx="3" fill="var(--mode-train)" stroke="#fff" stroke-width="3"/><text>Os</text><animateMotion dur="11s" repeatCount="indefinite" path="M-20 320 C120 320 200 250 420 240"/></g>
+      <text x="30" y="70" class="ub-cities">Košice · Prešov · Bratislava · Žilina · Nitra</text>
+      <text x="30" y="92" class="ub-cities">Poprad · Martin · Trnava · Zvolen · +46</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ============ TODAY ============ -->
+<section id="today">
+  <div class="eyebrow">01 · Where Ubian stands</div>
+  <h2>A strong engine behind a dated interface</h2>
+  <p class="muted small">Based on the iOS app, ubian.sk and its live-data endpoints, as observed on 3 Oct 2026. I haven't reviewed store ratings or support data.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h4><span class="chipx ok">Strengths</span></h4>
+      <ul class="clean small muted">
+        <li><b>Unique coverage</b>: city transport in about 55 cities, regional buses and trains in one place.</li>
+        <li><b>Live data already exists</b>: vehicle positions, delays, cancellations, current stop, low-floor, Wi-Fi and bike flags.</li>
+        <li><b>A full commerce stack</b>: credit, chip and virtual transport card, time tickets, single tickets, student passes, parking, Google Pay.</li>
+        <li><b>Already innovating</b>: an AI agent (beta) for journey search, and bikesharing on the map.</li>
+        <li>Operators already trust it: DPMK's own live departures run on Ubian.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4><span class="chipx warn">Friction</span></h4>
+      <ul class="clean small muted">
+        <li><b>The city is a manual choice</b> from a list of about 55 "MHD &lt;city&gt;" entries, when the phone already knows where you are.</li>
+        <li><b>Transport type is one of 7 combinations</b> ("Vlaky / Autobusy / MHD", "Vlaky / MHD"…). Three toggles do the same job.</li>
+        <li><b>Commerce is split into separate silos</b>: e-shop, basket, wallet, card, transfer of card products, student pass. Users have to know Ubian's internal model to buy something.</li>
+        <li><b>Train delays are a separate page</b> instead of being part of every journey.</li>
+        <li>The AI agent is a <b>separate chat</b> instead of part of search.</li>
+        <li>The web is built on Bootstrap and jQuery UI with icon-font glyphs, so it feels like a website rather than a native app.</li>
+      </ul>
+    </div>
+  </div>
+  <h3>In the iOS app today</h3>
+  <div class="grid g2">
+    <div class="card small muted">
+      <ul class="clean">
+        <li><b>Five tabs organised by product</b>: Connections · Card · Ticket · Parking · My Ubian. Three of the five are commerce, while departures hide behind a toggle inside Connections.</li>
+        <li>The <b>map is a separate pushed screen</b> with Stops / Vehicle position / Bikes toggles. The live data, Ubian's strongest asset, is two taps away.</li>
+        <li>The <b>Search button looks disabled</b> (pale green) until a destination is chosen, and the planner then needs that extra tap.</li>
+        <li>The home screen mixes search, the active ticket, history, favourites and four commerce tiles, so there's no single focus.</li>
+        <li>Solid green bars and centred titles predate today's iOS style: no large titles, no Liquid Glass, no bottom accessory.</li>
+      </ul>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Worth keeping</h4>
+      <ul class="clean">
+        <li>The <b>active-ticket card with a validity progress bar</b> ("Ticket is valid for 356 days"). It carries over into Peňaženka.</li>
+        <li>The quick <b>"No transfers"</b> toggle, which becomes a planner chip.</li>
+        <li>The <b>mode coding</b>: orange trains, blue buses, red city transport. It's recognisable, so the redesign keeps it.</li>
+        <li>Current position as the default origin, and the ⇅ swap.</li>
+      </ul>
+      <div class="banner" style="margin-top:8px"><div class="bi">!</div><div><b>Contrast</b><br>White on Ubian green <code>#33B45D</code> is only 2.7:1, and the mode icons are 2.1–3.3:1. The header titles and the Search label fail WCAG AA.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRINCIPLES ============ -->
+<section id="principles">
+  <div class="eyebrow">02 · Principles</div>
+  <h2>What the redesign optimises for</h2>
+  <div class="grid g3">
+    <div class="card"><h4>⏱ Seconds, not screens</h4><p class="small muted" style="margin:0">Your departures with 0 taps, a route in 2, a ticket shown in 1. Every flow is measured in taps.</p></div>
+    <div class="card"><h4>📍 Context instead of configuration</h4><p class="small muted" style="margin:0">The city, operator and tariff follow your location and route. Nobody should pick "MHD Košice" from a list again.</p></div>
+    <div class="card"><h4>🧭 Native, not generic</h4><p class="small muted" style="margin:0">Liquid Glass and SF on iOS, Material 3 Expressive on Android. Ubian's identity lives in the content: lines, rides and cards.</p></div>
+    <div class="card"><h4>👛 One wallet</h4><p class="small muted" style="margin:0">Credit, cards, tickets, passes and parking in one place, grouped by "what's valid now" rather than by product type.</p></div>
+    <div class="card"><h4>📶 Honest data</h4><p class="small muted" style="margin:0">"Naživo" vs. "podľa CP" is always explicit. Offline, you get saved places and tickets, never a blank screen.</p></div>
+    <div class="card"><h4>♿ Everyone rides</h4><p class="small muted" style="margin:0">WCAG 2.2 AA, Dynamic Type / 200 %, step-free routing, and low-floor flags (already in the data).</p></div>
+  </div>
+</section>
+
+<!-- ============ IA ============ -->
+<section id="ia">
+  <div class="eyebrow">03 · Structure</div>
+  <h2>Three tabs and a search in the corner</h2>
+  <div class="grid g4">
+    <div class="card"><span class="tag red">Daily</span><h4 style="margin-top:8px">Odchody</h4><p class="small muted" style="margin:0">Your places (Domov, Práca, Škola) with chosen stops, nearest first, across any city.</p></div>
+    <div class="card"><span class="tag blue">Weekly</span><h4 style="margin-top:8px">Spojenia 🔍</h4><p class="small muted" style="margin:0">Search, bottom right, opens the planner over the live map. Typing in plain language replaces the separate AI chat.</p></div>
+    <div class="card"><span class="tag">Per ride</span><h4 style="margin-top:8px">Jazda</h4><p class="small muted" style="margin:0">Opens from the live trip strip: delay, position, stops until you get off, transfers.</p></div>
+    <div class="card"><span class="tag">Per check</span><h4 style="margin-top:8px">Peňaženka</h4><p class="small muted" style="margin:0">What's valid now, then credit, cards, passes and parking. Always a dedicated tab.</p></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Bottom bar</h4>
+      <ul class="clean">
+        <li><b>iOS</b>: Odchody · Peňaženka · Ďalšie, plus the trailing <b>search tab</b> (<code>Tab(role: .search)</code>). On Spojenia the circle grows into the field and the tabs collapse.</li>
+        <li><b>Android</b>: a navigation bar with the same three, plus a <b>search FAB at bottom right</b> that expands into the planner (container transform).</li>
+        <li><b>Live trip strip</b> above the bar while tracking (iOS <code>tabViewBottomAccessory</code>) → Jazda.</li>
+        <li><b>Ďalšie</b>: Parkovanie, Bikesharing, Meškania vlakov, Mapy, Účet, Podpora.</li>
+      </ul>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">From the current site to the new structure</h4>
+      <div class="tbl-wrap"><table>
+        <tr><th>Today</th><th>Proposal</th></tr>
+        <tr><td>5 product tabs (Connections, Card, Ticket, Parking, My Ubian)</td><td>Odchody · Peňaženka · Ďalšie + search; Card, Ticket and Parking merge into Peňaženka</td></tr>
+        <tr><td>Connections | Departures toggle; map as a pushed screen</td><td>Odchody is its own tab; the map is the canvas of the planner</td></tr>
+        <tr><td>Disabled-looking Search button</td><td>Picking a destination searches straight away</td></tr>
+        <tr><td>Pick a city (about 55 entries)</td><td>Detected from location and route; "Mesto: Košice ▾" only as an override</td></tr>
+        <tr><td>7 transport-type combinations</td><td>3 filter chips: Vlaky · Autobusy · MHD</td></tr>
+        <tr><td>Meškania vlakov page</td><td>Delays inside every result, departure and Jazda</td></tr>
+        <tr><td>AI agent (separate chat)</td><td>Plain-language input in the planner</td></tr>
+        <tr><td>E-shop · basket · wallet · card · passes</td><td>One Peňaženka; buying starts from a route or a card</td></tr>
+        <tr><td>Map-first homepage</td><td>Your departures first, or the planner if you choose it as your default</td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOUNDATIONS ============ -->
+<section id="foundations">
+  <div class="eyebrow">04 · Foundations</div>
+  <h2>Ubian green, made accessible</h2>
+  <p class="muted">The palette keeps Ubian's own colours and fixes their contrast. The brand green stays for surfaces and identity, with navy text on it (5.6:1). Interactive text and white-on-colour use darker shades of the same hues. In dark mode, the original bright colours come back: they reach 5.3–8.3:1 against dark surfaces.</p>
+  <div class="grid g4">
+    <div class="sw"><div class="chip" style="background:#33B45D;color:#152937">ubian.green</div><div class="meta"><b>#33B45D · from the app</b>Brand surfaces and the ticket band, with navy text (5.6:1). Never white text (2.7:1).</div></div>
+    <div class="sw"><div class="chip" style="background:#1E7F3F">green.ui</div><div class="meta"><b>#1E7F3F · 5.0:1</b>Buttons, links, selection (light mode)</div></div>
+    <div class="sw"><div class="chip" style="background:#152937">ubian.navy</div><div class="meta"><b>#152937 · from the app</b>Text, the wordmark, text on green</div></div>
+    <div class="sw"><div class="chip" style="background:#F4F5F7;color:#152937">canvas</div><div class="meta"><b>#F4F5F7 / #0E1013</b>Light / dark canvas</div></div>
+  </div>
+  <h3>Mode coding, kept from Ubian</h3>
+  <div class="grid g3">
+    <div class="sw"><div class="chip" style="background:#A85A00">Vlaky · trains</div><div class="meta"><b>#A85A00 · 5.1:1 · slanted</b>From the app's orange <code>#F99C36</code> (2.1:1)</div></div>
+    <div class="sw"><div class="chip" style="background:#1F6FB2">Autobusy · regional buses</div><div class="meta"><b>#1F6FB2 · 5.3:1 · square + base</b>From blue <code>#4593D0</code> (3.3:1)</div></div>
+    <div class="sw"><div class="chip" style="background:#C8363A">MHD · city transport</div><div class="meta"><b>#C8363A · 5.2:1</b>From red <code>#EA6966</code> (3.1:1). Within city transport, the <b>shape</b> tells tram (pill), trolleybus (soft square) and bus (square) apart.</div></div>
+  </div>
+
+  <h3>Operator colours, made safe automatically</h3>
+  <div class="grid g2">
+    <div class="card">
+      <p class="small muted">Where an operator publishes its own line colours (e.g. a city with numbered colour-coded lines), they replace the mode colour. The design system <b>keeps the hue</b> and adjusts lightness until white text reaches 4.5:1. The shape always encodes the mode, whatever colour an operator chose.</p>
+      <div class="adapt">
+        <div><span class="chipsw" style="background:#FFD200"></span>operator <code>#FFD200</code></div><span>→</span><div><span class="lb bus" style="--c:#8A6F00">12</span><code>#8A6F00</code> 4.8:1</div>
+        <div><span class="chipsw" style="background:#7FC241"></span>operator <code>#7FC241</code></div><span>→</span><div><span class="lb trolley" style="--c:#3E7A12">4</span><code>#3E7A12</code> 5.3:1</div>
+        <div><span class="chipsw" style="background:#E30613"></span>operator <code>#E30613</code></div><span>→</span><div><span class="lb tram" style="--c:#D1050F">9</span><code>#D1050F</code> 5.6:1</div>
+      </div>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Mode shapes are fixed nationwide</h4>
+      <p style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="lb tram">2</span>električka · <span class="lb trolley">38</span>trolejbus · <span class="lb bus">23</span>autobus MHD · <span class="lb regional">701</span>prímestský · <span class="lb train">Os</span>vlak · <span class="lb night">N1</span>nočná</p>
+      <p style="margin:0">When an operator supplies no colour, Ubian's mode coding above applies. The mode is always shown three ways: colour, shape and glyph, so riders who can't tell colours apart and anyone in bright sunlight can still read it.</p>
+    </div>
+  </div>
+
+  <h3>Type and motion</h3>
+  <div class="grid g2">
+    <div class="card small muted"><h4 style="color:var(--text)">System fonts</h4>SF Pro on iOS, Roboto Flex on Android and the system UI font on the web. They give native feel, Dynamic Type and full Slovak diacritics for free. Times and prices use tabular figures. There's no custom typeface unless Ubian's brand requires one.</div>
+    <div class="card small muted"><h4 style="color:var(--text)">Motion that explains</h4>The search morph, routes drawing themselves, vehicles gliding between GPS updates, departures collapsing away, a pulse at your destination. Everything respects Reduce Motion, and text never moves while you read it.</div>
+  </div>
+</section>
+
+<!-- ============ COMPONENTS ============ -->
+<section id="components">
+  <div class="eyebrow">05 · Components</div>
+  <h2>The building blocks</h2>
+
+  <h3>Planner with plain-language input (the AI agent, integrated)</h3>
+  <div class="grid g2">
+    <div class="card">
+      <div class="planner static">
+        <div class="pl-row focus"><svg width="16" height="16" fill="var(--accent)"><use href="#i-spark"/></svg><b class="caret">zajtra ráno do Prešova bez prestupu</b></div>
+        <div class="pl-parse"><span class="chipx blue">Odkiaľ: Moja poloha</span><span class="chipx blue">Kam: Prešov</span><span class="chipx blue">Zajtra · odchod 6:00–9:00</span><span class="chipx blue">Bez prestupu</span></div>
+        <div class="pl-chips"><span class="chipx">Vlaky ✓</span><span class="chipx">Autobusy ✓</span><span class="chipx">MHD ✓</span><span class="chipx">Filtre</span></div>
+      </div>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Why fold the AI into search</h4>
+      <ul class="clean">
+        <li>The same field takes "Hlavná", "Domov" or a whole sentence. The model's job is to <b>fill in the form</b>, shown as editable chips, not to chat.</li>
+        <li>The chips make the interpretation visible and correctable in one tap, so nothing is a black box.</li>
+        <li>Three toggles (Vlaky · Autobusy · MHD) replace the 7 transport combinations.</li>
+        <li>No personal data goes to the model. The parsed query goes to Ubian's search engine.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Live trip strip → Jazda</h3>
+  <div class="grid g2">
+    <div class="card">
+      <div class="trip">
+        <div class="trip-h"><span class="lb tram">2</span><b>smer Staničné nám.</b><span class="st warn" style="margin-left:auto">+3 min</span></div>
+        <div class="trip-track" style="--c:var(--mode-tram)"><i style="left:0"></i><i style="left:33%"></i><i style="left:66%"></i><i class="end" style="left:100%"></i><span class="trip-veh"></span></div>
+        <div class="trip-stops"><span>Havlíčkova</span><span>Hlavná</span><span>Dom umenia</span><span><b>Staničné nám.</b></span></div>
+        <div class="trip-f"><b>Vystúpte o 2 zastávky</b><span>o 6 min</span></div>
+      </div>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Built on data Ubian already serves</h4>
+      <p style="margin:0">The live endpoint returns <code>delayMinutes</code>, <code>lastStopOrder</code>, <code>isOnStop</code>, <code>canceled</code>, <code>lowFloor</code>, <code>wifi</code>, <code>bicycle</code>, the operator, and coordinates. That's everything this strip, the Jazda timeline and the Live Activity need, so <b>no new backend is required</b> to start.</p>
+    </div>
+  </div>
+
+  <h3>Peňaženka: what's valid now comes first</h3>
+  <div class="grid g2">
+    <div class="card">
+      <div class="vcard">
+        <div class="vc-band"><span class="vc-clock js-clock">14:21:07</span><span class="vc-city">Virtuálna karta · Košice</span></div>
+        <div class="vc-body"><div class="qr js-qr" style="width:88px;height:88px;margin:0"></div><div><b>MHD Košice · Základný</b><div class="op">ročný · do 23. 9. 2027</div><span class="chipx ok" style="margin-top:6px">● Platný · 356 dní</span><div class="vc-prog"><b></b></div></div></div>
+      </div>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">One wallet, sorted by validity</h4>
+      <ul class="clean">
+        <li><b>Valid now</b> (keeping today's validity progress bar): the virtual card with an active product, a single ticket, a running parking session. It shows a live band, the seconds clock and a rotating QR.</li>
+        <li><b>Credit</b>: one balance with "Dobiť" (Google Pay / Apple Pay / card).</li>
+        <li><b>Cards and passes</b>: chip card (and transferring its products), virtual card, student or teacher pass.</li>
+        <li>Buying starts from <b>context</b>: from a route ("Kúpiť lístok na túto cestu"), from a card ("Predĺžiť"), or from a parking zone.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Place card (Odchody), across cities</h3>
+  <div class="grid g2">
+    <div class="card" style="padding:12px">
+      <div class="pcard" style="margin:0">
+        <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 3 min · Košice</div><b>Práca · Technická univerzita</b></div><span class="pc-dir">→ centrum</span></div>
+        <div class="dep"><span class="lb tram">4</span><div class="dest"><b>Námestie osloboditeľov</b><span>nást. A · ♿</span></div><div class="t"><b class="rt now">teraz</b><span class="st ok"><span class="live"></span>&nbsp;naživo</span></div></div>
+        <div class="dep"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b><span>nást. A</span></div><div class="t"><b class="rt">4 min</b></div></div>
+        <div class="dep"><span class="lb train">Os</span><div class="dest"><b>Prešov</b><span>Košice, žel. st. · koľ. 3</span></div><div class="t"><b>14:27</b><span class="st warn">+5 min</span></div></div>
+      </div>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Places span modes and cities</h4>
+      <p style="margin:0">A place can mix a tram stop and a railway station, or stops in two cities (live in Prešov, work in Košice). Train delays appear right next to city departures, so the separate "Meškania vlakov" page isn't needed any more.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREENS ============ -->
+<section id="screens">
+  <div class="eyebrow">06 · Screens</div>
+  <h2>Odchody, Spojenia, Jazda, Peňaženka</h2>
+  <p class="muted">The first phone is interactive. Tap around or wait for it to cycle through Odchody → 🔍 Spojenia → Jazda → Peňaženka.</p>
+  <div class="devices phones">
+        <div class="dev-col">
+      <div class="phone ios"><div class="screen demo" id="demo" data-view="dep">
+
+        <div class="view v-map">
+          <div class="map">
+            <svg viewBox="0 0 280 620" preserveAspectRatio="xMidYMid slice">
+              <rect class="m-blk" x="20" y="120" width="70" height="60" rx="4"/><rect class="m-blk" x="110" y="90" width="80" height="70" rx="4"/><rect class="m-blk" x="200" y="140" width="70" height="80" rx="4"/>
+              <rect class="m-blk" x="30" y="220" width="60" height="90" rx="4"/><rect class="m-blk" x="180" y="250" width="90" height="60" rx="4"/>
+              <path class="m-park" d="M100 200 h70 v90 h-70z"/>
+              <path class="m-water" d="M-10 400 C60 380 120 440 190 420 S280 380 300 400 V440 C240 430 200 470 130 460 S30 430 -10 440Z"/>
+              <path class="m-road" stroke-width="10" d="M140 -10 V640"/><path class="m-road" stroke-width="7" d="M-10 200 H290"/><path class="m-road2" stroke-width="5" d="M-10 90 L290 60 M60 -10 L80 640 M220 -10 L240 640"/>
+              <text class="m-label" x="150" y="128">Hlavná</text><text class="m-label" x="104" y="250">Mestský park</text>
+              <g class="veh"><circle r="11" fill="var(--mode-tram)" stroke="#fff" stroke-width="2"/><text>2</text><animateMotion dur="14s" repeatCount="indefinite" path="M140 -10 V200 H290"/></g>
+              <g class="veh"><circle r="11" fill="var(--mode-tram)" stroke="#fff" stroke-width="2"/><text>4</text><animateMotion dur="18s" repeatCount="indefinite" path="M290 200 H140 V640"/></g>
+              <g class="veh"><rect x="-11" y="-11" width="22" height="22" rx="2" fill="var(--mode-bus)" stroke="#fff" stroke-width="2"/><text>23</text><animateMotion dur="20s" repeatCount="indefinite" path="M60 -10 L80 640"/></g>
+              <g transform="translate(232 286)"><circle r="9" fill="#fff" stroke="var(--accent)" stroke-width="2.5"/><text x="0" y="0.5" style="font:900 9px var(--font);fill:var(--accent);text-anchor:middle;dominant-baseline:central">🚲</text></g>
+              <circle cx="150" cy="215" r="18" fill="var(--accent)" opacity=".18"/><circle cx="150" cy="215" r="7" fill="var(--accent)" stroke="#fff" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="planner glass">
+            <div class="pl-row"><svg width="15" height="15" fill="var(--accent)"><use href="#i-spark"/></svg><span class="muted" style="width:auto">Kam a kedy… napr. „zajtra ráno do Prešova“</span></div>
+            <div class="pl-chips"><span class="chipx blue">Teraz ▾</span><span class="chipx">Vlaky · Autobusy · MHD</span><span class="chipx">Filtre</span></div>
+            <div class="pl-sug"><span class="pc-ic">💼</span><div><b>Práca</b><div class="op">Technická univerzita · Košice</div></div><b class="pl-t">12 min</b></div>
+            <div class="pl-sug"><span class="pc-ic">🏠</span><div><b>Domov</b><div class="op">Prešov, Sídlisko III</div></div><b class="pl-t">58 min</b></div>
+          </div>
+        </div>
+
+        <div class="view v-dep">
+          <div style="height:44px"></div>
+          <div class="ios-nav" style="padding-bottom:2px"><span class="chipx">📍 Košice</span><span style="color:var(--accent);font-weight:700;font-size:15px">Upraviť</span></div>
+          <div class="ios-large">Odchody</div>
+          <div class="pcard">
+            <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 3 min</div><b>Technická univ.</b></div><span class="pc-dir">→ centrum</span></div>
+            <div class="deplist" id="deplist">
+              <div class="dep"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov</b></div><div class="t"><b class="rt now">teraz</b></div></div>
+              <div class="dep"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b></div><div class="t"><b class="rt">4 min</b></div></div>
+              <div class="dep"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP</b></div><div class="t"><b>11 min</b></div></div>
+            </div>
+          </div>
+          <div class="pcard">
+            <div class="pc-h"><span class="pc-ic">🚉</span><div><div class="pc-eye">Práca · 9 min</div><b>Košice, žel. st.</b></div><span class="pc-dir">→ Prešov</span></div>
+            <div class="dep"><span class="lb train">Os</span><div class="dest"><b>Prešov</b></div><div class="t"><b>14:27</b><span class="st warn">+5</span></div></div>
+          </div>
+          <div class="pcard dim">
+            <div class="pc-h"><span class="pc-ic">🏠</span><div><div class="pc-eye">Domov · Prešov</div><b>Sídlisko III</b></div><span class="pc-dir"><span class="lb trolley sm">38</span> 9 min</span></div>
+          </div>
+        </div>
+
+        <div class="view v-ride">
+          <div style="height:44px"></div>
+          <div class="ios-nav"><span class="grab" style="margin:0 auto"></span></div>
+          <div class="ride-h">
+            <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">2</span><b>→ Staničné nám.</b><span class="st warn" style="margin-left:auto">+3 min</span></div>
+            <div class="ride-big">Vystúpte o 2 zastávky</div>
+            <div class="muted small">Staničné námestie · 14:21 · o 6 min</div>
+          </div>
+          <div class="vtl">
+            <div class="vs past" style="--c:var(--mode-tram)"><span class="tm">14:09</span>Havlíčkova</div>
+            <div class="vs cur" style="--c:var(--mode-tram)"><span class="tm">14:13</span>Hlavná<span class="vveh"></span></div>
+            <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:17</span>Dom umenia</div>
+            <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
+            <div class="vs walk"><span class="muted">🚶 6 min · koľ. 3</span></div>
+            <div class="vs" style="--c:var(--mode-train)"><span class="tm">14:27</span><span class="lb train sm">Os 8813</span> → <b>Prešov</b></div>
+          </div>
+          <div class="ride-cta">
+            <div class="ios-btn" data-go="ticket" style="margin:0"><svg width="18" height="18" fill="currentColor"><use href="#i-wallet"/></svg>Zobraziť lístok</div>
+            <div class="ride-sec">Ukončiť sledovanie</div>
+          </div>
+        </div>
+
+        <div class="view v-ticket">
+          <div style="height:44px"></div>
+          <div class="ios-nav"><span></span><span style="color:var(--accent);font-weight:700;font-size:14px">Kredit 12,40 € · Dobiť</span></div>
+          <div class="ios-large" style="padding-bottom:6px">Peňaženka</div>
+          <div class="m-label" style="padding-top:0">Platné teraz</div>
+          <div class="vcard" style="margin:0 12px">
+            <div class="vc-band"><span class="vc-clock js-clock">14:21:07</span><span class="vc-city">Virtuálna karta · Košice</span></div>
+            <div class="vc-body"><div class="qr js-qr" style="width:84px;height:84px;margin:0;flex:none"></div><div class="small"><b>MHD Košice · Základný</b><div class="op">ročný · do 23. 9. 2027</div><span class="chipx ok" style="margin-top:6px">● Platný · 356 dní</span><div class="vc-prog"><b></b></div></div></div>
+          </div>
+          <div class="m-label">Ďalšie</div>
+          <div class="ios-group" style="background:var(--surface-2)">
+            <div class="ios-row"><svg width="18" height="18" fill="var(--accent)"><use href="#i-p"/></svg><div><b style="font-size:14px">Parkovanie · Košice A2</b><div class="op">beží · do 15:30</div></div><span class="r">›</span></div>
+            <div class="ios-row">💳 <div><b style="font-size:14px">Čipová karta</b><div class="op">Preukaz študenta</div></div><span class="r">›</span></div>
+          </div>
+        </div>
+
+        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
+
+        <div class="acc glass" data-go="ride">
+          <span class="lb tram sm">2</span>
+          <div class="acc-t"><b>Vystúpte o 2 zast.</b><span class="mini-track"><span></span></span></div>
+          <b class="acc-m">6 min</b>
+        </div>
+
+        <div class="dock">
+          <div class="dock-tabs glass">
+            <button data-go="dep" class="last" aria-label="Odchody"><svg><use href="#i-dep"/></svg><span>Odchody</span></button>
+            <button data-go="ticket" aria-label="Peňaženka"><svg><use href="#i-wallet"/></svg><span>Peňaženka</span></button>
+            <button data-go="more" aria-label="Ďalšie"><svg><use href="#i-more"/></svg><span>Ďalšie</span></button>
+          </div>
+          <div class="dock-search glass" data-go="map" role="button" aria-label="Spojenia"><svg><use href="#i-search"/></svg><span class="ds-t">Kam a kedy?</span></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="dev-cap"><b>iOS · Interactive</b>The city comes from your location ("📍 Košice"), and a place can span two cities. Search is the trailing tab: the planner takes plain language, and its suggestions are your places with live travel times. The trip strip opens Jazda, which links to the Peňaženka.</div>
+    </div>
+
+    <div class="dev-col">
+      <div class="phone android"><div class="screen">
+        <div class="map">
+          <svg viewBox="0 0 280 620" preserveAspectRatio="xMidYMid slice">
+            <rect class="m-blk" x="20" y="80" width="70" height="60" rx="4"/><rect class="m-blk" x="160" y="60" width="90" height="60" rx="4"/>
+            <path class="m-water" d="M-10 250 C60 230 120 290 190 270 S280 230 300 250 V285 C240 275 200 315 130 305 S30 275 -10 285Z"/>
+            <path class="m-road" stroke-width="8" d="M110 -10 V340 M-10 150 H290"/><path class="m-road2" stroke-width="4" d="M-10 50 L290 30 M210 -10 L230 340"/>
+            <path d="M40 330 C80 300 60 220 110 190 S190 120 250 40" stroke="#9AA1AA" stroke-width="4" fill="none" opacity=".6"/>
+            <g class="draw">
+              <path pathLength="1" d="M58 322 L108 322 L108 160 L200 160" stroke="var(--ribbon-case)" stroke-width="9" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+              <path pathLength="1" d="M58 322 L108 322 L108 160 L200 160" stroke="var(--mode-tram)" stroke-width="5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+              <path pathLength="1" class="d2" d="M200 160 L237 99 L267 43" stroke="var(--ribbon-case)" stroke-width="9" fill="none" stroke-linecap="round"/>
+              <path pathLength="1" class="d2" d="M200 160 L237 99 L267 43" stroke="var(--mode-train)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            </g>
+            <circle cx="50" cy="322" r="7" fill="var(--accent)" stroke="#fff" stroke-width="3"/>
+            <g class="veh"><circle r="10" fill="var(--mode-tram)" stroke="#fff" stroke-width="2"/><text>2</text><animateMotion dur="10s" repeatCount="indefinite" path="M58 322 L108 322 L108 160 L200 160"/></g>
+          </svg>
+        </div>
+        <div class="sbar" style="position:relative"><span>9:41</span><span class="ic"><i></i></span></div>
+        <div class="a-sheet" style="bottom:0;padding-bottom:20px">
+          <div class="grab"></div>
+          <div class="a-od"><div><svg width="15" height="15" fill="var(--accent)"><use href="#i-spark"/></svg>zajtra ráno do Prešova</div></div>
+          <div class="pl-parse" style="padding:0 12px 6px"><span class="chipx blue">Zajtra 6:00–9:00</span><span class="chipx blue">→ Prešov</span><span class="chipx">Vlaky ✓</span><span class="chipx">Autobusy ✓</span></div>
+          <div class="m-card sel" style="margin:6px 12px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:19px;font-weight:800;font-variant-numeric:tabular-nums">6:52 – 7:41</b><b>49 min</b></div>
+            <div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>4</span><span class="sep">›</span><span class="lb tram sm">2</span><span class="sep">›</span><span class="lb train sm">Os 8805</span></div>
+            <div class="op">DPMK, a.s. · ZSSK, a.s.</div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px"><span class="chipx ok">Lístok v aplikácii · 2,80 €</span><span class="st muted" style="font-weight:400">podľa CP</span></div>
+          </div>
+          <div class="m-card" style="margin:6px 12px;padding:10px 15px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px;font-weight:800;font-variant-numeric:tabular-nums">7:05 – 8:20</b><span class="legs" style="margin:0"><span class="lb regional sm">701</span></span></div>
+          </div>
+          <div style="display:flex;gap:8px;padding:6px 12px 0"><div class="m-btn tonal" style="margin:0;flex:1;height:48px">Pripomenúť</div><div class="m-btn" style="margin:0;flex:1.4;height:48px">Kúpiť · 2,80 €</div></div>
+        </div>
+        <div class="a-back">←</div>
+      </div></div>
+      <div class="dev-cap"><b>Android · Spojenia with plain language</b>The FAB expands into the planner. The sentence is turned into editable chips, so you see what was understood. The selected route draws itself as a cased ribbon in each line's colour. Tomorrow's trip shows "podľa CP" honestly, and you can set a reminder.</div>
+    </div>
+
+    <div class="dev-col">
+      <div class="phone android"><div class="screen" style="background:var(--surface)">
+        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
+        <div class="m-tbar"><b style="font-size:24px;font-weight:800">Peňaženka</b></div>
+        <div class="m-card" style="display:flex;align-items:center;gap:10px;margin-top:2px"><svg width="22" height="22" fill="var(--accent)"><use href="#i-wallet"/></svg><div style="flex:1"><div class="op">Kredit</div><b style="font-size:22px;font-variant-numeric:tabular-nums">12,40 €</b></div><div class="m-btn" style="margin:0;height:40px;padding:0 18px">Dobiť</div></div>
+        <div class="m-label">Platné teraz</div>
+        <div class="vcard" style="margin:0 12px">
+          <div class="vc-band"><span class="vc-clock js-clock">14:21:07</span><span class="vc-city">Virtuálna karta · Košice</span></div>
+          <div class="vc-body"><div class="qr js-qr" style="width:84px;height:84px;margin:0;flex:none"></div><div class="small"><b>MHD Košice · Základný</b><div class="op">ročný · do 23. 9. 2027</div><span class="chipx ok" style="margin-top:6px">● Platný · 356 dní</span><div class="vc-prog"><b></b></div></div></div>
+        </div>
+        <div class="m-label">Karty a preukazy</div>
+        <div class="m-card" style="display:flex;gap:10px;align-items:center;margin-top:0">💳<div style="flex:1"><b style="font-size:14px">Čipová karta · Prešov</b><div class="op">2 produkty · preniesť</div></div>›</div>
+        <div class="m-card" style="display:flex;gap:10px;align-items:center;margin-top:0">🎓<div style="flex:1"><b style="font-size:14px">Preukaz študenta</b><div class="op">overený do 31. 8. 2027</div></div>›</div>
+        <div class="a-fab"><svg width="22" height="22" fill="currentColor"><use href="#i-search"/></svg></div>
+        <div class="a-nav">
+          <div><i><svg><use href="#i-dep"/></svg></i>Odchody</div><div class="on"><i><svg><use href="#i-wallet"/></svg></i>Peňaženka</div><div><i><svg><use href="#i-more"/></svg></i>Ďalšie</div>
+        </div>
+      </div></div>
+      <div class="dev-cap"><b>Android · Peňaženka</b>One balance, then whatever is valid now, with a live band, seconds clock and rotating QR. Cards and passes come below. Buying starts from context: a route, a card or a parking zone.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ DATA ============ -->
+<section id="data">
+  <div class="eyebrow">07 · Data platform</div>
+  <h2>Ubian is already a national data hub. Make it official.</h2>
+  <div class="grid g2">
+    <div class="card small muted">
+      <h4 style="color:var(--text)">What I found</h4>
+      <ul class="clean">
+        <li>Slovakia has <b>no working national access point</b> for multimodal travel data (EU Delegated Regulation 2017/1926). The official entry is a ŽSR track-closure map.</li>
+        <li>Only a few feeds are open: ŽSR trains (GTFS, CC0) and Prešov city transport (GTFS, CC BY 4.0). Košice publishes only an expired JDF export.</li>
+        <li>Ubian's site gets live vehicles from an <b>undocumented JSON endpoint</b> that answers plain requests without authentication and sends no cross-origin permission header. It works, but it's not a product: there's no documentation, licence or terms.</li>
+      </ul>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Proposal: Ubian Open Data</h4>
+      <ul class="clean">
+        <li>Publish <b>GTFS + GTFS-RT</b> (vehicle positions, trip updates, service alerts) for operators that agree. Ubian becomes the de facto national access point.</li>
+        <li>A <b>documented API</b> with keys, rate limits, a CORS policy and clear terms, free for non-commercial use and paid for B2B.</li>
+        <li>Put the internal endpoints behind the same gateway: caching and rate limiting protect the live service.</li>
+        <li>That's a ready answer for tenders like IDS Východ's, which require live delays and positions from every operator.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section id="roadmap">
+  <div class="eyebrow">08 · Roadmap</div>
+  <h2>Ship value early, migrate commerce carefully</h2>
+  <div class="tbl-wrap"><table>
+    <tr><th>Phase</th><th>Scope</th><th>Proves</th><th>Effort</th></tr>
+    <tr><td><b>0 · Prototype</b></td><td>Web prototype on live Ubian data for Košice and Prešov: Odchody, planner and Jazda</td><td>The new structure works on real data</td><td>~2 weeks</td></tr>
+    <tr><td><b>1 · Odchody + Spojenia</b></td><td>Native iOS and Android: places, automatic city, planner with plain-language input, live map</td><td>Daily use, retention</td><td>~2–3 months</td></tr>
+    <tr><td><b>2 · Jazda</b></td><td>Live trip strip, Jazda, Live Activities / Live Updates, widgets</td><td>Engagement per ride</td><td>~1–2 months</td></tr>
+    <tr><td><b>3 · Peňaženka</b></td><td>One wallet: credit, virtual and chip card, tickets, passes, parking; buying from context</td><td>Conversion, support load</td><td>~3 months; migrate payments behind feature flags</td></tr>
+    <tr><td><b>4 · Open data</b></td><td>GTFS-RT, a documented API, a developer portal</td><td>Partners and tenders</td><td>Runs in parallel</td></tr>
+  </table></div>
+  <h3>Open questions</h3>
+  <ul class="muted small">
+    <li>Ubian's brand guidelines: the palette and wordmark here are placeholders.</li>
+    <li>Which operators allow Ubian to republish their data, and under what licence?</li>
+    <li>App store reviews and support tickets, to rank the friction points with evidence.</li>
+    <li>Could the virtual card become an Apple Wallet / Google Wallet pass, or does validation require the rotating in-app QR?</li>
+  </ul>
+</section>
+</main>
+<footer>Ubian redesign proposal v0.1 · Unsolicited concept by Dominik Murar, not affiliated with or endorsed by Ubian · Observations as of 3 Oct 2026</footer>
+
+<script>
+const root=document.documentElement, btn=document.getElementById('themeBtn');
+const setTheme=t=>{root.dataset.theme=t;btn.textContent=t==='dark'?'☀ Light':'◐ Dark'};
+setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+btn.onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
+const finder=(r,c)=>{for(const [y,x] of [[0,0],[0,14],[14,0]]){const dy=r-y,dx=c-x;if(dy>=0&&dy<7&&dx>=0&&dx<7)return dy===0||dy===6||dx===0||dx===6||(dy>1&&dy<5&&dx>1&&dx<5)?1:0}return -1};
+const drawQr=seed=>document.querySelectorAll('.js-qr').forEach(q=>{let h='';for(let r=0;r<21;r++)for(let c=0;c<21;c++){const f=finder(r,c);const on=f>=0?f:((r*31+c*17+seed*7)^(r*c+seed))%3===0;h+=`<i class="${on?'':'o'}"></i>`}q.innerHTML=h});
+const pad=n=>String(n).padStart(2,'0');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let left=58*60+12, seed=1;
+drawQr(seed);
+setInterval(()=>{
+  const d=new Date(),t=`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  document.querySelectorAll('.js-clock').forEach(e=>e.textContent=t);
+  left=Math.max(0,left-1);document.querySelectorAll('.js-left').forEach(e=>e.textContent=`${pad(Math.floor(left/60))}:${pad(left%60)}`);
+  if(left%15===0)drawQr(++seed);
+},1000);
+document.querySelectorAll('.lock').forEach(l=>l.onclick=()=>l.style.filter=l.style.filter?'':'invert(1)');
+
+const demo=document.getElementById('demo');
+const order=['dep','map','ride','ticket'];
+const show=v=>{if(!order.includes(v))return;demo.dataset.view=v;
+  if(v==='dep'||v==='ticket')demo.querySelectorAll('.dock-tabs button').forEach(b=>b.classList.toggle('last',b.dataset.go===v));
+  demo.querySelectorAll('.dock-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.go===v))};
+let auto=reduced?null:setInterval(()=>show(order[(order.indexOf(demo.dataset.view)+1)%order.length]),4200);
+demo.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',()=>{clearInterval(auto);auto=null;show(el.dataset.go)}));
+show('dep');
+
+const list=document.getElementById('deplist');
+const next=[['tram','4','Nám. osloboditeľov','16 min'],['bus','23','Sídlisko KVP','19 min'],['tram','6','Ťahanovce','22 min']];
+let k=0;
+const tick=()=>{
+  const rows=list.querySelectorAll('.dep');
+  rows[0].classList.add('leave');
+  setTimeout(()=>{
+    rows[0].remove();
+    const first=list.querySelector('.dep .t b');first.textContent='teraz';first.classList.add('rt','now');
+    const [m,l,d,t]=next[k++%next.length];
+    list.insertAdjacentHTML('beforeend',`<div class="dep enter"><span class="lb ${m}">${l}</span><div class="dest"><b>${d}</b></div><div class="t"><b>${t}</b></div></div>`);
+  },460);
+};
+if(!reduced)setInterval(tick,5200);
+
+const qv=new URLSearchParams(location.search).get('view');if(qv){clearInterval(auto);auto=null;show(qv)}
+
+</script>
+</body>
+</html>
