@@ -801,7 +801,7 @@ h1,h2,h3,h4{font-weight:800}
       <ul class="clean">
         <li><b>iOS 26</b>: MapKit with a persistent <code>.sheet</code>, using <code>presentationDetents([.height(140), .medium, .large])</code> and <code>presentationBackgroundInteraction(.enabled)</code>, so the map stays interactive behind it. Liquid Glass sheet; Peňaženka is a <code>.fullScreenCover</code>. This is the Apple Maps / Find My model.</li>
         <li><b>Android</b>: MapLibre with <code>BottomSheetScaffold</code> (peek height, drag handle), the <code>SearchBar</code> pinned to the bottom of the sheet, and Peňaženka as a full-screen dialog. Predictive back collapses the sheet one level at a time.</li>
-        <li><b>Nastavenia</b> holds the defaults: the network (<i>Všetky spoje</i> / <i>Len integrované IDS</i>, overridable per search), the transport modes, and the start view. <b>Default view</b> is just the default sheet state: <i>Odchody (medium)</i>, <i>Mapa (peek)</i> or <i>Hľadať (focused field)</i>.</li>
+        <li><b>Nastavenia</b> holds the defaults: the transport modes and the start view. <b>Default view</b> is just the default sheet state: <i>Odchody (medium)</i>, <i>Mapa (peek)</i> or <i>Hľadať (focused field)</i>.</li>
       </ul>
     </div>
   </div>
@@ -815,7 +815,6 @@ h1,h2,h3,h4{font-weight:800}
     <tr><td>Disabled-looking Search button</td><td>Picking a destination searches straight away</td></tr>
     <tr><td>Pick a city (about 55 entries)</td><td>Detected from location and route; "Mesto: Košice ▾" only as an override</td></tr>
     <tr><td>7 transport-type combinations</td><td>3 toggles inside Filtre: Vlaky · Autobusy · MHD</td></tr>
-    <tr><td>"MHD Bratislava + IDS BK" as a separate list entry</td><td>A default in Nastavenia ("Všetky spoje" / "Len integrované IDS") + a "Len IDS" toggle per search</td></tr>
     <tr><td>Meškania vlakov page</td><td>Delays inside every row, result and Jazda</td></tr>
     <tr><td>AI agent (separate chat)</td><td>Plain-language input in the same search field</td></tr>
   </table></div>
@@ -901,7 +900,7 @@ h1,h2,h3,h4{font-weight:800}
       <div class="planner static">
         <div class="pl-row focus"><svg width="16" height="16" fill="var(--accent)"><use href="#i-spark"/></svg><b class="caret">zajtra ráno do Prešova bez prestupu</b></div>
         <div class="pl-parse"><span class="chipx blue">Odkiaľ: Moja poloha</span><span class="chipx blue">Kam: Prešov</span><span class="chipx blue">Zajtra · odchod 6:00–9:00</span><span class="chipx blue">Bez prestupu</span></div>
-        <div class="pl-chips"><span class="chipx">Odchod ▾</span><span class="chipx chip-tgl">Len IDS <i class="mini-tgl"></i></span><span class="chipx">Filtre</span></div>
+        <div class="pl-chips"><span class="chipx">Odchod ▾</span><span class="chipx">Filtre</span></div>
       </div>
     </div>
     <div class="card small muted">
@@ -910,7 +909,6 @@ h1,h2,h3,h4{font-weight:800}
         <li>The same field takes "Hlavná", "Domov" or a whole sentence. The model's job is to <b>fill in the form</b>, shown as editable chips, not to chat.</li>
         <li>The chips make the interpretation visible and correctable in one tap, so nothing is a black box.</li>
         <li>Three toggles (Vlaky · Autobusy · MHD) inside <b>Filtre</b> replace the 7 transport combinations. The chip shows how many filters are active.</li>
-        <li><b>Len IDS</b>: a small toggle next to time and Filtre, shown where an integrated system exists (IDS BK, IDS Východ…). It overrides the default from 👤 › Nastavenia for this one search.</li>
         <li>No personal data goes to the model. The parsed query goes to Ubian's search engine.</li>
       </ul>
     </div>
@@ -1038,7 +1036,7 @@ h1,h2,h3,h4{font-weight:800}
               <div class="pl-sug"><span class="pc-ic">🕘</span><div><b>Poprad, žel. st.</b><div class="op">minulý týždeň</div></div></div>
               <div class="pl-sug"><span class="pc-ic"><svg width="15" height="15" fill="var(--accent)"><use href="#i-spark"/></svg></span><div><b>Skúste vetu</b><div class="op">„zajtra ráno do Prešova bez prestupu“</div></div></div>
             </div>
-            <div class="pl-chips" style="padding:8px 14px 6px"><span class="chipx blue">Odchod teraz ▾</span><span class="chipx chip-tgl">Len IDS <i class="mini-tgl"></i></span><span class="chipx">Filtre · 2</span></div>
+            <div class="pl-chips" style="padding:8px 14px 6px"><span class="chipx blue">Odchod teraz ▾</span><span class="chipx">Filtre · 2</span></div>
             <div class="pl-row" style="margin:0 14px 0"><span class="dot"></span><span class="muted">Odkiaľ</span><b>Moja poloha</b><span class="pl-swap"><svg width="16" height="16" fill="currentColor"><use href="#i-swap"/></svg></span></div>
           </div>
 
