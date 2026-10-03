@@ -527,6 +527,31 @@ section,[id]{scroll-margin-top:84px}
 .a-fab{position:absolute;right:16px;bottom:96px;width:56px;height:56px;border-radius:16px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:6}
 @media (prefers-reduced-motion:reduce){.vveh{top:20px}}
 
+
+/* ---------- true device scale: real pt/dp sizes, scaled down as a whole ---------- */
+.phone{width:413px;height:872px;border-radius:62px;padding:10px;zoom:.727}
+.phone.android{width:432px;height:935px;border-radius:44px;zoom:.694}
+.screen{border-radius:52px}
+.android .screen{border-radius:34px}
+.ios .sbar{height:54px;font-size:17px;padding:0 34px 0 44px}
+.ios .sbar::after{width:125px;height:37px;top:11px;border-radius:20px}
+.android .sbar{height:36px;font-size:14px;padding:0 22px}
+.android .sbar::after{width:14px;height:14px;top:11px}
+.home-ind{width:140px;height:5px;bottom:8px}
+.dock{bottom:28px;left:16px;right:16px}
+.acc{bottom:96px;left:18px;right:18px}
+.planner{bottom:96px;left:14px;right:14px}
+.ride-cta{bottom:40px;left:18px;right:18px}
+.ios-tabs{bottom:28px}
+.dock-tabs,.dock-search{height:62px;border-radius:31px}
+.dock-search{min-width:62px}
+.demo:not([data-view=map]) .dock-search{max-width:62px}
+.dock-tabs button{height:54px;border-radius:27px;font-size:10.5px}
+.dock-tabs button svg{width:26px;height:26px}
+.acc{height:56px;border-radius:28px;bottom:102px}
+.planner{bottom:102px}
+@media(max-width:360px){.phone{transform:none!important;margin-bottom:0!important;zoom:.66}.phone.android{zoom:.63}}
+
 footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:13px}
 </style>
 </head>
@@ -1026,7 +1051,7 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
         </div>
 
         <div class="view v-dep">
-          <div style="height:44px"></div>
+          <div style="height:56px"></div>
           <div class="ios-nav" style="padding-bottom:2px"><span></span><span style="color:var(--accent);font-weight:700;font-size:15px">Upraviť</span></div>
           <div class="ios-large">Odchody</div>
           <div class="pcard">
@@ -1047,7 +1072,7 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
         </div>
 
         <div class="view v-ride">
-          <div style="height:44px"></div>
+          <div style="height:56px"></div>
           <div class="ios-nav"><span class="grab" style="margin:0 auto"></span></div>
           <div class="ride-h">
             <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">R6</span><b>smer Ťahanovce</b><span class="st warn" style="margin-left:auto">+2 min</span></div>
@@ -1069,7 +1094,7 @@ footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:1
         </div>
 
         <div class="view v-ticket">
-          <div style="height:44px"></div>
+          <div style="height:56px"></div>
           <div class="ios-nav"><span></span><span style="color:var(--accent);font-weight:700;font-size:14px">Kredit 11,40 €</span></div>
           <div class="ios-large" style="padding-bottom:6px">Lístky</div>
           <div class="ticket" style="margin:0 12px">
