@@ -550,6 +550,72 @@ section,[id]{scroll-margin-top:84px}
 .planner{bottom:102px}
 @media(max-width:360px){.phone{transform:none!important;margin-bottom:0!important;zoom:.66}.phone.android{zoom:.63}}
 
+
+/* ---------- v0.2: map canvas + sheet ---------- */
+.demo .map{position:absolute;inset:0}
+.map-dim{position:absolute;inset:0;background:#000;opacity:0;transition:opacity .4s;pointer-events:none;z-index:2}
+.demo[data-view=search] .map-dim{opacity:.28}
+.ml{transition:opacity .45s}
+.demo:not([data-view=dep]):not([data-view=wallet]) .ml-dep{opacity:0}
+.demo:not([data-view=res]):not([data-view=ride]) .ml-route{opacity:0}
+.demo:not([data-view=ride]) .ml-ride{opacity:0}
+.draw2 path{stroke-dasharray:1;stroke-dashoffset:1;transition:none}
+.demo[data-view=res] .draw2 path,.demo[data-view=ride] .draw2 path{animation:drawin .8s ease-out .15s forwards}
+@keyframes drawin{to{stroke-dashoffset:0}}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:430px;border-radius:32px 32px 0 0;z-index:6;padding:8px 0 0;overflow:hidden;transition:height .55s cubic-bezier(.3,1.15,.4,1);border-bottom:0}
+.demo[data-view=search] .sheet{height:760px}
+.demo[data-view=res] .sheet{height:400px}
+.demo[data-view=ride] .sheet{height:400px}
+.sheet .grab{cursor:pointer}
+.sh-head{display:flex;gap:8px;padding:4px 14px 12px;align-items:center}
+.sh-head.static{padding:0}
+.sh-search{flex:1;min-width:0;height:50px;border-radius:25px;background:color-mix(in srgb,var(--text) 7%,transparent);display:flex;align-items:center;gap:9px;padding:0 16px;font-size:17px;color:var(--text-2);cursor:pointer;white-space:nowrap;overflow:hidden}
+.sh-search svg{fill:currentColor;flex:none}
+.sh-search .q{display:none;color:var(--text);font-weight:600}
+.demo[data-view=search] .sh-search{outline:2px solid var(--accent);background:var(--surface)}
+.demo[data-view=search] .sh-search .ph{display:none}
+.demo[data-view=search] .sh-search .q{display:inline}
+.sh-btn{width:50px;height:50px;border-radius:50%;background:color-mix(in srgb,var(--text) 7%,transparent);display:grid;place-items:center;position:relative;flex:none;cursor:pointer;overflow:hidden;transition:width .4s,opacity .3s,margin .4s}
+.sh-btn svg{fill:var(--text)}
+.sh-btn.av{font:800 15px var(--font);color:var(--text)}
+.badge{position:absolute;top:10px;right:10px;width:11px;height:11px;border-radius:50%;background:var(--ok);border:2px solid var(--surface)}
+.sh-cancel{max-width:0;overflow:hidden;color:var(--accent);font-weight:700;font-size:16px;white-space:nowrap;transition:max-width .4s;cursor:pointer}
+.demo[data-view=search] .sh-btn{width:0;opacity:0;margin-left:-8px}
+.demo[data-view=search] .sh-cancel{max-width:80px}
+.sc{position:absolute;left:0;right:0;top:82px;bottom:0;opacity:0;transform:translateY(14px);transition:opacity .3s,transform .45s cubic-bezier(.2,.8,.2,1);pointer-events:none;overflow:hidden}
+.demo[data-view=dep] .sc-dep,.demo[data-view=wallet] .sc-dep,.demo[data-view=search] .sc-search,.demo[data-view=res] .sc-res,.demo[data-view=ride] .sc-ride{opacity:1;transform:none;pointer-events:auto}
+.sc .pcard{background:color-mix(in srgb,var(--surface) 75%,transparent)}
+.wallet{position:absolute;inset:0;z-index:20;background:var(--surface);transform:translateY(102%);transition:transform .55s cubic-bezier(.3,1.1,.4,1);padding-top:60px;border-radius:52px 52px 0 0}
+.demo[data-view=wallet] .wallet{transform:none}
+.live-row .pos{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)}
+.pos-track{position:relative;width:46px;height:9px;display:inline-block;flex:none}
+.pos-track::before{content:"";position:absolute;left:0;right:0;top:3.5px;height:2px;background:color-mix(in srgb,var(--mode-tram) 35%,transparent)}
+.pos-track i{position:absolute;top:1.5px;width:6px;height:6px;border-radius:50%;background:var(--surface);border:1.5px solid var(--mode-tram);box-sizing:border-box}
+.pos-track i:nth-child(1){left:0}.pos-track i:nth-child(2){left:20px}.pos-track i:nth-child(3){right:0;background:var(--accent);border-color:var(--accent)}
+.pos-track b{position:absolute;top:0;left:0;width:9px;height:9px;border-radius:50%;background:var(--mode-tram);animation:posm 9s linear infinite}
+@keyframes posm{from{left:-2px}to{left:34px}}
+.catch{display:inline-block;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2);margin-top:3px}
+.catch.ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.dep.sel{background:color-mix(in srgb,var(--mode-tram) 7%,transparent);border-radius:12px;margin:0 -8px;padding-left:8px;padding-right:8px}
+@media (prefers-reduced-motion:reduce){.draw2 path{stroke-dashoffset:0}}
+
+.dev-cap strong{color:var(--text)}
+/* bottom bar: search + wallet + account pinned to the sheet bottom (thumb zone) */
+.sheet .sh-head{position:absolute;left:0;right:0;bottom:0;padding:10px 14px 30px;z-index:3;border-top:.5px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.sc{top:24px;bottom:94px}
+.sc-search{display:flex;flex-direction:column;justify-content:flex-end}
+.demo .sheet{height:470px}
+.demo[data-view=search] .sheet{height:560px}
+.demo[data-view=res] .sheet,.demo[data-view=ride] .sheet{height:450px}
+.chip-tgl{gap:6px}
+.mini-tgl{display:inline-block;width:26px;height:15px;border-radius:8px;background:var(--line);position:relative}
+.mini-tgl::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:left .25s}
+.chip-tgl.on .mini-tgl{background:var(--accent)}.chip-tgl.on .mini-tgl::after{left:13px}
+.chip-tgl{cursor:pointer}
+.demo[data-view=search] .sheet{height:450px}
+.a-sheet.has-bar{display:flex;flex-direction:column}
+.a-sheet.has-bar .sh-head{order:9;margin-top:auto;padding:10px 14px 4px}
+
 footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:13px}
 
 /* ---------- Ubian overrides ---------- */
@@ -609,7 +675,7 @@ h1,h2,h3,h4{font-weight:800}
 </svg>
 
 <header class="top"><div class="top-in">
-  <div class="brand"><span class="wordmark">ubian<i></i></span><span class="tag">Redesign proposal · v0.1</span></div>
+  <div class="brand"><span class="wordmark">ubian<i></i></span><span class="tag">Redesign proposal · v0.2</span></div>
   <nav>
     <a href="#today">Today</a><a href="#principles">Principles</a><a href="#ia">Structure</a><a href="#foundations">Foundations</a>
     <a href="#components">Components</a><a href="#screens">Screens</a><a href="#data">Data platform</a><a href="#roadmap">Roadmap</a>
@@ -711,39 +777,48 @@ h1,h2,h3,h4{font-weight:800}
 <!-- ============ IA ============ -->
 <section id="ia">
   <div class="eyebrow">03 · Structure</div>
-  <h2>Three tabs and a search in the corner</h2>
+  <h2>One map. One sheet. One wallet button.</h2>
+  <p class="muted">Live vehicle positions are Ubian's most valuable data, yet today the map is two taps away. In the redesign the map is the app: <b>a live map that never leaves the screen</b>, with everything else layered on it as a sheet. There are no tabs, so there's no tab switching.</p>
   <div class="grid g4">
-    <div class="card"><span class="tag red">Daily</span><h4 style="margin-top:8px">Odchody</h4><p class="small muted" style="margin:0">Your places (Domov, Práca, Škola) with chosen stops, nearest first, across any city.</p></div>
-    <div class="card"><span class="tag blue">Weekly</span><h4 style="margin-top:8px">Spojenia 🔍</h4><p class="small muted" style="margin:0">Search, bottom right, opens the planner over the live map. Typing in plain language replaces the separate AI chat.</p></div>
-    <div class="card"><span class="tag">Per ride</span><h4 style="margin-top:8px">Jazda</h4><p class="small muted" style="margin:0">Opens from the live trip strip: delay, position, stops until you get off, transfers.</p></div>
-    <div class="card"><span class="tag">Per check</span><h4 style="margin-top:8px">Peňaženka</h4><p class="small muted" style="margin:0">What's valid now, then credit, cards, passes and parking. Always a dedicated tab.</p></div>
+    <div class="card"><span class="tag red">Canvas</span><h4 style="margin-top:8px">Live map</h4><p class="small muted" style="margin:0">Vehicles, your stops and places, bikesharing. The camera follows whatever the sheet shows.</p></div>
+    <div class="card"><span class="tag blue">Default</span><h4 style="margin-top:8px">Odchody in the sheet</h4><p class="small muted" style="margin:0">Your places and stops. The map shows the vehicles for those departures, approaching for real.</p></div>
+    <div class="card"><span class="tag">On demand</span><h4 style="margin-top:8px">Search at the bottom</h4><p class="small muted" style="margin:0">"Kam a kedy?" is pinned to the bottom of the sheet at every height, in thumb reach, with no separate button. Typing turns the sheet into the planner above it.</p></div>
+    <div class="card"><span class="tag">Always 1 tap</span><h4 style="margin-top:8px">🎫 Peňaženka</h4><p class="small muted" style="margin:0">A dedicated button next to search opens a full-screen wallet. It's predictable, so nobody panics at a ticket check.</p></div>
   </div>
-  <div class="grid g2" style="margin-top:16px">
+
+  <h3>The sheet</h3>
+  <div class="grid g2">
     <div class="card small muted">
-      <h4 style="color:var(--text)">Bottom bar</h4>
       <ul class="clean">
-        <li><b>iOS</b>: Odchody · Peňaženka · Ďalšie, plus the trailing <b>search tab</b> (<code>Tab(role: .search)</code>). On Spojenia the circle grows into the field and the tabs collapse.</li>
-        <li><b>Android</b>: a navigation bar with the same three, plus a <b>search FAB at bottom right</b> that expands into the planner (container transform).</li>
-        <li><b>Live trip strip</b> above the bar while tracking (iOS <code>tabViewBottomAccessory</code>) → Jazda.</li>
-        <li><b>Ďalšie</b>: Parkovanie, Bikesharing, Meškania vlakov, Mapy, Účet, Podpora.</li>
+        <li><b>Bottom bar, always visible and always at the bottom</b>: <code>[🔍 Kam a kedy?] [🎫] [👤]</code>. Content grows <i>upward</i> from it, so the most actionable things stay in the lower half of a tall phone. A green dot on 🎫 means something is valid right now. 👤 opens account, settings, parking history and support (what used to be "Ďalšie").</li>
+        <li><b>Three heights</b>: <i>peek</i> (the bottom bar + your next departure in one line), <i>medium</i> (the departures dashboard; the map stays useful), <i>large</i> (the full list or the planner).</li>
+        <li><b>The content follows the job</b>: Odchody → planner → results → Jazda. The bottom bar stays put. In the planner it rides above the keyboard, with Odkiaľ directly above, then chips, then suggestions, so the likeliest tap is nearest your thumb.</li>
+        <li><b>Live trip strip</b>: while you're riding it sits directly above the bottom bar. Tap it and the sheet becomes Jazda, with the map following your vehicle.</li>
       </ul>
     </div>
     <div class="card small muted">
-      <h4 style="color:var(--text)">From the current site to the new structure</h4>
-      <div class="tbl-wrap"><table>
-        <tr><th>Today</th><th>Proposal</th></tr>
-        <tr><td>5 product tabs (Connections, Card, Ticket, Parking, My Ubian)</td><td>Odchody · Peňaženka · Ďalšie + search; Card, Ticket and Parking merge into Peňaženka</td></tr>
-        <tr><td>Connections | Departures toggle; map as a pushed screen</td><td>Odchody is its own tab; the map is the canvas of the planner</td></tr>
-        <tr><td>Disabled-looking Search button</td><td>Picking a destination searches straight away</td></tr>
-        <tr><td>Pick a city (about 55 entries)</td><td>Detected from location and route; "Mesto: Košice ▾" only as an override</td></tr>
-        <tr><td>7 transport-type combinations</td><td>3 filter chips: Vlaky · Autobusy · MHD</td></tr>
-        <tr><td>Meškania vlakov page</td><td>Delays inside every result, departure and Jazda</td></tr>
-        <tr><td>AI agent (separate chat)</td><td>Plain-language input in the planner</td></tr>
-        <tr><td>E-shop · basket · wallet · card · passes</td><td>One Peňaženka; buying starts from a route or a card</td></tr>
-        <tr><td>Map-first homepage</td><td>Your departures first, or the planner if you choose it as your default</td></tr>
-      </table></div>
+      <h4 style="color:var(--text)">Native on both platforms</h4>
+      <ul class="clean">
+        <li><b>iOS 26</b>: MapKit with a persistent <code>.sheet</code>, using <code>presentationDetents([.height(140), .medium, .large])</code> and <code>presentationBackgroundInteraction(.enabled)</code>, so the map stays interactive behind it. Liquid Glass sheet; Peňaženka is a <code>.fullScreenCover</code>. This is the Apple Maps / Find My model.</li>
+        <li><b>Android</b>: MapLibre with <code>BottomSheetScaffold</code> (peek height, drag handle), the <code>SearchBar</code> pinned to the bottom of the sheet, and Peňaženka as a full-screen dialog. Predictive back collapses the sheet one level at a time.</li>
+        <li><b>Nastavenia</b> holds the defaults: the network (<i>Všetky spoje</i> / <i>Len integrované IDS</i>, overridable per search), the transport modes, and the start view. <b>Default view</b> is just the default sheet state: <i>Odchody (medium)</i>, <i>Mapa (peek)</i> or <i>Hľadať (focused field)</i>.</li>
+      </ul>
     </div>
   </div>
+
+  <h3>From today's app to the new structure</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Today</th><th>Proposal</th></tr>
+    <tr><td>5 product tabs (Connections, Card, Ticket, Parking, My Ubian)</td><td>Map + sheet; Card, Ticket and Parking merge into 🎫 Peňaženka; My Ubian becomes 👤</td></tr>
+    <tr><td>Map as a pushed screen with Stops / Vehicles / Bikes toggles</td><td>The map is always on; layers follow the context (bikes as an optional layer)</td></tr>
+    <tr><td>Connections | Departures toggle</td><td>Departures are the sheet's default; search is its bottom bar</td></tr>
+    <tr><td>Disabled-looking Search button</td><td>Picking a destination searches straight away</td></tr>
+    <tr><td>Pick a city (about 55 entries)</td><td>Detected from location and route; "Mesto: Košice ▾" only as an override</td></tr>
+    <tr><td>7 transport-type combinations</td><td>3 toggles inside Filtre: Vlaky · Autobusy · MHD</td></tr>
+    <tr><td>"MHD Bratislava + IDS BK" as a separate list entry</td><td>A default in Nastavenia ("Všetky spoje" / "Len integrované IDS") + a "Len IDS" toggle per search</td></tr>
+    <tr><td>Meškania vlakov page</td><td>Delays inside every row, result and Jazda</td></tr>
+    <tr><td>AI agent (separate chat)</td><td>Plain-language input in the same search field</td></tr>
+  </table></div>
 </section>
 
 <!-- ============ FOUNDATIONS ============ -->
@@ -793,13 +868,40 @@ h1,h2,h3,h4{font-weight:800}
   <div class="eyebrow">05 · Components</div>
   <h2>The building blocks</h2>
 
+  <h3>Departure row with live position and "Stihnete"</h3>
+  <div class="grid g2">
+    <div class="card" style="padding:12px">
+      <div class="pcard" style="margin:0">
+        <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 🚶 2 min</div><b>Technická univerzita</b></div><span class="pc-dir">→ centrum</span></div>
+        <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov</b><span class="pos"><span class="pos-track"><i></i><i></i><i></i><b></b></span>2 zastávky pred vami</span></div><div class="t"><b class="rt">1 min</b><span class="catch ok">Stihnete</span></div></div>
+        <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="catch ok">Stihnete</span></div></div>
+        <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP</b><span class="pos">podľa CP · bez polohy</span></div><div class="t"><b>11 min</b><span class="catch">🚶 2 min</span></div></div>
+      </div>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">ETA plus position equals confidence</h4>
+      <ul class="clean">
+        <li>The predicted minutes stay the big number. Under the destination, a <b>mini track shows where the vehicle is</b> relative to your stop ("2 zastávky pred vami"), taken from <code>lastStopOrder</code> and <code>isOnStop</code> in Ubian's live data.</li>
+        <li><b>"Stihnete" / "Ponáhľajte sa" / "Nestihnete"</b> compares your walking time with the vehicle's <i>live</i> position, not just the timetable. "1 min" on the board, but two stops out on the map, means you'll make it.</li>
+        <li>Tapping a row <b>highlights that vehicle on the map</b> and draws its remaining path to your stop, plus your walk.</li>
+        <li>Without live data the row says "podľa CP · bez polohy". It's honest, and it never pretends.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Bottom bar</h3>
+  <div class="grid g2">
+    <div class="card"><div class="sh-head static"><div class="sh-search"><svg width="18" height="18"><use href="#i-search"/></svg><span>Kam a kedy?</span></div><div class="sh-btn"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div><div class="sh-btn av">DM</div></div></div>
+    <div class="card small muted"><h4 style="color:var(--text)">Three controls, always in reach</h4>Search takes stops, lines, places, addresses or a whole sentence. 🎫 shows a green dot when a ticket or card product is valid right now. 👤 holds the account, settings and support. Nothing else is permanently on screen, so the map gets the space.</div>
+  </div>
+
   <h3>Planner with plain-language input (the AI agent, integrated)</h3>
   <div class="grid g2">
     <div class="card">
       <div class="planner static">
         <div class="pl-row focus"><svg width="16" height="16" fill="var(--accent)"><use href="#i-spark"/></svg><b class="caret">zajtra ráno do Prešova bez prestupu</b></div>
         <div class="pl-parse"><span class="chipx blue">Odkiaľ: Moja poloha</span><span class="chipx blue">Kam: Prešov</span><span class="chipx blue">Zajtra · odchod 6:00–9:00</span><span class="chipx blue">Bez prestupu</span></div>
-        <div class="pl-chips"><span class="chipx">Vlaky ✓</span><span class="chipx">Autobusy ✓</span><span class="chipx">MHD ✓</span><span class="chipx">Filtre</span></div>
+        <div class="pl-chips"><span class="chipx">Odchod ▾</span><span class="chipx chip-tgl">Len IDS <i class="mini-tgl"></i></span><span class="chipx">Filtre</span></div>
       </div>
     </div>
     <div class="card small muted">
@@ -807,7 +909,8 @@ h1,h2,h3,h4{font-weight:800}
       <ul class="clean">
         <li>The same field takes "Hlavná", "Domov" or a whole sentence. The model's job is to <b>fill in the form</b>, shown as editable chips, not to chat.</li>
         <li>The chips make the interpretation visible and correctable in one tap, so nothing is a black box.</li>
-        <li>Three toggles (Vlaky · Autobusy · MHD) replace the 7 transport combinations.</li>
+        <li>Three toggles (Vlaky · Autobusy · MHD) inside <b>Filtre</b> replace the 7 transport combinations. The chip shows how many filters are active.</li>
+        <li><b>Len IDS</b>: a small toggle next to time and Filtre, shown where an integrated system exists (IDS BK, IDS Východ…). It overrides the default from 👤 › Nastavenia for this one search.</li>
         <li>No personal data goes to the model. The parsed query goes to Ubian's search engine.</li>
       </ul>
     </div>
@@ -868,174 +971,170 @@ h1,h2,h3,h4{font-weight:800}
 <!-- ============ SCREENS ============ -->
 <section id="screens">
   <div class="eyebrow">06 · Screens</div>
-  <h2>Odchody, Spojenia, Jazda, Peňaženka</h2>
-  <p class="muted">The first phone is interactive. Tap around or wait for it to cycle through Odchody → 🔍 Spojenia → Jazda → Peňaženka.</p>
+  <h2>One map, everything else on top</h2>
+  <p class="muted">The first phone is interactive. The map stays put while the sheet changes height and content: departures, search, results, ride, and the wallet on top.</p>
   <div class="devices phones">
-        <div class="dev-col">
+    <div class="dev-col">
       <div class="phone ios"><div class="screen demo" id="demo" data-view="dep">
 
-        <div class="view v-map">
-          <div class="map">
-            <svg viewBox="0 0 280 620" preserveAspectRatio="xMidYMid slice">
-              <rect class="m-blk" x="20" y="120" width="70" height="60" rx="4"/><rect class="m-blk" x="110" y="90" width="80" height="70" rx="4"/><rect class="m-blk" x="200" y="140" width="70" height="80" rx="4"/>
-              <rect class="m-blk" x="30" y="220" width="60" height="90" rx="4"/><rect class="m-blk" x="180" y="250" width="90" height="60" rx="4"/>
-              <path class="m-park" d="M100 200 h70 v90 h-70z"/>
-              <path class="m-water" d="M-10 400 C60 380 120 440 190 420 S280 380 300 400 V440 C240 430 200 470 130 460 S30 430 -10 440Z"/>
-              <path class="m-road" stroke-width="10" d="M140 -10 V640"/><path class="m-road" stroke-width="7" d="M-10 200 H290"/><path class="m-road2" stroke-width="5" d="M-10 90 L290 60 M60 -10 L80 640 M220 -10 L240 640"/>
-              <text class="m-label" x="150" y="128">Hlavná</text><text class="m-label" x="104" y="250">Mestský park</text>
-              <g class="veh"><circle r="11" fill="var(--mode-tram)" stroke="#fff" stroke-width="2"/><text>2</text><animateMotion dur="14s" repeatCount="indefinite" path="M140 -10 V200 H290"/></g>
-              <g class="veh"><circle r="11" fill="var(--mode-tram)" stroke="#fff" stroke-width="2"/><text>4</text><animateMotion dur="18s" repeatCount="indefinite" path="M290 200 H140 V640"/></g>
-              <g class="veh"><rect x="-11" y="-11" width="22" height="22" rx="2" fill="var(--mode-bus)" stroke="#fff" stroke-width="2"/><text>23</text><animateMotion dur="20s" repeatCount="indefinite" path="M60 -10 L80 640"/></g>
-              <g transform="translate(232 286)"><circle r="9" fill="#fff" stroke="var(--accent)" stroke-width="2.5"/><text x="0" y="0.5" style="font:900 9px var(--font);fill:var(--accent);text-anchor:middle;dominant-baseline:central">🚲</text></g>
-              <circle cx="150" cy="215" r="18" fill="var(--accent)" opacity=".18"/><circle cx="150" cy="215" r="7" fill="var(--accent)" stroke="#fff" stroke-width="3"/>
-            </svg>
-          </div>
-          <div class="planner glass">
-            <div class="pl-row"><svg width="15" height="15" fill="var(--accent)"><use href="#i-spark"/></svg><span class="muted" style="width:auto">Kam a kedy… napr. „zajtra ráno do Prešova“</span></div>
-            <div class="pl-chips"><span class="chipx blue">Teraz ▾</span><span class="chipx">Vlaky · Autobusy · MHD</span><span class="chipx">Filtre</span></div>
-            <div class="pl-sug"><span class="pc-ic">💼</span><div><b>Práca</b><div class="op">Technická univerzita · Košice</div></div><b class="pl-t">12 min</b></div>
-            <div class="pl-sug"><span class="pc-ic">🏠</span><div><b>Domov</b><div class="op">Prešov, Sídlisko III</div></div><b class="pl-t">58 min</b></div>
-          </div>
-        </div>
+        <div class="map">
+          <svg viewBox="0 0 393 852" preserveAspectRatio="xMidYMid slice">
+            <rect class="m-blk" x="20" y="90" width="80" height="70" rx="5"/><rect class="m-blk" x="140" y="80" width="110" height="80" rx="5"/><rect class="m-blk" x="290" y="90" width="90" height="70" rx="5"/>
+            <rect class="m-blk" x="20" y="200" width="80" height="80" rx="5"/><rect class="m-blk" x="300" y="190" width="80" height="90" rx="5"/>
+            <path class="m-park" d="M140 190 h110 v90 h-110z"/>
+            <rect class="m-blk" x="20" y="330" width="80" height="80" rx="5"/><rect class="m-blk" x="140" y="330" width="110" height="80" rx="5"/><rect class="m-blk" x="300" y="330" width="80" height="80" rx="5"/>
+            <path class="m-water" d="M-10 470 C80 440 160 500 250 470 S380 430 410 450 V500 C330 490 280 530 190 520 S60 490 -10 510Z"/>
+            <path class="m-road" stroke-width="12" d="M-10 305 H410"/><path class="m-road" stroke-width="9" d="M120 -10 V860 M270 -10 V860"/><path class="m-road2" stroke-width="6" d="M-10 175 H410 M-10 425 H410"/>
+            <text class="m-label" x="150" y="245">Mestský park</text><text class="m-label" x="300" y="168">Hlavná</text>
 
-        <div class="view v-dep">
-          <div style="height:56px"></div>
-          <div class="ios-nav" style="padding-bottom:2px"><span class="chipx">📍 Košice</span><span style="color:var(--accent);font-weight:700;font-size:15px">Upraviť</span></div>
-          <div class="ios-large">Odchody</div>
-          <div class="pcard">
-            <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 3 min</div><b>Technická univ.</b></div><span class="pc-dir">→ centrum</span></div>
-            <div class="deplist" id="deplist">
-              <div class="dep"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov</b></div><div class="t"><b class="rt now">teraz</b></div></div>
-              <div class="dep"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b></div><div class="t"><b class="rt">4 min</b></div></div>
-              <div class="dep"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP</b></div><div class="t"><b>11 min</b></div></div>
+            <g class="ml ml-dep">
+              <path d="M70 305 H290" stroke="var(--mode-tram)" stroke-width="4" stroke-dasharray="2 7" stroke-linecap="round" fill="none" opacity=".8"/>
+              <path d="M205 240 V305 H282" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="1 7" stroke-linecap="round" fill="none"/>
+              <circle cx="120" cy="305" r="5" fill="#fff" stroke="var(--mode-tram)" stroke-width="2.5"/><circle cx="200" cy="305" r="5" fill="#fff" stroke="var(--mode-tram)" stroke-width="2.5"/>
+              <g class="veh"><circle r="22" fill="var(--mode-tram)" opacity=".18"><animate attributeName="r" values="14;26;14" dur="1.8s" repeatCount="indefinite"/></circle><circle r="13" fill="var(--mode-tram)" stroke="#fff" stroke-width="3"/><text style="font-size:11px">4</text>
+                <g transform="translate(0 -30)"><rect x="-42" y="-12" width="84" height="22" rx="11" fill="var(--surface)" stroke="var(--line)"/><text style="fill:var(--text);font-size:10.5px;font-weight:800">2 zast. · 1 min</text></g>
+                <animateMotion dur="9s" repeatCount="indefinite" path="M40 305 H270"/></g>
+            </g>
+            <g class="veh"><circle r="11" fill="var(--mode-tram)" stroke="#fff" stroke-width="2.5"/><text>6</text><animateMotion dur="22s" repeatCount="indefinite" path="M120 -10 V305"/></g>
+            <g class="veh"><rect x="-12" y="-11" width="24" height="22" rx="3" fill="var(--mode-bus)" stroke="#fff" stroke-width="2.5"/><text>23</text><animateMotion dur="26s" repeatCount="indefinite" path="M410 175 H-10"/></g>
+            <g transform="translate(345 300)"><circle r="10" fill="#fff" stroke="var(--accent)" stroke-width="2.5"/><text style="font-size:10px;text-anchor:middle;dominant-baseline:central">🚲</text></g>
+
+            <g class="ml ml-route">
+              <g class="draw2"><path pathLength="1" d="M290 305 H370 V40" stroke="var(--ribbon-case)" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path pathLength="1" d="M290 305 H370 V40" stroke="var(--mode-tram)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+            </g>
+            <g class="ml ml-ride"><g class="veh"><circle r="24" fill="var(--mode-tram)" opacity=".15"/><circle r="14" fill="var(--mode-tram)" stroke="#fff" stroke-width="3"/><text style="font-size:11px">4</text><animateMotion dur="10s" repeatCount="indefinite" path="M290 305 H370 V40"/></g></g>
+
+            <g transform="translate(290 305)"><rect x="-11" y="-11" width="22" height="22" rx="7" fill="#fff" stroke="var(--accent)" stroke-width="3"/><text x="0" y="-22" style="font:800 11px var(--font);fill:var(--text);text-anchor:middle">Technická univ.</text></g>
+            <circle cx="205" cy="240" r="22" fill="var(--accent)" opacity=".16"/><circle cx="205" cy="240" r="8" fill="var(--accent)" stroke="#fff" stroke-width="3"/>
+          </svg>
+        </div>
+        <div class="map-dim"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
+
+        <div class="sheet glass">
+          <div class="grab" data-go="dep"></div>
+          <div class="sh-head">
+            <div class="sh-search" data-go="search"><svg width="18" height="18"><use href="#i-search"/></svg><span class="ph">Kam a kedy?</span><span class="q caret">Domov</span></div>
+            <span class="sh-cancel" data-go="dep">Zrušiť</span>
+            <div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div>
+            <div class="sh-btn av" aria-label="Účet">DM</div>
+          </div>
+
+          <div class="sc sc-dep">
+            <div class="pcard">
+              <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 🚶 2 min</div><b>Technická univerzita</b></div><span class="pc-dir">→ centrum</span></div>
+              <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov</b><span class="pos"><span class="pos-track"><i></i><i></i><i></i><b></b></span>2 zastávky pred vami</span></div><div class="t"><b class="rt">1 min</b><span class="catch ok">Stihnete</span></div></div>
+              <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="catch ok">Stihnete</span></div></div>
+              <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP</b><span class="pos">podľa CP · bez polohy</span></div><div class="t"><b>11 min</b></div></div>
+            </div>
+            <div class="pcard dim"><div class="pc-h"><span class="pc-ic">🚉</span><div><div class="pc-eye">Práca · 🚶 9 min</div><b>Košice, žel. st.</b></div><span class="pc-dir"><span class="lb train sm">Os</span> 14:27 <span class="st warn">+5</span></span></div></div>
+            <div class="pcard dim"><div class="pc-h"><span class="pc-ic">🏠</span><div><div class="pc-eye">Domov · Prešov</div><b>Sídlisko III</b></div><span class="pc-dir"><span class="lb trolley sm">38</span> 9 min</span></div></div>
+          </div>
+
+          <div class="sc sc-search">
+            <div style="padding:0 14px">
+              <div class="pl-sug" data-go="res" style="cursor:pointer"><span class="pc-ic">🏠</span><div><b>Domov</b><div class="op">Prešov, Sídlisko III</div></div><b class="pl-t">58 min</b></div>
+              <div class="pl-sug"><span class="pc-ic">🎓</span><div><b>Škola</b><div class="op">Pridať adresu</div></div></div>
+              <div class="pl-sug"><span class="pc-ic">🕘</span><div><b>Poprad, žel. st.</b><div class="op">minulý týždeň</div></div></div>
+              <div class="pl-sug"><span class="pc-ic"><svg width="15" height="15" fill="var(--accent)"><use href="#i-spark"/></svg></span><div><b>Skúste vetu</b><div class="op">„zajtra ráno do Prešova bez prestupu“</div></div></div>
+            </div>
+            <div class="pl-chips" style="padding:8px 14px 6px"><span class="chipx blue">Odchod teraz ▾</span><span class="chipx chip-tgl">Len IDS <i class="mini-tgl"></i></span><span class="chipx">Filtre · 2</span></div>
+            <div class="pl-row" style="margin:0 14px 0"><span class="dot"></span><span class="muted">Odkiaľ</span><b>Moja poloha</b><span class="pl-swap"><svg width="16" height="16" fill="currentColor"><use href="#i-swap"/></svg></span></div>
+          </div>
+
+          <div class="sc sc-res">
+            <div class="pl-parse" style="padding:0 14px 4px"><span class="chipx blue">Moja poloha → 🏠 Domov</span><span class="chipx">Teraz</span></div>
+            <div class="m-card sel" style="margin:6px 12px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:20px;font-weight:800;font-variant-numeric:tabular-nums">14:13 – 15:11</b><b>58 min</b></div>
+              <div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>2</span><span class="sep">›</span><span class="lb tram sm">4</span><span class="sep">›</span><span class="lb train sm">Os 8813</span><span class="sep">›</span><span class="lb trolley sm">38</span></div>
+              <div class="op">DPMK · ZSSK · DPMP</div>
+              <div style="display:flex;gap:8px;margin-top:10px"><div class="m-btn tonal" data-go="ride" style="margin:0;flex:1;height:44px;font-size:15px;cursor:pointer">Sledovať</div><div class="m-btn" style="margin:0;flex:1.3;height:44px;font-size:15px">Kúpiť · 3,40 €</div></div>
+            </div>
+            <div class="m-card" style="margin:6px 12px;padding:10px 15px"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px;font-weight:800;font-variant-numeric:tabular-nums">14:30 – 15:45</b><span class="legs" style="margin:0"><span class="lb regional sm">701</span></span></div></div>
+          </div>
+
+          <div class="sc sc-ride">
+            <div class="ride-h" style="padding-top:0">
+              <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">4</span><b>→ Staničné nám.</b><span class="st ok" style="margin-left:auto">naživo</span></div>
+              <div class="ride-big" style="font-size:24px">Vystúpte o 3 zastávky</div>
+              <div class="muted small">Staničné nám. · 14:21 · potom <span class="lb train sm">Os 8813</span> koľ. 3</div>
+            </div>
+            <div class="vtl" style="margin-top:8px">
+              <div class="vs cur" style="--c:var(--mode-tram)"><span class="tm">14:13</span>Technická univerzita<span class="vveh"></span></div>
+              <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Hlavná</div>
+              <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
             </div>
           </div>
-          <div class="pcard">
-            <div class="pc-h"><span class="pc-ic">🚉</span><div><div class="pc-eye">Práca · 9 min</div><b>Košice, žel. st.</b></div><span class="pc-dir">→ Prešov</span></div>
-            <div class="dep"><span class="lb train">Os</span><div class="dest"><b>Prešov</b></div><div class="t"><b>14:27</b><span class="st warn">+5</span></div></div>
-          </div>
-          <div class="pcard dim">
-            <div class="pc-h"><span class="pc-ic">🏠</span><div><div class="pc-eye">Domov · Prešov</div><b>Sídlisko III</b></div><span class="pc-dir"><span class="lb trolley sm">38</span> 9 min</span></div>
-          </div>
         </div>
 
-        <div class="view v-ride">
-          <div style="height:56px"></div>
-          <div class="ios-nav"><span class="grab" style="margin:0 auto"></span></div>
-          <div class="ride-h">
-            <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">2</span><b>→ Staničné nám.</b><span class="st warn" style="margin-left:auto">+3 min</span></div>
-            <div class="ride-big">Vystúpte o 2 zastávky</div>
-            <div class="muted small">Staničné námestie · 14:21 · o 6 min</div>
-          </div>
-          <div class="vtl">
-            <div class="vs past" style="--c:var(--mode-tram)"><span class="tm">14:09</span>Havlíčkova</div>
-            <div class="vs cur" style="--c:var(--mode-tram)"><span class="tm">14:13</span>Hlavná<span class="vveh"></span></div>
-            <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:17</span>Dom umenia</div>
-            <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
-            <div class="vs walk"><span class="muted">🚶 6 min · koľ. 3</span></div>
-            <div class="vs" style="--c:var(--mode-train)"><span class="tm">14:27</span><span class="lb train sm">Os 8813</span> → <b>Prešov</b></div>
-          </div>
-          <div class="ride-cta">
-            <div class="ios-btn" data-go="ticket" style="margin:0"><svg width="18" height="18" fill="currentColor"><use href="#i-wallet"/></svg>Zobraziť lístok</div>
-            <div class="ride-sec">Ukončiť sledovanie</div>
-          </div>
-        </div>
-
-        <div class="view v-ticket">
-          <div style="height:56px"></div>
-          <div class="ios-nav"><span></span><span style="color:var(--accent);font-weight:700;font-size:14px">Kredit 12,40 € · Dobiť</span></div>
-          <div class="ios-large" style="padding-bottom:6px">Peňaženka</div>
-          <div class="m-label" style="padding-top:0">Platné teraz</div>
-          <div class="vcard" style="margin:0 12px">
+        <div class="wallet">
+          <div class="ios-nav"><b style="font-size:17px">Peňaženka</b><span data-go="dep" style="width:32px;height:32px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;cursor:pointer">✕</span></div>
+          <div class="m-card" style="display:flex;align-items:center;gap:10px;margin:12px 14px"><svg width="22" height="22" fill="var(--accent)"><use href="#i-wallet"/></svg><div style="flex:1"><div class="op">Kredit</div><b style="font-size:22px;font-variant-numeric:tabular-nums">12,40 €</b></div><div class="m-btn" style="margin:0;height:40px;padding:0 18px">Dobiť</div></div>
+          <div class="m-label" style="padding-top:2px">Platné teraz</div>
+          <div class="vcard" style="margin:0 14px">
             <div class="vc-band"><span class="vc-clock js-clock">14:21:07</span><span class="vc-city">Virtuálna karta · Košice</span></div>
-            <div class="vc-body"><div class="qr js-qr" style="width:84px;height:84px;margin:0;flex:none"></div><div class="small"><b>MHD Košice · Základný</b><div class="op">ročný · do 23. 9. 2027</div><span class="chipx ok" style="margin-top:6px">● Platný · 356 dní</span><div class="vc-prog"><b></b></div></div></div>
+            <div class="vc-body"><div class="qr js-qr" style="width:96px;height:96px;margin:0;flex:none"></div><div class="small"><b>MHD Košice · Základný</b><div class="op">ročný · do 23. 9. 2027</div><span class="chipx ok" style="margin-top:6px">● Platný · 356 dní</span><div class="vc-prog"><b></b></div></div></div>
           </div>
           <div class="m-label">Ďalšie</div>
           <div class="ios-group" style="background:var(--surface-2)">
             <div class="ios-row"><svg width="18" height="18" fill="var(--accent)"><use href="#i-p"/></svg><div><b style="font-size:14px">Parkovanie · Košice A2</b><div class="op">beží · do 15:30</div></div><span class="r">›</span></div>
-            <div class="ios-row">💳 <div><b style="font-size:14px">Čipová karta</b><div class="op">Preukaz študenta</div></div><span class="r">›</span></div>
+            <div class="ios-row">💳 <div><b style="font-size:14px">Čipová karta · Prešov</b><div class="op">2 produkty</div></div><span class="r">›</span></div>
+            <div class="ios-row">🎓 <div><b style="font-size:14px">Preukaz študenta</b><div class="op">do 31. 8. 2027</div></div><span class="r">›</span></div>
           </div>
-        </div>
-
-        <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
-
-        <div class="acc glass" data-go="ride">
-          <span class="lb tram sm">2</span>
-          <div class="acc-t"><b>Vystúpte o 2 zast.</b><span class="mini-track"><span></span></span></div>
-          <b class="acc-m">6 min</b>
-        </div>
-
-        <div class="dock">
-          <div class="dock-tabs glass">
-            <button data-go="dep" class="last" aria-label="Odchody"><svg><use href="#i-dep"/></svg><span>Odchody</span></button>
-            <button data-go="ticket" aria-label="Peňaženka"><svg><use href="#i-wallet"/></svg><span>Peňaženka</span></button>
-            <button data-go="more" aria-label="Ďalšie"><svg><use href="#i-more"/></svg><span>Ďalšie</span></button>
-          </div>
-          <div class="dock-search glass" data-go="map" role="button" aria-label="Spojenia"><svg><use href="#i-search"/></svg><span class="ds-t">Kam a kedy?</span></div>
         </div>
         <div class="home-ind"></div>
       </div></div>
-      <div class="dev-cap"><b>iOS · Interactive</b>The city comes from your location ("📍 Košice"), and a place can span two cities. Search is the trailing tab: the planner takes plain language, and its suggestions are your places with live travel times. The trip strip opens Jazda, which links to the Peňaženka.</div>
+      <div class="dev-cap"><b>iOS · Interactive</b>Tap around or wait for it to cycle: <strong>Odchody</strong> (the map shows tram 4 two stops out: "1 min", and you'll make it) → <strong>search</strong> from the bottom bar → <strong>results</strong> (the route draws on the map) → <strong>Jazda</strong> (the map follows your tram) → <strong>🎫 Peňaženka</strong>.</div>
     </div>
 
     <div class="dev-col">
       <div class="phone android"><div class="screen">
         <div class="map">
-          <svg viewBox="0 0 280 620" preserveAspectRatio="xMidYMid slice">
-            <rect class="m-blk" x="20" y="80" width="70" height="60" rx="4"/><rect class="m-blk" x="160" y="60" width="90" height="60" rx="4"/>
-            <path class="m-water" d="M-10 250 C60 230 120 290 190 270 S280 230 300 250 V285 C240 275 200 315 130 305 S30 275 -10 285Z"/>
-            <path class="m-road" stroke-width="8" d="M110 -10 V340 M-10 150 H290"/><path class="m-road2" stroke-width="4" d="M-10 50 L290 30 M210 -10 L230 340"/>
-            <path d="M40 330 C80 300 60 220 110 190 S190 120 250 40" stroke="#9AA1AA" stroke-width="4" fill="none" opacity=".6"/>
-            <g class="draw">
-              <path pathLength="1" d="M58 322 L108 322 L108 160 L200 160" stroke="var(--ribbon-case)" stroke-width="9" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-              <path pathLength="1" d="M58 322 L108 322 L108 160 L200 160" stroke="var(--mode-tram)" stroke-width="5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-              <path pathLength="1" class="d2" d="M200 160 L237 99 L267 43" stroke="var(--ribbon-case)" stroke-width="9" fill="none" stroke-linecap="round"/>
-              <path pathLength="1" class="d2" d="M200 160 L237 99 L267 43" stroke="var(--mode-train)" stroke-width="5" fill="none" stroke-linecap="round"/>
-            </g>
-            <circle cx="50" cy="322" r="7" fill="var(--accent)" stroke="#fff" stroke-width="3"/>
-            <g class="veh"><circle r="10" fill="var(--mode-tram)" stroke="#fff" stroke-width="2"/><text>2</text><animateMotion dur="10s" repeatCount="indefinite" path="M58 322 L108 322 L108 160 L200 160"/></g>
+          <svg viewBox="0 0 412 915" preserveAspectRatio="xMidYMid slice">
+            <rect class="m-blk" x="20" y="90" width="90" height="70" rx="5"/><rect class="m-blk" x="150" y="80" width="110" height="80" rx="5"/><rect class="m-blk" x="300" y="90" width="90" height="70" rx="5"/>
+            <path class="m-park" d="M150 190 h110 v90 h-110z"/><rect class="m-blk" x="20" y="200" width="90" height="80" rx="5"/><rect class="m-blk" x="310" y="190" width="80" height="90" rx="5"/>
+            <path class="m-road" stroke-width="12" d="M-10 305 H420"/><path class="m-road" stroke-width="9" d="M130 -10 V920 M280 -10 V920"/><path class="m-road2" stroke-width="6" d="M-10 175 H420"/>
+            <path d="M70 305 H300" stroke="var(--mode-tram)" stroke-width="4" stroke-dasharray="2 7" stroke-linecap="round" fill="none" opacity=".8"/>
+            <path d="M215 240 V305 H292" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="1 7" stroke-linecap="round" fill="none"/>
+            <g class="veh"><circle r="22" fill="var(--mode-tram)" opacity=".18"><animate attributeName="r" values="14;26;14" dur="1.8s" repeatCount="indefinite"/></circle><circle r="13" fill="var(--mode-tram)" stroke="#fff" stroke-width="3"/><text style="font-size:11px">4</text><animateMotion dur="9s" repeatCount="indefinite" path="M40 305 H280"/></g>
+            <g transform="translate(300 305)"><rect x="-11" y="-11" width="22" height="22" rx="7" fill="#fff" stroke="var(--accent)" stroke-width="3"/></g>
+            <circle cx="215" cy="240" r="8" fill="var(--accent)" stroke="#fff" stroke-width="3"/>
           </svg>
         </div>
         <div class="sbar" style="position:relative"><span>9:41</span><span class="ic"><i></i></span></div>
-        <div class="a-sheet" style="bottom:0;padding-bottom:20px">
+        <div class="a-sheet has-bar" style="bottom:0;padding:8px 0 24px;height:520px">
           <div class="grab"></div>
-          <div class="a-od"><div><svg width="15" height="15" fill="var(--accent)"><use href="#i-spark"/></svg>zajtra ráno do Prešova</div></div>
-          <div class="pl-parse" style="padding:0 12px 6px"><span class="chipx blue">Zajtra 6:00–9:00</span><span class="chipx blue">→ Prešov</span><span class="chipx">Vlaky ✓</span><span class="chipx">Autobusy ✓</span></div>
-          <div class="m-card sel" style="margin:6px 12px">
-            <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:19px;font-weight:800;font-variant-numeric:tabular-nums">6:52 – 7:41</b><b>49 min</b></div>
-            <div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>4</span><span class="sep">›</span><span class="lb tram sm">2</span><span class="sep">›</span><span class="lb train sm">Os 8805</span></div>
-            <div class="op">DPMK, a.s. · ZSSK, a.s.</div>
-            <div style="display:flex;justify-content:space-between;margin-top:6px"><span class="chipx ok">Lístok v aplikácii · 2,80 €</span><span class="st muted" style="font-weight:400">podľa CP</span></div>
+          <div class="sh-head" style="padding-top:2px">
+            <div class="sh-search" style="height:56px;border-radius:28px"><svg width="20" height="20"><use href="#i-search"/></svg><span>Kam a kedy?</span></div>
+            <div class="sh-btn" style="width:56px;height:56px;border-radius:16px;background:var(--accent-soft)"><svg width="24" height="24"><use href="#i-wallet"/></svg><i class="badge"></i></div>
           </div>
-          <div class="m-card" style="margin:6px 12px;padding:10px 15px">
-            <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px;font-weight:800;font-variant-numeric:tabular-nums">7:05 – 8:20</b><span class="legs" style="margin:0"><span class="lb regional sm">701</span></span></div>
+          <div class="pcard" style="margin-top:4px">
+            <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 🚶 2 min</div><b>Technická univerzita</b></div><span class="pc-dir">→ centrum</span></div>
+            <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov</b><span class="pos"><span class="pos-track"><i></i><i></i><i></i><b></b></span>2 zastávky pred vami</span></div><div class="t"><b class="rt">1 min</b><span class="catch ok">Stihnete</span></div></div>
+            <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b><span class="pos">na zastávke Letná</span></div><div class="t"><b class="rt">5 min</b><span class="catch ok">Stihnete</span></div></div>
           </div>
-          <div style="display:flex;gap:8px;padding:6px 12px 0"><div class="m-btn tonal" style="margin:0;flex:1;height:48px">Pripomenúť</div><div class="m-btn" style="margin:0;flex:1.4;height:48px">Kúpiť · 2,80 €</div></div>
+          <div class="pcard dim"><div class="pc-h"><span class="pc-ic">🏠</span><div><div class="pc-eye">Domov · Prešov</div><b>Sídlisko III</b></div><span class="pc-dir"><span class="lb trolley sm">38</span> 9 min</span></div></div>
         </div>
-        <div class="a-back">←</div>
       </div></div>
-      <div class="dev-cap"><b>Android · Spojenia with plain language</b>The FAB expands into the planner. The sentence is turned into editable chips, so you see what was understood. The selected route draws itself as a cased ribbon in each line's colour. Tomorrow's trip shows "podľa CP" honestly, and you can set a reminder.</div>
+      <div class="dev-cap"><b>Android · Map + bottom sheet</b><code>BottomSheetScaffold</code> over MapLibre. The <code>SearchBar</code> and a tonal wallet button are pinned to the bottom of the sheet, and there's no navigation bar. The selected departure's tram is highlighted on the map with your walk to the stop.</div>
     </div>
 
     <div class="dev-col">
-      <div class="phone android"><div class="screen" style="background:var(--surface)">
+      <div class="phone android"><div class="screen">
         <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
-        <div class="m-tbar"><b style="font-size:24px;font-weight:800">Peňaženka</b></div>
+        <div class="m-tbar"><span>✕</span><b style="font-size:22px;font-weight:800">Peňaženka</b></div>
         <div class="m-card" style="display:flex;align-items:center;gap:10px;margin-top:2px"><svg width="22" height="22" fill="var(--accent)"><use href="#i-wallet"/></svg><div style="flex:1"><div class="op">Kredit</div><b style="font-size:22px;font-variant-numeric:tabular-nums">12,40 €</b></div><div class="m-btn" style="margin:0;height:40px;padding:0 18px">Dobiť</div></div>
         <div class="m-label">Platné teraz</div>
         <div class="vcard" style="margin:0 12px">
           <div class="vc-band"><span class="vc-clock js-clock">14:21:07</span><span class="vc-city">Virtuálna karta · Košice</span></div>
-          <div class="vc-body"><div class="qr js-qr" style="width:84px;height:84px;margin:0;flex:none"></div><div class="small"><b>MHD Košice · Základný</b><div class="op">ročný · do 23. 9. 2027</div><span class="chipx ok" style="margin-top:6px">● Platný · 356 dní</span><div class="vc-prog"><b></b></div></div></div>
+          <div class="vc-body"><div class="qr js-qr" style="width:96px;height:96px;margin:0;flex:none"></div><div class="small"><b>MHD Košice · Základný</b><div class="op">ročný · do 23. 9. 2027</div><span class="chipx ok" style="margin-top:6px">● Platný · 356 dní</span><div class="vc-prog"><b></b></div></div></div>
         </div>
         <div class="m-label">Karty a preukazy</div>
         <div class="m-card" style="display:flex;gap:10px;align-items:center;margin-top:0">💳<div style="flex:1"><b style="font-size:14px">Čipová karta · Prešov</b><div class="op">2 produkty · preniesť</div></div>›</div>
         <div class="m-card" style="display:flex;gap:10px;align-items:center;margin-top:0">🎓<div style="flex:1"><b style="font-size:14px">Preukaz študenta</b><div class="op">overený do 31. 8. 2027</div></div>›</div>
-        <div class="a-fab"><svg width="22" height="22" fill="currentColor"><use href="#i-search"/></svg></div>
-        <div class="a-nav">
-          <div><i><svg><use href="#i-dep"/></svg></i>Odchody</div><div class="on"><i><svg><use href="#i-wallet"/></svg></i>Peňaženka</div><div><i><svg><use href="#i-more"/></svg></i>Ďalšie</div>
-        </div>
+        <div class="m-card" style="display:flex;gap:10px;align-items:center;margin-top:0"><svg width="18" height="18" fill="var(--accent)"><use href="#i-p"/></svg><div style="flex:1"><b style="font-size:14px">Parkovanie</b><div class="op">Košice A2 · beží do 15:30</div></div>›</div>
       </div></div>
-      <div class="dev-cap"><b>Android · Peňaženka</b>One balance, then whatever is valid now, with a live band, seconds clock and rotating QR. Cards and passes come below. Buying starts from context: a route, a card or a parking zone.</div>
+      <div class="dev-cap"><b>Android · Peňaženka (full-screen dialog)</b>It opens from the wallet button in the bottom bar. Whatever is valid now comes first, with a live band, seconds clock, rotating QR and validity bar, then cards, passes and parking.</div>
     </div>
 
   </div>
@@ -1087,7 +1186,7 @@ h1,h2,h3,h4{font-weight:800}
   </ul>
 </section>
 </main>
-<footer>Ubian redesign proposal v0.1 · Unsolicited concept by Dominik Murar, not affiliated with or endorsed by Ubian · Observations as of 3 Oct 2026</footer>
+<footer>Ubian redesign proposal v0.2 · Unsolicited concept by Dominik Murar, not affiliated with or endorsed by Ubian · Observations as of 3 Oct 2026</footer>
 
 <script>
 const root=document.documentElement, btn=document.getElementById('themeBtn');
@@ -1109,13 +1208,11 @@ setInterval(()=>{
 document.querySelectorAll('.lock').forEach(l=>l.onclick=()=>l.style.filter=l.style.filter?'':'invert(1)');
 
 const demo=document.getElementById('demo');
-const order=['dep','map','ride','ticket'];
-const show=v=>{if(!order.includes(v))return;demo.dataset.view=v;
-  if(v==='dep'||v==='ticket')demo.querySelectorAll('.dock-tabs button').forEach(b=>b.classList.toggle('last',b.dataset.go===v));
-  demo.querySelectorAll('.dock-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.go===v))};
+const order=['dep','search','res','ride','wallet'];
+const show=v=>{if(order.includes(v))demo.dataset.view=v};
+document.querySelectorAll('.chip-tgl').forEach(c=>c.addEventListener('click',e=>{e.stopPropagation();c.classList.toggle('on')}));
 let auto=reduced?null:setInterval(()=>show(order[(order.indexOf(demo.dataset.view)+1)%order.length]),4200);
-demo.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',()=>{clearInterval(auto);auto=null;show(el.dataset.go)}));
-show('dep');
+demo.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();clearInterval(auto);auto=null;show(el.dataset.go)}));
 
 const list=document.getElementById('deplist');
 const next=[['tram','4','Nám. osloboditeľov','16 min'],['bus','23','Sídlisko KVP','19 min'],['tram','6','Ťahanovce','22 min']];
@@ -1130,7 +1227,7 @@ const tick=()=>{
     list.insertAdjacentHTML('beforeend',`<div class="dep enter"><span class="lb ${m}">${l}</span><div class="dest"><b>${d}</b></div><div class="t"><b>${t}</b></div></div>`);
   },460);
 };
-if(!reduced)setInterval(tick,5200);
+if(list&&!reduced)setInterval(tick,5200);
 
 const qv=new URLSearchParams(location.search).get('view');if(qv){clearInterval(auto);auto=null;show(qv)}
 
