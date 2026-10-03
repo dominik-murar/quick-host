@@ -708,6 +708,10 @@ section,[id]{scroll-margin-top:84px}
 .wtrip{display:flex;align-items:center;gap:8px;margin:2px 14px 6px;padding:10px 14px;border-radius:14px;background:color-mix(in srgb,var(--mode-tram) 9%,transparent);font-size:14px;cursor:pointer}
 .wtrip .muted{margin-left:auto}
 .xs:not(.trk) .wtrip{display:none}
+.plat{font-style:normal;font-weight:600;color:var(--text-3);margin-left:6px;font-size:.86em}
+.xstop{display:flex;align-items:baseline;gap:8px;padding:2px 0 6px;font-size:15px}
+.xstop span{font-size:12.5px;color:var(--text-2)}
+.plc i.c-school{background:linear-gradient(160deg,#F6C177,#A85A00)}
 .android .xtrip{bottom:532px;border-radius:28px;background:var(--surface);box-shadow:0 3px 12px rgba(0,0,0,.18);backdrop-filter:none;border:0}
 .android .xs[data-view=peek] .xtrip{bottom:152px}
 .android .xs.trk[data-view=dep] .xctl,.android .xs.trk[data-view=res] .xctl{bottom:604px}
@@ -880,7 +884,7 @@ h1,h2,h3,h4{font-weight:800}
   <p class="muted">Live vehicle positions are Ubian's most valuable data, yet today the map is two taps away. In the redesign the map is the app: <b>a live map that never leaves the screen</b>, with everything else layered on it as a sheet. There are no tabs, so there's no tab switching.</p>
   <div class="grid g4">
     <div class="card"><span class="tag red">Canvas</span><h4 style="margin-top:8px">Live map</h4><p class="small muted" style="margin:0">Vehicles, your stops and places, bikesharing. The camera follows whatever the sheet shows.</p></div>
-    <div class="card"><span class="tag blue">Default</span><h4 style="margin-top:8px">Odchody in the sheet</h4><p class="small muted" style="margin:0">Your places and stops. The map shows the vehicles for those departures, approaching for real.</p></div>
+    <div class="card"><span class="tag blue">Default</span><h4 style="margin-top:8px">Odchody in the sheet</h4><p class="small muted" style="margin:0">The nearest stops first, plus any stops you pin. The map shows the vehicles for those departures, approaching for real.</p></div>
     <div class="card"><span class="tag">On demand</span><h4 style="margin-top:8px">Search on the sheet's edge</h4><p class="small muted" style="margin:0">"Kam a kedy?" rides on the top edge of the sheet, like Apple Maps. At the default medium height that's the lower half of the screen. Tapping it expands the sheet into the planner.</p></div>
     <div class="card"><span class="tag">Always 1 tap</span><h4 style="margin-top:8px">🎫 Peňaženka</h4><p class="small muted" style="margin:0">A dedicated button next to search opens a full-screen wallet. It's predictable, so nobody panics at a ticket check.</p></div>
   </div>
@@ -890,7 +894,7 @@ h1,h2,h3,h4{font-weight:800}
     <div class="card small muted">
       <ul class="clean">
         <li><b>Sheet header, always visible</b>: <code>[🔍 Kam a kedy? 🎙] [🎫] [👤]</code>, sitting on the sheet's top edge. Its position follows the sheet: low when collapsed, around mid-screen at the default. A green dot on 🎫 means something is valid right now. 👤 opens account, settings, parking history and support (what used to be "Ďalšie").</li>
-        <li><b>Three heights, as in Apple Maps</b>: <i>collapsed</i> (a floating glass capsule with just the header, for the full map), <i>medium, the default</i> (Moje miesta as round shortcuts, then live departures for where you are), <i>large</i> (the full list or the planner).</li>
+        <li><b>Three heights, as in Apple Maps</b>: <i>collapsed</i> (a floating glass capsule with just the header, for the full map), <i>medium, the default</i> (<b>Kam</b>: destination shortcuts with live travel times; then <b>Odchody</b> from the nearest stops), <i>large</i> (the full list or the planner).</li>
         <li><b>The content follows the job</b>: Odchody → planner → results → Jazda. Back or swiping down returns one level. Map controls (map style, my location) float just above the sheet.</li>
         <li><b>Live trip strip</b>: once you tap "Sledovať", the ride is tracked until you end it. The strip <b>floats just above the sheet in every state</b> (medium, collapsed, results) and moves with it, and Peňaženka shows a compact ride line at its top. The collapsed map keeps following your vehicle. Tap the strip and the sheet becomes Jazda. Tap it and the sheet becomes Jazda, with the map following your vehicle.</li>
       </ul>
@@ -966,22 +970,23 @@ h1,h2,h3,h4{font-weight:800}
   <div class="eyebrow">05 · Components</div>
   <h2>The building blocks</h2>
 
-  <h3>Departure row with live position</h3>
+  <h3>Departure row</h3>
   <div class="grid g2">
     <div class="card" style="padding:12px">
       <div class="pcard" style="margin:0">
-        <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 🚶 2 min</div><b>Technická univerzita</b></div><span class="pc-dir">→ centrum</span></div>
-        <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov</b><span class="pos"><span class="pos-track"><i></i><i></i><i></i><b></b></span>2 zastávky pred vami</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
-        <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
-        <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP</b><span class="pos">nást. C</span></div><div class="t"><b>11 min</b><span class="catch">🚶 2 min</span></div></div>
+        <div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span></div>
+        <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
+        <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
+        <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b></div></div>
       </div>
     </div>
     <div class="card small muted">
-      <h4 style="color:var(--text)">ETA plus position equals confidence</h4>
+      <h4 style="color:var(--text)">One format for every row</h4>
       <ul class="clean">
-        <li>The predicted minutes stay the big number. Under the destination, a <b>mini track shows where the vehicle is</b> relative to your stop ("2 zastávky pred vami"), so you can judge for yourself whether you'll make it. It's taken from <code>lastStopOrder</code> and <code>isOnStop</code> in Ubian's live data.</li>
-        <li>Tapping a row <b>highlights that vehicle on the map</b> and draws its remaining path to your stop, plus your walk.</li>
-        <li>Rows without live data show no status at all, just the timetable time. The status itself ("načas" or "+2 min") is the signal that the data is live, with no extra label.</li>
+        <li><b>Line · destination · platform</b>. The platform is a light letter or number after the name, as CP shows it ("A", "C", track "3").</li>
+        <li><b>Live position as words</b> on the second line: "na zastávke Letná · 4 zast.", from <code>lastStopOrder</code> and <code>isOnStop</code>. Together with the map, you can see a "1 min" tram is still two stops out.</li>
+        <li><b>Time + status</b> on the right: "načas" or "+2 min". No live data: just the time, with no second line and no status.</li>
+        <li>Tapping a row highlights that vehicle on the map, with its path to the stop and your walk there.</li>
       </ul>
     </div>
   </div>
@@ -1048,19 +1053,17 @@ h1,h2,h3,h4{font-weight:800}
     </div>
   </div>
 
-  <h3>Place card (Odchody), across cities</h3>
+  <h3>Kam: destination shortcuts</h3>
   <div class="grid g2">
-    <div class="card" style="padding:12px">
-      <div class="pcard" style="margin:0">
-        <div class="pc-h"><span class="pc-ic">💼</span><div><div class="pc-eye">Ste blízko · 3 min · Košice</div><b>Práca · Technická univerzita</b></div><span class="pc-dir">→ centrum</span></div>
-        <div class="dep"><span class="lb tram">4</span><div class="dest"><b>Námestie osloboditeľov</b><span>nást. A · ♿</span></div><div class="t"><b class="rt now">teraz</b><span class="st ok">načas</span></div></div>
-        <div class="dep"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b><span>nást. A</span></div><div class="t"><b class="rt">4 min</b></div></div>
-        <div class="dep"><span class="lb train">Os</span><div class="dest"><b>Prešov</b><span>Košice, žel. st. · koľ. 3</span></div><div class="t"><b>14:27</b><span class="st warn">+5 min</span></div></div>
-      </div>
-    </div>
+    <div class="card"><div class="plc" style="padding:0">
+      <div><i class="c-home">🏠</i>Domov<small>58 min</small></div>
+      <div><i class="c-work">💼</i>Práca<small>Tu ste</small></div>
+      <div><i class="c-school">🎓</i>Škola<small>25 min</small></div>
+      <div><i class="c-add">＋</i>Pridať<small>&nbsp;</small></div>
+    </div></div>
     <div class="card small muted">
-      <h4 style="color:var(--text)">Places span modes and cities</h4>
-      <p style="margin:0">A place can mix a tram stop and a railway station, or stops in two cities (live in Prešov, work in Košice). Train delays appear right next to city departures, so the separate "Meškania vlakov" page isn't needed any more.</p>
+      <h4 style="color:var(--text)">Destinations, not starting points</h4>
+      <p style="margin:0">The starting point is almost always "where I am", so each shortcut answers one question: <b>how long to get there from here</b> (door to door, live). One tap gives the results. The place you're at shows "Tu ste". Departures are their own section, so the two never mix. A destination can be in another city (live in Prešov, work in Košice).</p>
     </div>
   </div>
 </section>
@@ -1107,17 +1110,18 @@ h1,h2,h3,h4{font-weight:800}
     <div class="xgrab" data-go="dep"></div>
     <div class="sh-head"><div class="sh-search" data-go="search"><svg width="18" height="18"><use href="#i-search"/></svg><span class="ph">Kam a kedy?</span><span class="q caret">Domov</span><svg class="mic" width="18" height="18"><use href="#i-mic"/></svg></div><span class="sh-cancel" data-go="dep">Zrušiť</span><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div><div class="sh-btn av" aria-label="Účet">DM</div></div>
     <div class="xsc xsc-dep">
-      <div class="xtitle">Moje miesta <span>›</span></div>
+      <div class="xtitle">Kam <span>›</span></div>
       <div class="plc">
-        <div data-go="res"><i class="c-work">💼</i>Práca<small><span class="lb tram sm">4</span> 1 min</small></div>
         <div data-go="res"><i class="c-home">🏠</i>Domov<small>58 min</small></div>
-        <div><i>🎓</i>Škola<small>Pridať</small></div>
+        <div><i class="c-work">💼</i>Práca<small>Tu ste</small></div>
+        <div data-go="res"><i class="c-school">🎓</i>Škola<small>25 min</small></div>
         <div><i class="c-add">＋</i>Pridať<small>&nbsp;</small></div>
       </div>
-      <div class="xtitle">Ste blízko · Technická univ. <span>›</span></div>
-      <div class="pcard xcard"><div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov</b><span class="pos"><span class="pos-track"><i></i><i></i><i></i><b></b></span>2 zastávky pred vami</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
-      <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
-      <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP</b><span class="pos">nást. C</span></div><div class="t"><b>11 min</b></div></div></div>
+      <div class="xtitle">Odchody <span>›</span></div>
+      <div class="pcard xcard"><div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span></div>
+      <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
+      <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
+      <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b></div></div></div>
     </div>
     <div class="xsc xsc-search">
       <div class="pl-row" style="margin:0 14px 8px"><span class="dot"></span><span class="muted">Odkiaľ</span><b>Moja poloha</b><span class="pl-swap"><svg width="16" height="16" fill="currentColor"><use href="#i-swap"/></svg></span></div>
@@ -1141,7 +1145,7 @@ h1,h2,h3,h4{font-weight:800}
     </div>
     <div class="xsc xsc-ride">
       <div class="ride-h" style="padding-top:0">
-        <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">4</span><b>→ Staničné nám.</b><span class="st ok" style="margin-left:auto">načas</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">4</span><b>→ Staničné nám.</b><span class="st ok" style="margin-left:auto">naživo</span></div>
         <div class="ride-big" style="font-size:24px">Vystúpte o 3 zastávky</div>
         <div class="muted small">Staničné nám. · 14:21 · potom <span class="lb train sm">Os 8813</span> koľ. 3</div>
       </div>
@@ -1206,17 +1210,18 @@ h1,h2,h3,h4{font-weight:800}
     <div class="xgrab" data-go="dep"></div>
     <div class="sh-head"><div class="sh-search" data-go="search"><svg width="20" height="20"><use href="#i-search"/></svg><span class="ph">Kam a kedy?</span><span class="q caret">Domov</span><span class="av-in">DM</span></div><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div></div>
     <div class="xsc xsc-dep">
-      <div class="xtitle">Moje miesta <span>›</span></div>
+      <div class="xtitle">Kam <span>›</span></div>
       <div class="plc">
-        <div data-go="res"><i class="c-work">💼</i>Práca<small><span class="lb tram sm">4</span> 1 min</small></div>
         <div data-go="res"><i class="c-home">🏠</i>Domov<small>58 min</small></div>
-        <div><i>🎓</i>Škola<small>Pridať</small></div>
+        <div><i class="c-work">💼</i>Práca<small>Tu ste</small></div>
+        <div data-go="res"><i class="c-school">🎓</i>Škola<small>25 min</small></div>
         <div><i class="c-add">＋</i>Pridať<small>&nbsp;</small></div>
       </div>
-      <div class="xtitle">Ste blízko · Technická univ. <span>›</span></div>
-      <div class="pcard xcard"><div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov</b><span class="pos"><span class="pos-track"><i></i><i></i><i></i><b></b></span>2 zastávky pred vami</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
-      <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce</b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
-      <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP</b><span class="pos">nást. C</span></div><div class="t"><b>11 min</b></div></div></div>
+      <div class="xtitle">Odchody <span>›</span></div>
+      <div class="pcard xcard"><div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span></div>
+      <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
+      <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
+      <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b></div></div></div>
     </div>
     <div class="xsc xsc-search">
       <div class="pl-row" style="margin:0 14px 8px"><span class="dot"></span><span class="muted">Odkiaľ</span><b>Moja poloha</b><span class="pl-swap"><svg width="16" height="16" fill="currentColor"><use href="#i-swap"/></svg></span></div>
@@ -1240,7 +1245,7 @@ h1,h2,h3,h4{font-weight:800}
     </div>
     <div class="xsc xsc-ride">
       <div class="ride-h" style="padding-top:0">
-        <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">4</span><b>→ Staničné nám.</b><span class="st ok" style="margin-left:auto">načas</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">4</span><b>→ Staničné nám.</b><span class="st ok" style="margin-left:auto">naživo</span></div>
         <div class="ride-big" style="font-size:24px">Vystúpte o 3 zastávky</div>
         <div class="muted small">Staničné nám. · 14:21 · potom <span class="lb train sm">Os 8813</span> koľ. 3</div>
       </div>
