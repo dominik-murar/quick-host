@@ -718,6 +718,42 @@ section,[id]{scroll-margin-top:84px}
 .android .xs.trk:is([data-view=dep],[data-view=res],[data-view=det]) .xctl{bottom:604px}
 .android .xs.trk[data-view=peek] .xctl{bottom:224px}
 
+/* Jazda: the live trip strip grows into the Jazda card. Same element, so badge, headline, minutes and track travel and scale. */
+.xtrip{transition:opacity .3s,transform .45s cubic-bezier(.3,1.3,.4,1),bottom .55s var(--jz-spring),left .55s var(--jz-spring),right .55s var(--jz-spring),height .55s var(--jz-spring),border-radius .55s var(--jz-spring),background .4s;--jz-spring:cubic-bezier(.3,1.12,.4,1);--jz-ease:cubic-bezier(.2,.8,.2,1);overflow:hidden;display:block;padding:0}
+.xtrip > *{position:absolute;transition:top .55s var(--jz-ease),left .55s var(--jz-ease),right .55s var(--jz-ease),transform .55s var(--jz-ease),opacity .2s}
+.xt-lb{left:10px;top:18px;transform-origin:0 0}
+.xt-title{left:56px;top:11px;font-size:15px;line-height:18px;white-space:nowrap;transform-origin:0 0}
+.xt-track{left:56px;right:96px;top:35px}
+.xt-track::before{transition:height .55s var(--jz-ease),top .55s var(--jz-ease)}
+.xt-eta{right:16px;top:10px;line-height:20px;transform-origin:100% 0}
+.xt-dest{right:16px;top:35px;font-size:11.5px;color:var(--text-2);max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xt-grab{left:50%;top:8px;width:40px;height:5px;margin-left:-20px;border-radius:3px;background:var(--text-3);opacity:0;cursor:pointer}
+.xt-dir{left:70px;top:30px;font-size:15px;opacity:0}
+.xt-live{left:70px;top:52px;opacity:0}
+.xt-close{right:14px;top:26px;width:34px;height:34px;border-radius:50%;background:var(--surface-2);color:var(--text-2);display:grid;place-items:center;opacity:0;pointer-events:none;cursor:pointer}
+.xt-body{left:0;right:0;top:150px;opacity:0;transform:translateY(10px);pointer-events:none}
+.xs.trk.jz .xtrip{opacity:1;transform:none;pointer-events:auto;cursor:default}
+.xs.jz[data-view] .xtrip{left:8px;right:8px;bottom:8px;height:404px;border-radius:46px;background:color-mix(in srgb,var(--surface) 92%,transparent)}
+.xs.jz .xt-lb{left:18px;top:28px;transform:scale(1.33)}
+.xs.jz .xt-title{left:18px;top:86px;transform:scale(1.6)}
+.xs.jz .xt-eta{right:18px;top:86px;transform:scale(1.45)}
+.xs.jz .xt-track{left:18px;right:18px;top:130px}
+.xs.jz .xt-track::before{height:6px;border-radius:3px;top:0}
+.xs.jz .xt-dest{opacity:0}
+.xs.jz :is(.xt-grab){opacity:.4;transition-delay:.15s}
+.xs.jz :is(.xt-dir,.xt-live,.xt-close){opacity:1;pointer-events:auto;transition-delay:.15s}
+.xs.jz .xt-body{opacity:1;transform:none;pointer-events:auto;transition:opacity .3s .22s,transform .45s .22s var(--jz-ease)}
+.xs:not(.jz) .xt-dest{transition-delay:.3s}
+/* the sheet keeps its place and content, stacked behind the card */
+.xsheet{transform-origin:50% 100%;transition:left .55s,right .55s,bottom .55s,height .55s,border-radius .55s,transform .55s,opacity .4s;transition-timing-function:cubic-bezier(.3,1.15,.4,1)}
+.xs.jz[data-view] .xsheet{left:8px;right:8px;bottom:8px;height:430px;border-radius:46px;transform:translateY(-31px) scale(.9);opacity:.75;pointer-events:none}
+.xs.trk.jz[data-view] .xctl{bottom:440px}
+.android .xs.jz[data-view] .xtrip{left:8px;right:8px;bottom:8px;height:424px;border-radius:28px;background:var(--surface)}
+.android .xs.jz .xt-body{top:150px}
+.android .xs.jz[data-view] .xsheet{left:0;right:0;bottom:0;height:460px;border-radius:28px 28px 0 0;transform:translateY(-27px) scale(.92)}
+.android .xs.trk.jz[data-view] .xctl{bottom:466px}
+@media (prefers-reduced-motion:reduce){.xtrip,.xtrip > *,.xsheet{transition:opacity .2s!important}}
+
 /* result card: first tap selects (glance + actions), tapping the selected card opens Detail spoja */
 .rcard{cursor:pointer;margin:6px 12px}
 .rcard:not(.sel){padding:10px 15px}
@@ -910,8 +946,9 @@ h1,h2,h3,h4{font-weight:800}
       <ul class="clean">
         <li><b>Sheet header, always visible</b>: <code>[🔍 Kam a kedy? 🎙] [🎫] [👤]</code>, sitting on the sheet's top edge. Its position follows the sheet: low when collapsed, around mid-screen at the default. A green dot on 🎫 means something is valid right now. 👤 opens account, settings, parking history and support (what used to be "Ďalšie").</li>
         <li><b>Three heights, as in Apple Maps</b>: <i>collapsed</i> (a floating glass capsule with just the header, for the full map), <i>medium, the default</i> (<b>Kam</b>: destination shortcuts with live travel times; then <b>Odchody</b> from the nearest stops), <i>large</i> (the full list or the planner).</li>
-        <li><b>The content follows the job</b>: Odchody → planner → results → Detail spoja → Jazda. A departure row opens Detail spoja directly. Back or swiping down returns one level. Map controls (map style, my location) float just above the sheet.</li>
-        <li><b>Live trip strip</b>: once you tap "Sledovať", the ride is tracked until you end it. The strip <b>floats just above the sheet in every state</b> (medium, collapsed, results) and moves with it, and Peňaženka shows a compact ride line at its top. The collapsed map keeps following your vehicle. Tap the strip and the sheet becomes Jazda. Tap it and the sheet becomes Jazda, with the map following your vehicle.</li>
+        <li><b>The content follows the job</b>: Odchody → planner → results → Detail spoja. A departure row opens Detail spoja directly. Back or swiping down returns one level. Map controls (map style, my location) float just above the sheet.</li>
+        <li><b>Live trip strip</b>: once you tap "Sledovať", the ride is tracked until you end it. The strip <b>floats just above the sheet in every state</b> (medium, collapsed, results) and moves with it, and Peňaženka shows a compact ride line at its top. The collapsed map keeps following your vehicle.</li>
+        <li><b>Jazda is a layer, not a step</b>: tapping the strip grows it into the Jazda card; the sheet doesn't navigate. The sheet stays where it was, stacked just behind the card, and minimising returns you to exactly that place. Floating with rounded corners on all sides means live ride; attached to the edge means navigation.</li>
       </ul>
     </div>
     <div class="card small muted">
@@ -976,7 +1013,7 @@ h1,h2,h3,h4{font-weight:800}
   <h3>Type and motion</h3>
   <div class="grid g2">
     <div class="card small muted"><h4 style="color:var(--text)">System fonts</h4>SF Pro on iOS, Roboto Flex on Android and the system UI font on the web. They give native feel, Dynamic Type and full Slovak diacritics for free. Times and prices use tabular figures. There's no custom typeface unless Ubian's brand requires one.<p style="margin:8px 0 0"><b>Three sizes in lists and cards</b>: 17 heavy for the numbers you compare between results (journey times and duration), 15 for primary text (destination, stop, countdown, buttons), 12 for everything secondary (position, status, platform, legs). Both sides of a row share a size, so a departure reads as two clean lines, 15 over 12; weight sets the countdown apart. Line badges are sized as icons. Colour carries status only, so countdowns and durations stay in the text colour.</p></div>
-    <div class="card small muted"><h4 style="color:var(--text)">Motion that explains</h4>The search morph, routes drawing themselves, vehicles gliding between GPS updates, departures collapsing away, a pulse at your destination. Everything respects Reduce Motion, and text never moves while you read it.</div>
+    <div class="card small muted"><h4 style="color:var(--text)">Motion that explains</h4>The search morph, the trip strip growing into Jazda, routes drawing themselves, vehicles gliding between GPS updates, departures collapsing away, a pulse at your destination. Everything respects Reduce Motion, and text never moves while you read it.</div>
   </div>
 </section>
 
@@ -1075,6 +1112,28 @@ h1,h2,h3,h4{font-weight:800}
       <p style="margin:8px 0 0"><b>Always with you</b>: while a ride is tracked, a compact strip (line, "Vystúpte o 3 zast.", minutes, mini track) floats above the sheet in every state, and as a line at the top of Peňaženka. Tracking a ride and holding a ticket stay separate, but each links to the other.</p>
     </div>
   </div>
+  <h3>Strip ⇄ Jazda: one element, two sizes</h3>
+  <div class="grid g2">
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Like a music player's mini player</h4>
+      <p style="margin:0">The strip <b>is</b> the Jazda card, just compact. Tap it and the same surface grows up out of its own position into a card about as tall as the medium sheet (≈ 45 % of the screen). Everything that's in both sizes travels and scales to its new place; nothing is swapped. <b>The map always keeps the top half</b>: the camera frames vehicle → exit stop above the card, and map controls ride on the card's top edge. The map stays interactive, and tapping it doesn't collapse the card, because people pan to watch their vehicle.</p>
+      <p style="margin:8px 0 0"><b>Minimise</b> with the ⌄ button, by dragging the grabber down (the morph follows your finger and can be interrupted) or with a downward flick. There's no "‹ Späť" here: Jazda isn't a level in the sheet, so there's nothing to go back to. <b>"Sledovať"</b> starts tracking in place: the strip drops in above the sheet, so you learn where the ride lives, and Jazda opens only when you tap it.</p>
+    </div>
+    <div class="card small">
+      <table>
+        <tr><th>Element</th><th>Strip</th><th>Jazda card</th></tr>
+        <tr><td>Surface</td><td>60 pt, inset 14, radius 30, glass</td><td>≈ 45 %, inset 8, radius 46, denser glass</td></tr>
+        <tr><td>Line badge</td><td>left, centred</td><td>header, scales ×1.33</td></tr>
+        <tr><td>"Vystúpte o 3 zast."</td><td>15 heavy</td><td>scales ×1.6 to 24, headline</td></tr>
+        <tr><td>Minutes to exit</td><td>right, 16 heavy</td><td>scales ×1.45, on the headline's baseline</td></tr>
+        <tr><td>Mini track</td><td>3 pt under the title</td><td>stretches to the full width, 6 pt live band</td></tr>
+        <tr><td>Exit stop</td><td>under the minutes</td><td>fades out, "→ Staničné nám." fades in</td></tr>
+        <tr><td>Timeline, actions</td><td>—</td><td>fade and rise 10 pt, 0.22 s after the surface</td></tr>
+        <tr><td>Sheet</td><td>unchanged</td><td>stays put, scales to 0.9 behind the card, peeks above it</td></tr>
+      </table>
+      <p class="muted" style="margin:8px 0 0">The surface uses a soft spring (0.55 s); text and badges use an ease-out without overshoot, so scaled text never wobbles. Text scales only while it travels, never while you're reading it. Reduce Motion replaces the morph with a 0.2 s cross-fade.</p>
+    </div>
+  </div>
 
   <h3>Peňaženka: what's valid now comes first</h3>
   <div class="grid g2">
@@ -1147,7 +1206,25 @@ h1,h2,h3,h4{font-weight:800}
   <div class="xdim"></div>
   <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
   <div class="xctl glass"><span><svg width="22" height="22"><use href="#i-map"/></svg></span><span><svg width="22" height="22"><use href="#i-loc"/></svg></span></div>
-<div class="xtrip glass" data-go="ride"><span class="lb tram">4</span><div class="acc-t"><b>Vystúpte o 3 zast.</b><span class="mini-track"><span></span></span></div><div class="xtrip-r"><b class="acc-m">6 min</b><span>Staničné nám.</span></div></div>
+<div class="xtrip glass" data-go="ride">
+  <span class="xt-grab" data-go="mini"></span>
+  <span class="lb tram xt-lb">4</span>
+  <b class="xt-dir">→ Staničné nám.</b><span class="st ok xt-live">naživo</span>
+  <span class="xt-close" data-go="mini" aria-label="Minimalizovať"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  <b class="xt-title">Vystúpte o 3 zast.</b>
+  <b class="xt-eta acc-m">6 min</b>
+  <span class="xt-dest">Staničné nám.</span>
+  <span class="mini-track xt-track"><span></span></span>
+  <div class="xt-body">
+    <div class="muted small" style="padding:0 18px">Staničné nám. · 14:21 · potom <span class="lb train sm">Os 8813</span> koľ. 3</div>
+    <div class="vtl" style="margin:10px 18px 0">
+      <div class="vs cur" style="--c:var(--mode-tram)"><span class="tm">14:13</span>Technická univerzita<span class="vveh"></span></div>
+      <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Hlavná</div>
+      <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
+    </div>
+    <div style="display:flex;gap:8px;padding:12px 18px 0"><div class="m-btn" data-go="wallet" style="margin:0;flex:1;height:46px;font-size:15px;cursor:pointer">Zobraziť lístok</div><div class="m-btn tonal" data-go="end" style="margin:0;flex:1;height:46px;font-size:15px;cursor:pointer">Ukončiť</div></div>
+  </div>
+</div>
   <div class="xsheet glass">
     <div class="xgrab" data-go="dep"></div>
     <div class="sh-head"><div class="sh-search" data-go="search"><svg width="18" height="18"><use href="#i-search"/></svg><span class="ph">Kam a kedy?</span><span class="q caret">Domov</span><svg class="mic" width="18" height="18"><use href="#i-mic"/></svg></div><span class="sh-cancel" data-go="dep">Zrušiť</span><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div><div class="sh-btn av" aria-label="Účet">DM</div></div>
@@ -1181,13 +1258,13 @@ h1,h2,h3,h4{font-weight:800}
         <div class="rc-h"><b class="rc-t">14:13 – 15:11</b><b>58 min</b></div>
         <div class="rc-top"><div class="rc-main"><div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>2</span><span class="sep">›</span><span class="lb tram sm">4</span><span class="sep">›</span><span class="lb train sm">Os 8813</span><span class="sep">›</span><span class="lb trolley sm">38</span></div>
         <div class="op rc-more">DPMK · ZSSK · DPMP</div></div><span class="rc-go" aria-hidden="true">›</span></div>
-        <div class="rc-cta rc-more"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">3,40 €</div></div>
+        <div class="rc-cta rc-more"><div class="m-btn tonal" data-go="track">Sledovať</div><div class="m-btn">3,40 €</div></div>
       </div>
       <div class="m-card rcard" data-rc="1">
         <div class="rc-h"><b class="rc-t">14:30 – 15:45</b><b>75 min</b></div>
         <div class="rc-top"><div class="rc-main"><div class="legs"><span class="lb regional sm">701</span></div>
         <div class="op rc-more">Arriva · bez prestupu</div></div><span class="rc-go" aria-hidden="true">›</span></div>
-        <div class="rc-cta rc-more"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">2,90 €</div></div>
+        <div class="rc-cta rc-more"><div class="m-btn tonal" data-go="track">Sledovať</div><div class="m-btn">2,90 €</div></div>
       </div>
     </div>
     <div class="xsc xsc-det">
@@ -1201,20 +1278,7 @@ h1,h2,h3,h4{font-weight:800}
         <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Hlavná</div>
         <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
       </div>
-      <div class="rc-cta" style="padding:10px 14px 0"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">3,40 €</div></div>
-    </div>
-    <div class="xsc xsc-ride">
-      <div class="ride-h" style="padding-top:0">
-        <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">4</span><b>→ Staničné nám.</b><span class="st ok" style="margin-left:auto">naživo</span></div>
-        <div class="ride-big" style="font-size:24px">Vystúpte o 3 zastávky</div>
-        <div class="muted small">Staničné nám. · 14:21 · potom <span class="lb train sm">Os 8813</span> koľ. 3</div>
-      </div>
-      <div class="vtl" style="margin-top:8px">
-        <div class="vs cur" style="--c:var(--mode-tram)"><span class="tm">14:13</span>Technická univerzita<span class="vveh"></span></div>
-        <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Hlavná</div>
-        <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
-      </div>
-      <div style="display:flex;gap:8px;padding:10px 14px 0"><div class="m-btn" data-go="wallet" style="margin:0;flex:1;height:46px;font-size:15px;cursor:pointer">Zobraziť lístok</div><div class="m-btn tonal" data-go="end" style="margin:0;flex:1;height:46px;font-size:15px;cursor:pointer">Ukončiť</div></div>
+      <div class="rc-cta" style="padding:10px 14px 0"><div class="m-btn tonal" data-go="track">Sledovať</div><div class="m-btn">3,40 €</div></div>
     </div>
   </div>
   <div class="xwallet">
@@ -1265,7 +1329,25 @@ h1,h2,h3,h4{font-weight:800}
   <div class="xdim"></div>
   <div class="sbar"><span>9:41</span><span class="ic"><i></i></span></div>
   <div class="xctl glass"><span><svg width="22" height="22"><use href="#i-map"/></svg></span><span><svg width="22" height="22"><use href="#i-loc"/></svg></span></div>
-<div class="xtrip glass" data-go="ride"><span class="lb tram">4</span><div class="acc-t"><b>Vystúpte o 3 zast.</b><span class="mini-track"><span></span></span></div><div class="xtrip-r"><b class="acc-m">6 min</b><span>Staničné nám.</span></div></div>
+<div class="xtrip glass" data-go="ride">
+  <span class="xt-grab" data-go="mini"></span>
+  <span class="lb tram xt-lb">4</span>
+  <b class="xt-dir">→ Staničné nám.</b><span class="st ok xt-live">naživo</span>
+  <span class="xt-close" data-go="mini" aria-label="Minimalizovať"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  <b class="xt-title">Vystúpte o 3 zast.</b>
+  <b class="xt-eta acc-m">6 min</b>
+  <span class="xt-dest">Staničné nám.</span>
+  <span class="mini-track xt-track"><span></span></span>
+  <div class="xt-body">
+    <div class="muted small" style="padding:0 18px">Staničné nám. · 14:21 · potom <span class="lb train sm">Os 8813</span> koľ. 3</div>
+    <div class="vtl" style="margin:10px 18px 0">
+      <div class="vs cur" style="--c:var(--mode-tram)"><span class="tm">14:13</span>Technická univerzita<span class="vveh"></span></div>
+      <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Hlavná</div>
+      <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
+    </div>
+    <div style="display:flex;gap:8px;padding:12px 18px 0"><div class="m-btn" data-go="wallet" style="margin:0;flex:1;height:46px;font-size:15px;cursor:pointer">Zobraziť lístok</div><div class="m-btn tonal" data-go="end" style="margin:0;flex:1;height:46px;font-size:15px;cursor:pointer">Ukončiť</div></div>
+  </div>
+</div>
   <div class="xsheet glass">
     <div class="xgrab" data-go="dep"></div>
     <div class="sh-head"><div class="sh-search" data-go="search"><svg width="20" height="20"><use href="#i-search"/></svg><span class="ph">Kam a kedy?</span><span class="q caret">Domov</span><span class="av-in">DM</span></div><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div></div>
@@ -1299,13 +1381,13 @@ h1,h2,h3,h4{font-weight:800}
         <div class="rc-h"><b class="rc-t">14:13 – 15:11</b><b>58 min</b></div>
         <div class="rc-top"><div class="rc-main"><div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>2</span><span class="sep">›</span><span class="lb tram sm">4</span><span class="sep">›</span><span class="lb train sm">Os 8813</span><span class="sep">›</span><span class="lb trolley sm">38</span></div>
         <div class="op rc-more">DPMK · ZSSK · DPMP</div></div><span class="rc-go" aria-hidden="true">›</span></div>
-        <div class="rc-cta rc-more"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">3,40 €</div></div>
+        <div class="rc-cta rc-more"><div class="m-btn tonal" data-go="track">Sledovať</div><div class="m-btn">3,40 €</div></div>
       </div>
       <div class="m-card rcard" data-rc="1">
         <div class="rc-h"><b class="rc-t">14:30 – 15:45</b><b>75 min</b></div>
         <div class="rc-top"><div class="rc-main"><div class="legs"><span class="lb regional sm">701</span></div>
         <div class="op rc-more">Arriva · bez prestupu</div></div><span class="rc-go" aria-hidden="true">›</span></div>
-        <div class="rc-cta rc-more"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">2,90 €</div></div>
+        <div class="rc-cta rc-more"><div class="m-btn tonal" data-go="track">Sledovať</div><div class="m-btn">2,90 €</div></div>
       </div>
     </div>
     <div class="xsc xsc-det">
@@ -1319,20 +1401,7 @@ h1,h2,h3,h4{font-weight:800}
         <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Hlavná</div>
         <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
       </div>
-      <div class="rc-cta" style="padding:10px 14px 0"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">3,40 €</div></div>
-    </div>
-    <div class="xsc xsc-ride">
-      <div class="ride-h" style="padding-top:0">
-        <div style="display:flex;align-items:center;gap:8px"><span class="lb tram">4</span><b>→ Staničné nám.</b><span class="st ok" style="margin-left:auto">naživo</span></div>
-        <div class="ride-big" style="font-size:24px">Vystúpte o 3 zastávky</div>
-        <div class="muted small">Staničné nám. · 14:21 · potom <span class="lb train sm">Os 8813</span> koľ. 3</div>
-      </div>
-      <div class="vtl" style="margin-top:8px">
-        <div class="vs cur" style="--c:var(--mode-tram)"><span class="tm">14:13</span>Technická univerzita<span class="vveh"></span></div>
-        <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Hlavná</div>
-        <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
-      </div>
-      <div style="display:flex;gap:8px;padding:10px 14px 0"><div class="m-btn" data-go="wallet" style="margin:0;flex:1;height:46px;font-size:15px;cursor:pointer">Zobraziť lístok</div><div class="m-btn tonal" data-go="end" style="margin:0;flex:1;height:46px;font-size:15px;cursor:pointer">Ukončiť</div></div>
+      <div class="rc-cta" style="padding:10px 14px 0"><div class="m-btn tonal" data-go="track">Sledovať</div><div class="m-btn">3,40 €</div></div>
     </div>
   </div>
   <div class="xwallet">
@@ -1426,18 +1495,22 @@ document.querySelectorAll('.lock').forEach(l=>l.onclick=()=>l.style.filter=l.sty
 
 const order=['dep','search','res','det','ride','peek','trkdep','wallet'];
 const screens=[...document.querySelectorAll('.xs')], segBtns=[...document.querySelectorAll('#pairctl button')];
-let tracking=false, cur='dep', detFrom='res';
+let tracking=false, expanded=false, cur='dep', detFrom='res';
 const show=v=>{
   if(v==='end'){tracking=false;v='dep'}
   if(v==='back')v=detFrom;
+  if(v==='track'){tracking=true;v=cur}
+  if(v==='mini')v=cur;
+  expanded=v==='ride';
+  if(expanded){tracking=true;v=['search','wallet'].includes(cur)?'dep':cur}
   if(v==='det'&&cur!=='det')detFrom=['dep','trkdep'].includes(cur)?cur:'res';
-  if(['ride','peek','trkdep'].includes(v))tracking=true;
+  if(['peek','trkdep'].includes(v))tracking=true;
   if(!order.includes(v))return;
   cur=v; const view=v==='trkdep'?'dep':v;
-  screens.forEach(x=>{x.dataset.view=view;x.classList.toggle('trk',tracking)});
-  segBtns.forEach(b=>b.classList.toggle('on',b.dataset.state===v));
+  screens.forEach(x=>{x.dataset.view=view;x.classList.toggle('trk',tracking);x.classList.toggle('jz',expanded)});
+  segBtns.forEach(b=>b.classList.toggle('on',b.dataset.state===(expanded?'ride':v)));
 };
-let auto=reduced?null:setInterval(()=>{const n=order[(order.indexOf(cur)+1)%order.length];if(n==='dep')tracking=false;show(n)},4200);
+let auto=reduced?null:setInterval(()=>{const n=order[(order.indexOf(expanded?'ride':cur)+1)%order.length];if(n==='dep')tracking=false;show(n)},4200);
 const stop=()=>{clearInterval(auto);auto=null};
 segBtns.forEach(b=>b.addEventListener('click',()=>{stop();if(['dep','search','res'].includes(b.dataset.state))tracking=false;show(b.dataset.state)}));
 document.querySelectorAll('.xs [data-go]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();stop();show(el.dataset.go)}));
