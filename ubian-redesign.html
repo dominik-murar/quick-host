@@ -733,7 +733,7 @@ section,[id]{scroll-margin-top:84px}
 .xt-close{right:14px;top:26px;width:34px;height:34px;border-radius:50%;background:var(--surface-2);color:var(--text-2);display:grid;place-items:center;opacity:0;pointer-events:none;cursor:pointer}
 .xt-body{left:0;right:0;top:150px;opacity:0;transform:translateY(10px);pointer-events:none}
 .xs.trk.jz .xtrip{opacity:1;transform:none;pointer-events:auto;cursor:default}
-.xs.jz[data-view] .xtrip{left:8px;right:8px;bottom:8px;height:404px;border-radius:46px;background:color-mix(in srgb,var(--surface) 92%,transparent)}
+.xs.jz[data-view] .xtrip{left:8px;right:8px;bottom:8px;height:404px;border-radius:46px;background:transparent;border-color:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
 .xs.jz .xt-lb{left:18px;top:28px;transform:scale(1.33)}
 .xs.jz .xt-title{left:18px;top:86px;transform:scale(1.6)}
 .xs.jz .xt-eta{right:18px;top:86px;transform:scale(1.45)}
@@ -744,14 +744,15 @@ section,[id]{scroll-margin-top:84px}
 .xs.jz :is(.xt-dir,.xt-live,.xt-close){opacity:1;pointer-events:auto;transition-delay:.15s}
 .xs.jz .xt-body{opacity:1;transform:none;pointer-events:auto;transition:opacity .3s .22s,transform .45s .22s var(--jz-ease)}
 .xs:not(.jz) .xt-dest{transition-delay:.3s}
-/* the sheet keeps its place and content, stacked behind the card */
-.xsheet{transform-origin:50% 100%;transition:left .55s,right .55s,bottom .55s,height .55s,border-radius .55s,transform .55s,opacity .4s;transition-timing-function:cubic-bezier(.3,1.15,.4,1)}
-.xs.jz[data-view] .xsheet{left:8px;right:8px;bottom:8px;height:430px;border-radius:46px;transform:translateY(-31px) scale(.9);opacity:.75;pointer-events:none}
-.xs.trk.jz[data-view] .xctl{bottom:440px}
-.android .xs.jz[data-view] .xtrip{left:8px;right:8px;bottom:8px;height:424px;border-radius:28px;background:var(--surface)}
-.android .xs.jz .xt-body{top:150px}
-.android .xs.jz[data-view] .xsheet{left:0;right:0;bottom:0;height:460px;border-radius:28px 28px 0 0;transform:translateY(-27px) scale(.92)}
-.android .xs.trk.jz[data-view] .xctl{bottom:466px}
+/* the strip merges into the sheet: the sheet takes the Jazda detent and the strip's content, its own content waits underneath */
+.xsheet{transition:left .55s,right .55s,bottom .55s,height .55s,border-radius .55s;transition-timing-function:cubic-bezier(.3,1.12,.4,1)}
+.xs.jz[data-view] .xsheet{left:8px;right:8px;bottom:8px;height:404px;border-radius:46px}
+.xs.jz .xsheet > *{opacity:0!important;pointer-events:none!important;transition:opacity .15s!important}
+.xs.trk.jz[data-view] .xctl{bottom:426px}
+.android .xs.jz[data-view] .xtrip{left:0;right:0;bottom:0;height:440px;border-radius:28px 28px 0 0;background:var(--surface);box-shadow:none}
+.android .xs.jz[data-view] .xsheet{left:0;right:0;bottom:0;height:440px;border-radius:28px 28px 0 0}
+.android .xs.jz .xt-grab{width:32px;height:4px;margin-left:-16px;top:10px}
+.android .xs.trk.jz[data-view] .xctl{bottom:456px}
 @media (prefers-reduced-motion:reduce){.xtrip,.xtrip > *,.xsheet{transition:opacity .2s!important}}
 
 /* result card: first tap selects (glance + actions), tapping the selected card opens Detail spoja */
@@ -948,7 +949,7 @@ h1,h2,h3,h4{font-weight:800}
         <li><b>Three heights, as in Apple Maps</b>: <i>collapsed</i> (a floating glass capsule with just the header, for the full map), <i>medium, the default</i> (<b>Kam</b>: destination shortcuts with live travel times; then <b>Odchody</b> from the nearest stops), <i>large</i> (the full list or the planner).</li>
         <li><b>The content follows the job</b>: Odchody → planner → results → Detail spoja. A departure row opens Detail spoja directly. Back or swiping down returns one level. Map controls (map style, my location) float just above the sheet.</li>
         <li><b>Live trip strip</b>: once you tap "Sledovať", the ride is tracked until you end it. The strip <b>floats just above the sheet in every state</b> (medium, collapsed, results) and moves with it, and Peňaženka shows a compact ride line at its top. The collapsed map keeps following your vehicle.</li>
-        <li><b>Jazda is a layer, not a step</b>: tapping the strip grows it into the Jazda card; the sheet doesn't navigate. The sheet stays where it was, stacked just behind the card, and minimising returns you to exactly that place. Floating with rounded corners on all sides means live ride; attached to the edge means navigation.</li>
+        <li><b>Jazda is opened, not navigated to</b>: tapping the strip turns it into the sheet. The sheet takes Jazda's height and content, and whatever it showed (Odchody, results, Detail spoja) waits underneath, untouched. Closing Jazda turns the sheet back into the strip and restores that place. There's always exactly one sheet, and Jazda never adds a level to its back stack.</li>
       </ul>
     </div>
     <div class="card small muted">
@@ -1112,26 +1113,30 @@ h1,h2,h3,h4{font-weight:800}
       <p style="margin:8px 0 0"><b>Always with you</b>: while a ride is tracked, a compact strip (line, "Vystúpte o 3 zast.", minutes, mini track) floats above the sheet in every state, and as a line at the top of Peňaženka. Tracking a ride and holding a ticket stay separate, but each links to the other.</p>
     </div>
   </div>
-  <h3>Strip ⇄ Jazda: one element, two sizes</h3>
+  <h3>Strip ⇄ Jazda: the strip becomes the sheet</h3>
   <div class="grid g2">
     <div class="card small muted">
-      <h4 style="color:var(--text)">Like a music player's mini player</h4>
-      <p style="margin:0">The strip <b>is</b> the Jazda card, just compact. Tap it and the same surface grows up out of its own position into a card about as tall as the medium sheet (≈ 45 % of the screen). Everything that's in both sizes travels and scales to its new place; nothing is swapped. <b>The map always keeps the top half</b>: the camera frames vehicle → exit stop above the card, and map controls ride on the card's top edge. The map stays interactive, and tapping it doesn't collapse the card, because people pan to watch their vehicle.</p>
-      <p style="margin:8px 0 0"><b>Minimise</b> with the ⌄ button, by dragging the grabber down (the morph follows your finger and can be interrupted) or with a downward flick. There's no "‹ Späť" here: Jazda isn't a level in the sheet, so there's nothing to go back to. <b>"Sledovať"</b> starts tracking in place: the strip drops in above the sheet, so you learn where the ride lives, and Jazda opens only when you tap it.</p>
+      <h4 style="color:var(--text)">One surface at a time</h4>
+      <p style="margin:0">It works like a music player's mini player, but within each platform's rules: <b>Jazda is never a card on top of the sheet</b>. When you tap the strip, it and the sheet merge into one sheet, which shows Jazda at about 45 % of the screen. Everything that's in both sizes travels and scales to its new place. <b>The map always keeps the top half</b>: the camera frames the vehicle and your exit stop above the sheet, the map stays interactive, and tapping it doesn't close Jazda, because people pan to watch their vehicle. Jazda has no large detent, so the stop list scrolls inside.</p>
+      <ul class="clean" style="margin-top:8px">
+        <li><b>iOS 26</b>: Liquid Glass belongs to one layer of controls above the content, and glass never sits on glass. The strip and the sheet are two glass shapes side by side. On tap they merge into one, the way Liquid Glass shapes do, rather than one covering the other. The sheet moves to a custom <code>.height</code> detent and shows Jazda in place of its header and content, like an Apple Maps place card that you close with ⌄ or by swiping down, not ‹.</li>
+        <li><b>Android</b>: this is Material's <b>container transform</b>. The strip is an elevated surface; on tap, its container expands into the standard edge-to-edge bottom sheet and becomes it. Nothing floats or stacks. <b>Predictive back</b> runs the transform in reverse, following the gesture, so back shrinks Jazda into the strip and restores the sheet behind it.</li>
+      </ul>
+      <p style="margin:8px 0 0"><b>"Sledovať"</b> starts tracking in place: the strip drops in above the sheet, so you learn where the ride lives, and Jazda opens only when you tap the strip.</p>
     </div>
     <div class="card small">
       <table>
-        <tr><th>Element</th><th>Strip</th><th>Jazda card</th></tr>
-        <tr><td>Surface</td><td>60 pt, inset 14, radius 30, glass</td><td>≈ 45 %, inset 8, radius 46, denser glass</td></tr>
+        <tr><th>Element</th><th>Strip</th><th>Jazda (the sheet)</th></tr>
+        <tr><td>Surface</td><td>iOS: glass capsule, 60 pt · Android: elevated surface, 28 dp radius</td><td>Merges into the sheet at the Jazda detent (≈ 45 %); one surface</td></tr>
+        <tr><td>Sheet content</td><td>unchanged</td><td>fades out and waits underneath; it comes back when Jazda closes</td></tr>
         <tr><td>Line badge</td><td>left, centred</td><td>header, scales ×1.33</td></tr>
-        <tr><td>"Vystúpte o 3 zast."</td><td>15 heavy</td><td>scales ×1.6 to 24, headline</td></tr>
+        <tr><td>"Vystúpte o 3 zast."</td><td>15 heavy</td><td>scales ×1.6 to 24, the headline</td></tr>
         <tr><td>Minutes to exit</td><td>right, 16 heavy</td><td>scales ×1.45, on the headline's baseline</td></tr>
-        <tr><td>Mini track</td><td>3 pt under the title</td><td>stretches to the full width, 6 pt live band</td></tr>
-        <tr><td>Exit stop</td><td>under the minutes</td><td>fades out, "→ Staničné nám." fades in</td></tr>
+        <tr><td>Mini track</td><td>3 pt under the title</td><td>stretches to full width as a 6 pt live band</td></tr>
+        <tr><td>Exit stop</td><td>under the minutes</td><td>fades out as "→ Staničné nám." fades in</td></tr>
         <tr><td>Timeline, actions</td><td>—</td><td>fade and rise 10 pt, 0.22 s after the surface</td></tr>
-        <tr><td>Sheet</td><td>unchanged</td><td>stays put, scales to 0.9 behind the card, peeks above it</td></tr>
       </table>
-      <p class="muted" style="margin:8px 0 0">The surface uses a soft spring (0.55 s); text and badges use an ease-out without overshoot, so scaled text never wobbles. Text scales only while it travels, never while you're reading it. Reduce Motion replaces the morph with a 0.2 s cross-fade.</p>
+      <p class="muted" style="margin:8px 0 0">The surface uses a soft spring (0.55 s). Text and badges use an ease-out without overshoot, so scaled text never wobbles. Text scales only while it travels, never while you're reading it. Reduce Motion replaces the morph with a 0.2 s cross-fade.</p>
     </div>
   </div>
 
