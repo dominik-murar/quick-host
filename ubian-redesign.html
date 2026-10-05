@@ -628,10 +628,11 @@ section,[id]{scroll-margin-top:84px}
 .xdim{position:absolute;inset:0;background:#000;opacity:0;transition:opacity .4s;pointer-events:none;z-index:3}
 .xs[data-view=search] .xdim{opacity:.25}
 .xs .ml{transition:opacity .45s}
-.xs:not([data-view=dep]):not([data-view=peek]):not([data-view=wallet]) .ml-dep{opacity:0}
-.xs:not([data-view=res]):not([data-view=ride]) .ml-route{opacity:0}
+.xs:not([data-view=dep]):not([data-view=peek]):not([data-view=wallet]):not([data-view=det]) .ml-dep{opacity:0}
+.xs:not([data-view=res]):not([data-view=det]):not([data-view=ride]) .ml-route{opacity:0}
+.xs[data-view=res]:not(:has(.rcard.sel)) .ml-route{opacity:0}
 .xs:not([data-view=ride]) .ml-ride{opacity:0}
-.xs[data-view=res] .draw2 path,.xs[data-view=ride] .draw2 path{animation:drawin .8s ease-out .15s forwards}
+.xs[data-view=res] .draw2 path,.xs[data-view=det] .draw2 path,.xs[data-view=ride] .draw2 path{animation:drawin .8s ease-out .15s forwards}
 .xchip{position:absolute;top:62px;left:16px;z-index:4;height:40px;padding:0 14px;border-radius:20px;display:flex;align-items:center;gap:6px;font-weight:700;font-size:15px}
 .xctl{position:absolute;right:14px;bottom:494px;z-index:4;width:52px;border-radius:26px;display:flex;flex-direction:column;align-items:center;padding:4px 0;transition:bottom .55s cubic-bezier(.3,1.15,.4,1),opacity .3s}
 .xctl span{width:44px;height:44px;display:grid;place-items:center}
@@ -643,7 +644,7 @@ section,[id]{scroll-margin-top:84px}
 .xsheet .sh-head{padding:0 12px 10px}
 .xsheet .sh-search .mic{margin-left:auto;fill:var(--text-2)}
 .xsc{position:absolute;left:0;right:0;top:80px;bottom:0;opacity:0;transform:translateY(14px);transition:opacity .3s,transform .45s cubic-bezier(.2,.8,.2,1);pointer-events:none;overflow:hidden}
-.xs[data-view=dep] .xsc-dep,.xs[data-view=wallet] .xsc-dep,.xs[data-view=search] .xsc-search,.xs[data-view=res] .xsc-res,.xs[data-view=ride] .xsc-ride{opacity:1;transform:none;pointer-events:auto}
+.xs[data-view=dep] .xsc-dep,.xs[data-view=wallet] .xsc-dep,.xs[data-view=search] .xsc-search,.xs[data-view=res] .xsc-res,.xs[data-view=det] .xsc-det,.xs[data-view=ride] .xsc-ride{opacity:1;transform:none;pointer-events:auto}
 .xs[data-view=peek] .xsheet{left:22px;right:22px;bottom:26px;height:86px;border-radius:43px}
 .xs[data-view=peek] .xctl{bottom:128px}
 .xs[data-view=search] .xsheet{left:0;right:0;bottom:0;height:790px;border-radius:40px 40px 0 0}
@@ -696,10 +697,10 @@ section,[id]{scroll-margin-top:84px}
 .xtrip{position:absolute;left:14px;right:14px;bottom:486px;height:60px;border-radius:30px;z-index:7;display:flex;align-items:center;gap:10px;padding:0 16px 0 10px;cursor:pointer;opacity:0;transform:translateY(14px) scale(.97);pointer-events:none;transition:opacity .3s,transform .45s cubic-bezier(.3,1.3,.4,1),bottom .55s cubic-bezier(.3,1.15,.4,1)}
 .xtrip .acc-t b{font-size:15px}
 .xtrip-r{display:flex;flex-direction:column;align-items:flex-end;font-size:11.5px;color:var(--text-2)}
-.xs.trk:is([data-view=dep],[data-view=peek],[data-view=res]) .xtrip{opacity:1;transform:none;pointer-events:auto}
+.xs.trk:is([data-view=dep],[data-view=peek],[data-view=res],[data-view=det]) .xtrip{opacity:1;transform:none;pointer-events:auto}
 .xtrip{left:14px;right:14px;transition:opacity .3s,transform .45s cubic-bezier(.3,1.3,.4,1),bottom .55s cubic-bezier(.3,1.15,.4,1),left .55s,right .55s}
 .xs[data-view=peek] .xtrip{bottom:122px}
-.xs.trk[data-view=dep] .xctl,.xs.trk[data-view=res] .xctl{bottom:560px}
+.xs.trk:is([data-view=dep],[data-view=res],[data-view=det]) .xctl{bottom:560px}
 .xs.trk[data-view=peek] .xctl{bottom:194px}
 .xs.trk .ml-dep{opacity:0!important}
 .xs.trk .ml-route,.xs.trk .ml-ride{opacity:1!important}
@@ -714,8 +715,22 @@ section,[id]{scroll-margin-top:84px}
 .plc i.c-school{background:linear-gradient(160deg,#F6C177,#A85A00)}
 .android .xtrip{bottom:532px;border-radius:28px;background:var(--surface);box-shadow:0 3px 12px rgba(0,0,0,.18);backdrop-filter:none;border:0}
 .android .xs[data-view=peek] .xtrip{bottom:152px}
-.android .xs.trk[data-view=dep] .xctl,.android .xs.trk[data-view=res] .xctl{bottom:604px}
+.android .xs.trk:is([data-view=dep],[data-view=res],[data-view=det]) .xctl{bottom:604px}
 .android .xs.trk[data-view=peek] .xctl{bottom:224px}
+
+/* result card: tap selects (glance + actions), tap again deselects; Podrobnosti opens Detail spoja */
+.rcard{cursor:pointer;margin:6px 12px}
+.rcard:not(.sel){padding:10px 15px}
+.rc-h{display:flex;justify-content:space-between;align-items:baseline}
+.rc-t{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.rcard:not(.sel) .rc-t{font-size:17px}
+.rcard:not(.sel) .rc-more{display:none}
+.rc-op{display:flex;align-items:baseline;gap:8px}
+.m-more{margin-left:auto;font-size:13px;font-weight:800;color:var(--accent);cursor:pointer}
+.rc-cta{display:flex;gap:8px;margin-top:10px}
+.rc-cta .m-btn{margin:0;flex:1;height:44px;font-size:15px;cursor:pointer}
+.rc-cta .m-btn:last-child{flex:1.3}
+.xback{width:30px;height:30px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-size:20px;line-height:1;cursor:pointer}
 
 footer{max-width:1240px;margin:auto;padding:24px;color:var(--text-3);font-size:13px}
 
@@ -778,7 +793,7 @@ h1,h2,h3,h4{font-weight:800}
 </svg>
 
 <header class="top"><div class="top-in">
-  <div class="brand"><span class="wordmark">ubian<i></i></span><span class="tag">Redesign proposal · v0.3</span></div>
+  <div class="brand"><span class="wordmark">ubian<i></i></span><span class="tag">Redesign proposal · v0.4</span></div>
   <nav>
     <a href="#today">Today</a><a href="#principles">Principles</a><a href="#ia">Structure</a><a href="#foundations">Foundations</a>
     <a href="#components">Components</a><a href="#screens">Screens</a><a href="#data">Data platform</a><a href="#roadmap">Roadmap</a>
@@ -895,7 +910,7 @@ h1,h2,h3,h4{font-weight:800}
       <ul class="clean">
         <li><b>Sheet header, always visible</b>: <code>[🔍 Kam a kedy? 🎙] [🎫] [👤]</code>, sitting on the sheet's top edge. Its position follows the sheet: low when collapsed, around mid-screen at the default. A green dot on 🎫 means something is valid right now. 👤 opens account, settings, parking history and support (what used to be "Ďalšie").</li>
         <li><b>Three heights, as in Apple Maps</b>: <i>collapsed</i> (a floating glass capsule with just the header, for the full map), <i>medium, the default</i> (<b>Kam</b>: destination shortcuts with live travel times; then <b>Odchody</b> from the nearest stops), <i>large</i> (the full list or the planner).</li>
-        <li><b>The content follows the job</b>: Odchody → planner → results → Jazda. Back or swiping down returns one level. Map controls (map style, my location) float just above the sheet.</li>
+        <li><b>The content follows the job</b>: Odchody → planner → results → Detail spoja → Jazda. A departure row opens Detail spoja directly. Back or swiping down returns one level. Map controls (map style, my location) float just above the sheet.</li>
         <li><b>Live trip strip</b>: once you tap "Sledovať", the ride is tracked until you end it. The strip <b>floats just above the sheet in every state</b> (medium, collapsed, results) and moves with it, and Peňaženka shows a compact ride line at its top. The collapsed map keeps following your vehicle. Tap the strip and the sheet becomes Jazda. Tap it and the sheet becomes Jazda, with the map following your vehicle.</li>
       </ul>
     </div>
@@ -986,7 +1001,7 @@ h1,h2,h3,h4{font-weight:800}
         <li><b>Line · destination · platform</b>. The platform is a light letter or number after the name, as CP shows it ("A", "C", track "3").</li>
         <li><b>Live position as words</b> on the second line: "na zastávke Letná · 4 zast.", from <code>lastStopOrder</code> and <code>isOnStop</code>. Together with the map, you can see a "1 min" tram is still two stops out.</li>
         <li><b>Time + status</b> on the right: "načas" or "+2 min". No live data: just the time, with no second line and no status.</li>
-        <li>Tapping a row highlights that vehicle on the map, with its path to the stop and your walk there.</li>
+        <li>Tapping a row opens <b>Detail spoja</b>, with that vehicle highlighted on the map, its path to the stop and your walk there.</li>
       </ul>
     </div>
   </div>
@@ -1013,6 +1028,33 @@ h1,h2,h3,h4{font-weight:800}
         <li>The chips make the interpretation visible and correctable in one tap, so nothing is a black box.</li>
         <li>Three toggles (Vlaky · Autobusy · MHD) inside <b>Filtre</b> replace the 7 transport combinations. The chip shows how many filters are active.</li>
         <li>No personal data goes to the model. The parsed query goes to Ubian's search engine.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Result card → Detail spoja</h3>
+  <div class="grid g2">
+    <div class="card" style="padding:6px 0">
+      <div class="m-card rcard sel" data-rc="0">
+        <div class="rc-h"><b class="rc-t">14:13 – 15:11</b><b>58 min</b></div>
+        <div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>2</span><span class="sep">›</span><span class="lb tram sm">4</span><span class="sep">›</span><span class="lb train sm">Os 8813</span><span class="sep">›</span><span class="lb trolley sm">38</span></div>
+        <div class="rc-more"><div class="op rc-op"><span>DPMK · ZSSK · DPMP</span><span class="m-more">Podrobnosti ›</span></div>
+        <div class="rc-cta"><div class="m-btn tonal">Sledovať</div><div class="m-btn">Kúpiť · 3,40 €</div></div></div>
+      </div>
+      <div class="m-card rcard" data-rc="1">
+        <div class="rc-h"><b class="rc-t">14:30 – 15:45</b><b>75 min</b></div>
+        <div class="legs"><span class="lb regional sm">701</span></div>
+        <div class="rc-more"><div class="op rc-op"><span>Arriva · bez prestupu</span><span class="m-more">Podrobnosti ›</span></div>
+        <div class="rc-cta"><div class="m-btn tonal">Sledovať</div><div class="m-btn">Kúpiť · 2,90 €</div></div></div>
+      </div>
+    </div>
+    <div class="card small muted">
+      <h4 style="color:var(--text)">Three actions: show, track, buy</h4>
+      <ul class="clean">
+        <li><b>Tap selects</b>. A result is a choice among alternatives, so the first tap highlights it: its route draws on the map and the card opens a glance (legs, operators) with the two actions. Tapping again deselects it, and selecting another moves the highlight. Only one card is selected at a time.</li>
+        <li><b>Podrobnosti ›</b> opens <b>Detail spoja</b>, the same view a departure row opens: line and direction, status, boarding stop, the stops to your exit, and the vehicle on the map.</li>
+        <li><b>Detail repeats the actions</b>: Sledovať and Kúpiť sit at its bottom, so you can decide after looking without going back.</li>
+        <li><b>Kúpiť carries the context</b>: from Výsledky it buys the whole journey, from Odchody a single ticket for that line.</li>
       </ul>
     </div>
   </div>
@@ -1073,7 +1115,7 @@ h1,h2,h3,h4{font-weight:800}
   <div class="eyebrow">06 · Screens</div>
   <h2>Every screen, on iOS and Android</h2>
   <p class="muted">The layout is modelled on Apple Maps in iOS 26 and Google Maps on Android. The live map stays put while the sheet changes height and content. <b>Medium is the default</b>: departures and your places.</p>
-  <div class="pair-ctl" id="pairctl"><button data-state="dep">Odchody</button><button data-state="search">Hľadať</button><button data-state="res">Výsledky</button><button data-state="ride">Jazda</button><button data-state="peek">Mapa počas jazdy</button><button data-state="trkdep">Odchody počas jazdy</button><button data-state="wallet">Peňaženka</button></div>
+  <div class="pair-ctl" id="pairctl"><button data-state="dep">Odchody</button><button data-state="search">Hľadať</button><button data-state="res">Výsledky</button><button data-state="det">Detail</button><button data-state="ride">Jazda</button><button data-state="peek">Mapa počas jazdy</button><button data-state="trkdep">Odchody počas jazdy</button><button data-state="wallet">Peňaženka</button></div>
   <div class="devices pair">
     <div class="dev-col"><div class="phone ios"><div class="screen xs" data-view="dep">
   <div class="xmap"><svg viewBox="0 0 393 852" preserveAspectRatio="xMidYMid slice">
@@ -1119,7 +1161,7 @@ h1,h2,h3,h4{font-weight:800}
       </div>
       <div class="xtitle">Odchody <span>›</span></div>
       <div class="pcard xcard"><div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span></div>
-      <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
+      <div class="dep live-row sel" data-go="det" style="cursor:pointer"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
       <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
       <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b></div></div></div>
     </div>
@@ -1135,13 +1177,31 @@ h1,h2,h3,h4{font-weight:800}
     </div>
     <div class="xsc xsc-res">
       <div class="pl-parse" style="padding:0 14px 4px"><span class="chipx blue">Moja poloha → 🏠 Domov</span><span class="chipx">Teraz</span></div>
-      <div class="m-card sel" style="margin:6px 12px">
-        <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:20px;font-weight:800;font-variant-numeric:tabular-nums">14:13 – 15:11</b><b>58 min</b></div>
+      <div class="m-card rcard sel" data-rc="0">
+        <div class="rc-h"><b class="rc-t">14:13 – 15:11</b><b>58 min</b></div>
         <div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>2</span><span class="sep">›</span><span class="lb tram sm">4</span><span class="sep">›</span><span class="lb train sm">Os 8813</span><span class="sep">›</span><span class="lb trolley sm">38</span></div>
-        <div class="op">DPMK · ZSSK · DPMP</div>
-        <div style="display:flex;gap:8px;margin-top:10px"><div class="m-btn tonal" data-go="ride" style="margin:0;flex:1;height:44px;font-size:15px;cursor:pointer">Sledovať</div><div class="m-btn" style="margin:0;flex:1.3;height:44px;font-size:15px">Kúpiť · 3,40 €</div></div>
+        <div class="rc-more"><div class="op rc-op"><span>DPMK · ZSSK · DPMP</span><span class="m-more" data-go="det">Podrobnosti ›</span></div>
+        <div class="rc-cta"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">Kúpiť · 3,40 €</div></div></div>
       </div>
-      <div class="m-card" style="margin:6px 12px;padding:10px 15px"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px;font-weight:800;font-variant-numeric:tabular-nums">14:30 – 15:45</b><span class="legs" style="margin:0"><span class="lb regional sm">701</span></span></div></div>
+      <div class="m-card rcard" data-rc="1">
+        <div class="rc-h"><b class="rc-t">14:30 – 15:45</b><b>75 min</b></div>
+        <div class="legs"><span class="lb regional sm">701</span></div>
+        <div class="rc-more"><div class="op rc-op"><span>Arriva · bez prestupu</span><span class="m-more" data-go="det">Podrobnosti ›</span></div>
+        <div class="rc-cta"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">Kúpiť · 2,90 €</div></div></div>
+      </div>
+    </div>
+    <div class="xsc xsc-det">
+      <div class="ride-h" style="padding-top:0">
+        <div style="display:flex;align-items:center;gap:8px"><span class="xback" data-go="back" aria-label="Späť">‹</span><span class="lb tram">4</span><b>→ Staničné nám.</b><span class="st ok" style="margin-left:auto">načas</span></div>
+        <div class="ride-big" style="font-size:24px">Odchod o 1 min</div>
+        <div class="muted small">Nástup Technická univerzita <i class="plat">A</i> · vozidlo je 2 zastávky pred vami</div>
+      </div>
+      <div class="vtl" style="margin-top:8px">
+        <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:13</span><b>Technická univerzita</b></div>
+        <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Hlavná</div>
+        <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
+      </div>
+      <div class="rc-cta" style="padding:10px 14px 0"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">Kúpiť · 3,40 €</div></div>
     </div>
     <div class="xsc xsc-ride">
       <div class="ride-h" style="padding-top:0">
@@ -1219,7 +1279,7 @@ h1,h2,h3,h4{font-weight:800}
       </div>
       <div class="xtitle">Odchody <span>›</span></div>
       <div class="pcard xcard"><div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span></div>
-      <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
+      <div class="dep live-row sel" data-go="det" style="cursor:pointer"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
       <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
       <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b></div></div></div>
     </div>
@@ -1235,13 +1295,31 @@ h1,h2,h3,h4{font-weight:800}
     </div>
     <div class="xsc xsc-res">
       <div class="pl-parse" style="padding:0 14px 4px"><span class="chipx blue">Moja poloha → 🏠 Domov</span><span class="chipx">Teraz</span></div>
-      <div class="m-card sel" style="margin:6px 12px">
-        <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:20px;font-weight:800;font-variant-numeric:tabular-nums">14:13 – 15:11</b><b>58 min</b></div>
+      <div class="m-card rcard sel" data-rc="0">
+        <div class="rc-h"><b class="rc-t">14:13 – 15:11</b><b>58 min</b></div>
         <div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>2</span><span class="sep">›</span><span class="lb tram sm">4</span><span class="sep">›</span><span class="lb train sm">Os 8813</span><span class="sep">›</span><span class="lb trolley sm">38</span></div>
-        <div class="op">DPMK · ZSSK · DPMP</div>
-        <div style="display:flex;gap:8px;margin-top:10px"><div class="m-btn tonal" data-go="ride" style="margin:0;flex:1;height:44px;font-size:15px;cursor:pointer">Sledovať</div><div class="m-btn" style="margin:0;flex:1.3;height:44px;font-size:15px">Kúpiť · 3,40 €</div></div>
+        <div class="rc-more"><div class="op rc-op"><span>DPMK · ZSSK · DPMP</span><span class="m-more" data-go="det">Podrobnosti ›</span></div>
+        <div class="rc-cta"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">Kúpiť · 3,40 €</div></div></div>
       </div>
-      <div class="m-card" style="margin:6px 12px;padding:10px 15px"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px;font-weight:800;font-variant-numeric:tabular-nums">14:30 – 15:45</b><span class="legs" style="margin:0"><span class="lb regional sm">701</span></span></div></div>
+      <div class="m-card rcard" data-rc="1">
+        <div class="rc-h"><b class="rc-t">14:30 – 15:45</b><b>75 min</b></div>
+        <div class="legs"><span class="lb regional sm">701</span></div>
+        <div class="rc-more"><div class="op rc-op"><span>Arriva · bez prestupu</span><span class="m-more" data-go="det">Podrobnosti ›</span></div>
+        <div class="rc-cta"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">Kúpiť · 2,90 €</div></div></div>
+      </div>
+    </div>
+    <div class="xsc xsc-det">
+      <div class="ride-h" style="padding-top:0">
+        <div style="display:flex;align-items:center;gap:8px"><span class="xback" data-go="back" aria-label="Späť">‹</span><span class="lb tram">4</span><b>→ Staničné nám.</b><span class="st ok" style="margin-left:auto">načas</span></div>
+        <div class="ride-big" style="font-size:24px">Odchod o 1 min</div>
+        <div class="muted small">Nástup Technická univerzita <i class="plat">A</i> · vozidlo je 2 zastávky pred vami</div>
+      </div>
+      <div class="vtl" style="margin-top:8px">
+        <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:13</span><b>Technická univerzita</b></div>
+        <div class="vs" style="--c:var(--mode-tram)"><span class="tm">14:16</span>Hlavná</div>
+        <div class="vs dest" style="--c:var(--mode-tram)"><span class="tm">14:21</span><b>Staničné námestie</b></div>
+      </div>
+      <div class="rc-cta" style="padding:10px 14px 0"><div class="m-btn tonal" data-go="ride">Sledovať</div><div class="m-btn">Kúpiť · 3,40 €</div></div>
     </div>
     <div class="xsc xsc-ride">
       <div class="ride-h" style="padding-top:0">
@@ -1325,7 +1403,7 @@ h1,h2,h3,h4{font-weight:800}
   </ul>
 </section>
 </main>
-<footer>Ubian redesign proposal v0.3 · Unsolicited concept by Dominik Murar, not affiliated with or endorsed by Ubian · Observations as of 3 Oct 2026</footer>
+<footer>Ubian redesign proposal v0.4 · Unsolicited concept by Dominik Murar, not affiliated with or endorsed by Ubian · Observations as of 3 Oct 2026</footer>
 
 <script>
 const root=document.documentElement, btn=document.getElementById('themeBtn');
@@ -1346,11 +1424,13 @@ setInterval(()=>{
 },1000);
 document.querySelectorAll('.lock').forEach(l=>l.onclick=()=>l.style.filter=l.style.filter?'':'invert(1)');
 
-const order=['dep','search','res','ride','peek','trkdep','wallet'];
+const order=['dep','search','res','det','ride','peek','trkdep','wallet'];
 const screens=[...document.querySelectorAll('.xs')], segBtns=[...document.querySelectorAll('#pairctl button')];
-let tracking=false, cur='dep';
+let tracking=false, cur='dep', detFrom='res';
 const show=v=>{
   if(v==='end'){tracking=false;v='dep'}
+  if(v==='back')v=detFrom;
+  if(v==='det'&&cur!=='det')detFrom=['dep','trkdep'].includes(cur)?cur:'res';
   if(['ride','peek','trkdep'].includes(v))tracking=true;
   if(!order.includes(v))return;
   cur=v; const view=v==='trkdep'?'dep':v;
@@ -1361,6 +1441,7 @@ let auto=reduced?null:setInterval(()=>{const n=order[(order.indexOf(cur)+1)%orde
 const stop=()=>{clearInterval(auto);auto=null};
 segBtns.forEach(b=>b.addEventListener('click',()=>{stop();if(['dep','search','res'].includes(b.dataset.state))tracking=false;show(b.dataset.state)}));
 document.querySelectorAll('.xs [data-go]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();stop();show(el.dataset.go)}));
+document.querySelectorAll('.xs .rcard').forEach(c=>c.addEventListener('click',()=>{stop();const on=!c.classList.contains('sel');document.querySelectorAll('.xs .rcard').forEach(o=>o.classList.toggle('sel',on&&o.dataset.rc===c.dataset.rc))}));
 show('dep');
 
 const list=document.getElementById('deplist');
