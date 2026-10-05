@@ -949,7 +949,7 @@ h1,h2,h3,h4{font-weight:800}
         <li><b>Three heights, as in Apple Maps</b>: <i>collapsed</i> (a floating glass capsule with just the header, for the full map), <i>medium, the default</i> (<b>Kam</b>: destination shortcuts with live travel times; then <b>Odchody</b> from the nearest stops), <i>large</i> (the full list or the planner).</li>
         <li><b>The content follows the job</b>: Odchody → planner → results → Detail spoja. A departure row opens Detail spoja directly. Back or swiping down returns one level. Map controls (map style, my location) float just above the sheet.</li>
         <li><b>Live trip strip</b>: once you tap "Sledovať", the ride is tracked until you end it. The strip <b>floats just above the sheet in every state</b> (medium, collapsed, results) and moves with it, and Peňaženka shows a compact ride line at its top. The collapsed map keeps following your vehicle.</li>
-        <li><b>Cards replace each other, history stays</b>: as in Apple Maps and Google Maps, opening something replaces the card in the sheet, and closing it brings the previous card back at its previous height. Jazda follows the same rule from anywhere: tapping the strip turns it into the sheet's top card on top of whatever was showing (Odchody, results, Detail spoja). ⌄ closes it back into the strip, since the ride goes on, and the previous card reappears untouched. There's always exactly one sheet.</li>
+        <li><b>Cards replace each other, history stays</b>: as in Apple Maps and Google Maps, opening something replaces the card in the sheet, and closing it brings the previous card back at its previous height. Jazda follows the same rule from anywhere: tapping the strip turns it into the sheet's top card on top of whatever was showing (Odchody, results, Detail spoja). The shrink button (two arrows pointing at each other) folds it back into the strip, since the ride goes on, and the previous card reappears untouched. It isn't a ⌄ or a ‹, which would read as moving the sheet or going back a level. There's always exactly one sheet.</li>
       </ul>
     </div>
     <div class="card small muted">
@@ -1119,7 +1119,7 @@ h1,h2,h3,h4{font-weight:800}
       <h4 style="color:var(--text)">One surface at a time</h4>
       <p style="margin:0">It works like a music player's mini player, but within each platform's rules: <b>Jazda is never a card on top of the sheet</b>. When you tap the strip, it and the sheet merge into one sheet, which shows Jazda at about 45 % of the screen. Everything that's in both sizes travels and scales to its new place. <b>The map always keeps the top half</b>: the camera frames the vehicle and your exit stop above the sheet, the map stays interactive, and tapping it doesn't close Jazda, because people pan to watch their vehicle. Jazda has no large detent, so the stop list scrolls inside.</p>
       <ul class="clean" style="margin-top:8px">
-        <li><b>iOS 26</b>: Liquid Glass belongs to one layer of controls above the content, and glass never sits on glass. The strip and the sheet are two glass shapes side by side. On tap they merge into one, the way Liquid Glass shapes do, rather than one covering the other. The sheet moves to a custom <code>.height</code> detent and shows Jazda in place of its header and content, like an Apple Maps place card: it replaces the card that was showing, and closing it (⌄ or swiping down) brings that card back.</li>
+        <li><b>iOS 26</b>: Liquid Glass belongs to one layer of controls above the content, and glass never sits on glass. The strip and the sheet are two glass shapes side by side. On tap they merge into one, the way Liquid Glass shapes do, rather than one covering the other. The sheet moves to a custom <code>.height</code> detent and shows Jazda in place of its header and content, like an Apple Maps place card: it replaces the card that was showing, and shrinking it (the shrink button or swiping down) brings that card back.</li>
         <li><b>Android</b>: this is Material's <b>container transform</b>, the same replace-and-restore pattern Google Maps uses for its sheets. The strip is an elevated surface; on tap, its container expands into the standard edge-to-edge bottom sheet and becomes it. Nothing floats or stacks. <b>Predictive back</b> runs the transform in reverse, following the gesture, so back shrinks Jazda into the strip and restores the sheet behind it.</li>
       </ul>
       <p style="margin:8px 0 0"><b>"Sledovať"</b> starts tracking in place: the strip drops in above the sheet, so you learn where the ride lives, and Jazda opens only when you tap the strip.</p>
@@ -1215,7 +1215,7 @@ h1,h2,h3,h4{font-weight:800}
   <span class="xt-grab" data-go="mini"></span>
   <span class="lb tram xt-lb">4</span>
   <b class="xt-dir">→ Staničné nám.</b><span class="st ok xt-live">naživo</span>
-  <span class="xt-close" data-go="mini" aria-label="Minimalizovať"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  <span class="xt-close" data-go="mini" aria-label="Zmenšiť do pásika"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 9.5 6.5M9.5 2.8v3.7h3.7M2 14l4.5-4.5M6.5 13.2V9.5H2.8"/></svg></span>
   <b class="xt-title">Vystúpte o 3 zast.</b>
   <b class="xt-eta acc-m">6 min</b>
   <span class="xt-dest">Staničné nám.</span>
@@ -1338,7 +1338,7 @@ h1,h2,h3,h4{font-weight:800}
   <span class="xt-grab" data-go="mini"></span>
   <span class="lb tram xt-lb">4</span>
   <b class="xt-dir">→ Staničné nám.</b><span class="st ok xt-live">naživo</span>
-  <span class="xt-close" data-go="mini" aria-label="Minimalizovať"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  <span class="xt-close" data-go="mini" aria-label="Zmenšiť do pásika"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 9.5 6.5M9.5 2.8v3.7h3.7M2 14l4.5-4.5M6.5 13.2V9.5H2.8"/></svg></span>
   <b class="xt-title">Vystúpte o 3 zast.</b>
   <b class="xt-eta acc-m">6 min</b>
   <span class="xt-dest">Staničné nám.</span>
@@ -1470,6 +1470,7 @@ h1,h2,h3,h4{font-weight:800}
   </table></div>
   <h3>Open questions</h3>
   <ul class="muted small">
+    <li>The native iOS mechanism for the strip ⇄ Jazda morph (the strip sits outside the system sheet): a zoom transition into a presented sheet, or a custom sheet. To be decided.</li>
     <li>Ubian's brand guidelines: the palette and wordmark here are placeholders.</li>
     <li>Which operators allow Ubian to republish their data, and under what licence?</li>
     <li>App store reviews and support tickets, to rank the friction points with evidence.</li>
