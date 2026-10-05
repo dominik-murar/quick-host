@@ -115,7 +115,7 @@ tr:last-child td{border-bottom:0}
 .lb svg{width:12px;height:12px;fill:currentColor}
 
 /* ---------- Status ---------- */
-.st{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.st{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
 .st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .st.ok{color:var(--ok)}.st.warn{color:var(--warn)}.st.crit{color:var(--crit)}.st.info{color:var(--info)}
 .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 1.8s infinite}
@@ -220,11 +220,11 @@ tr:last-child td{border-bottom:0}
 .m-seg div:last-child{border:0}
 .m-seg div.on{background:var(--accent-soft)}
 .m-label{font-size:12px;font-weight:900;color:var(--text-2);padding:10px 16px 4px;letter-spacing:.06em;text-transform:uppercase}
-.op{font-size:11.5px;color:var(--text-2);margin-top:2px}
+.op{font-size:12px;color:var(--text-2);margin-top:2px}
 
 .legs{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:6px 0}
 .legs .walk{font-size:12px;color:var(--text-2);display:inline-flex;align-items:center;gap:2px}
-.legs .sep{color:var(--text-3);font-size:11px}
+.legs .sep{color:var(--text-3);font-size:12px}
 .bar{height:6px;border-radius:3px;display:flex;overflow:hidden;gap:2px;margin:8px 0 4px}
 .bar span{display:block;height:100%}
 
@@ -709,9 +709,9 @@ section,[id]{scroll-margin-top:84px}
 .wtrip{display:flex;align-items:center;gap:8px;margin:2px 14px 6px;padding:10px 14px;border-radius:14px;background:color-mix(in srgb,var(--mode-tram) 9%,transparent);font-size:14px;cursor:pointer}
 .wtrip .muted{margin-left:auto}
 .xs:not(.trk) .wtrip{display:none}
-.plat{font-style:normal;font-weight:600;color:var(--text-3);margin-left:6px;font-size:.86em}
+.plat{font-style:normal;font-weight:600;color:var(--text-3);margin-left:6px;font-size:12px}
 .xstop{display:flex;align-items:baseline;gap:8px;padding:2px 0 6px;font-size:15px}
-.xstop span{font-size:12.5px;color:var(--text-2)}
+.xstop span{font-size:12px;color:var(--text-2)}
 .plc i.c-school{background:linear-gradient(160deg,#F6C177,#A85A00)}
 .android .xtrip{bottom:532px;border-radius:28px;background:var(--surface);box-shadow:0 3px 12px rgba(0,0,0,.18);backdrop-filter:none;border:0}
 .android .xs[data-view=peek] .xtrip{bottom:152px}
@@ -722,8 +722,8 @@ section,[id]{scroll-margin-top:84px}
 .rcard{cursor:pointer;margin:6px 12px}
 .rcard:not(.sel){padding:10px 15px}
 .rc-h{display:flex;justify-content:space-between;align-items:baseline}
-.rc-t{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
-.rcard:not(.sel) .rc-t{font-size:17px}
+.rc-t{font-size:17px;font-weight:900;font-variant-numeric:tabular-nums}
+.rc-h b:last-child{font-size:15px}
 .rcard:not(.sel) :is(.rc-more,.rc-go){display:none}
 .rc-top{display:flex;align-items:center;gap:6px}
 .rc-main{flex:1;min-width:0}
@@ -975,7 +975,7 @@ h1,h2,h3,h4{font-weight:800}
 
   <h3>Type and motion</h3>
   <div class="grid g2">
-    <div class="card small muted"><h4 style="color:var(--text)">System fonts</h4>SF Pro on iOS, Roboto Flex on Android and the system UI font on the web. They give native feel, Dynamic Type and full Slovak diacritics for free. Times and prices use tabular figures. There's no custom typeface unless Ubian's brand requires one.</div>
+    <div class="card small muted"><h4 style="color:var(--text)">System fonts</h4>SF Pro on iOS, Roboto Flex on Android and the system UI font on the web. They give native feel, Dynamic Type and full Slovak diacritics for free. Times and prices use tabular figures. There's no custom typeface unless Ubian's brand requires one.<p style="margin:8px 0 0"><b>Three sizes in lists and cards</b>: 17 heavy for the number you came for (countdown, journey times), 15 bold for primary text (destination, stop, duration, buttons), 12 for everything secondary (position, status, platform, legs). Line badges are sized as icons. Colour carries status only, so countdowns and durations stay in the text colour.</p></div>
     <div class="card small muted"><h4 style="color:var(--text)">Motion that explains</h4>The search morph, routes drawing themselves, vehicles gliding between GPS updates, departures collapsing away, a pulse at your destination. Everything respects Reduce Motion, and text never moves while you read it.</div>
   </div>
 </section>
