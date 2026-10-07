@@ -813,6 +813,51 @@ h1,h2,h3,h4{font-weight:800}
 .callout{border-left-color:var(--accent)}
 </style>
 <style>.cta{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:12px 20px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-weight:800;text-decoration:none}.cta:hover{filter:brightness(1.08)}.m-btn.split{padding:0;gap:0;overflow:hidden}.m-btn.split span{flex:1;align-self:stretch;display:flex;align-items:center;justify-content:center}.m-btn.split span+span{border-left:1px solid rgba(255,255,255,.4)}</style>
+<style>
+:root{--poc-bg:#F9FAFB;--poc-card:#FFFFFF;--poc-line:#E2E5E7;--poc-text-2:#5F6C74;--poc-tonal:#EDF0F1;--poc-grab:#C8CDD1;--poc-chip:#E4F2E8;--poc-chip-text:#146D37;--poc-plat:#4F5E67;--ok:#1E7F3F;--warn:#A35200;--poc-route:#C8363A}
+[data-theme=dark]{--poc-bg:#10171C;--poc-card:#182128;--poc-line:#2B3840;--poc-text-2:#91A0A8;--poc-tonal:#26323A;--poc-grab:#52616A;--poc-chip:#183426;--poc-chip-text:#7AD497;--poc-plat:#BDC8CD;--ok:#7AD497;--warn:#F5A524;--poc-route:#EA6966}
+.screen{--surface-2:var(--poc-tonal);--line:var(--poc-line);--text-2:var(--poc-text-2)}
+.xsheet{background:var(--poc-bg)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:0!important;box-shadow:0 -4px 20px rgba(21,41,55,.18)!important}
+.ios .xsheet,.ios .xs[data-view=peek] .xsheet,.ios .xs.jz[data-view] .xsheet,.ios .xs[data-view=search] .xsheet{left:0;right:0;bottom:0;border-radius:28px 28px 0 0}
+.xsheet,.xs.jz[data-view] .xsheet,.android .xsheet,.android .xs.jz[data-view] .xsheet{height:528px}
+.xs[data-view=peek] .xsheet,.android .xs[data-view=peek] .xsheet{height:104px}
+.xs[data-view=search] .xsheet,.android .xs[data-view=search] .xsheet{height:786px}
+.xgrab,.android .xgrab{width:42px;height:5px;border-radius:3px;background:var(--poc-grab);opacity:1;margin:9px auto 10px}
+.xctl,.android .xctl{bottom:544px}
+.xs[data-view=peek] .xctl,.android .xs[data-view=peek] .xctl{bottom:120px}
+.xtrip,.android .xtrip{left:10px;right:10px;bottom:540px;border-radius:20px}
+.xs[data-view=peek] .xtrip,.android .xs[data-view=peek] .xtrip{bottom:116px}
+.xs.trk:is([data-view=dep],[data-view=res],[data-view=det]) .xctl,.android .xs.trk:is([data-view=dep],[data-view=res],[data-view=det]) .xctl{bottom:612px}
+.xs.trk[data-view=peek] .xctl,.android .xs.trk[data-view=peek] .xctl{bottom:188px}
+.xs.jz[data-view] .xtrip,.android .xs.jz[data-view] .xtrip{left:0;right:0;bottom:0;height:528px;border-radius:28px 28px 0 0}
+.xs.trk.jz[data-view] .xctl,.android .xs.trk.jz[data-view] .xctl{bottom:544px}
+.sh-search,.android .sh-search{height:52px;border-radius:26px;background:var(--poc-card);border:.5px solid var(--poc-line);box-shadow:0 3px 10px rgba(21,41,55,.09);color:var(--poc-text-2);font-size:17px;font-weight:600;padding:0 16px}
+.sh-search svg{fill:var(--text)}
+.xtitle{font-size:22px;letter-spacing:-.4px;padding:2px 14px 12px}
+.xrefresh{margin-left:auto;font-size:12px;font-weight:700;color:var(--poc-chip-text);background:var(--poc-chip);border-radius:17px;padding:8px 12px}
+.pcard,.sc .pcard{margin:0 14px 10px;background:var(--poc-card);border:.5px solid var(--poc-line);border-radius:16px;padding:11px 12px 0}
+.pcard.focus{border:2px solid var(--accent);padding:10px 11px 0}
+.xstop{align-items:center;font-size:15px;font-weight:800}
+.xstop span{font-weight:600;color:var(--poc-text-2)}
+.xchev{margin-left:auto;font-style:normal;color:#829097;font-size:18px;transform:rotate(90deg)}
+.dep{gap:10px;padding:10px 0;min-height:60px;border-bottom:.5px solid var(--poc-line)}
+.dep.sel{background:none;margin:0;padding-left:0;padding-right:0}
+.dep .lb{min-width:38px;height:34px;padding:0 6px}
+.lb.tram,.lb.night{border-radius:17px}.lb.trolley{border-radius:8px}.lb.bus,.lb.regional,.lb.train{border-radius:3px}
+.lb.sm{min-width:33px;height:30px;font-size:12px}
+[data-theme=dark] .lb{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+[data-theme=dark] .lb.regional{box-shadow:inset 0 -3px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(255,255,255,.28)}
+.dep .dest b{font-weight:800}
+.dep .t b.rt{color:var(--text)}
+.dep .t .st{margin-top:3px}
+.st::before{display:none}
+.plat{color:var(--poc-plat);background:var(--poc-tonal);border-radius:5px;padding:1px 5px;margin-left:5px;font-size:12px;font-weight:600}
+.live-row .pos{color:var(--poc-text-2);margin-top:4px}
+.m-card{background:var(--poc-card);border:.5px solid var(--poc-line);border-radius:17px}
+.m-card.sel{outline:none;border:2px solid var(--accent)}
+.m-btn{height:44px;border-radius:22px;font-weight:800}
+.m-btn.tonal{background:var(--poc-tonal)}
+</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute">
@@ -965,12 +1010,19 @@ h1,h2,h3,h4{font-weight:800}
 <section id="foundations">
   <div class="eyebrow">04 · Základy</div>
   <h2>Farby Ubianu s dostatočným kontrastom</h2>
-  <p class="muted">Paleta zachováva farby Ubianu a upravuje ich kontrast. Značková zelená zostáva na plochách s tmavomodrým textom (5,6 : 1). Odkazy a biele písmo na farbe používajú tmavšie odtiene tých istých farieb. V tmavom režime sa používajú pôvodné jasné farby, ktoré na tmavom pozadí kontrast spĺňajú.</p>
+  <p class="muted">Paleta zachováva farby Ubianu a upravuje ich kontrast. Značková zelená zostáva na plochách s tmavomodrým textom (5,6 : 1). Odkazy a biele písmo na farbe používajú tmavšie odtiene tých istých farieb. V tmavom režime zostávajú farby liniek rovnaké a odznaky dostanú jemný svetlý okraj. Zelená sa zosvetlí na <code>#33B45D</code> s tmavomodrým textom a trasa jazdy na <code>#EA6966</code>.</p>
   <div class="grid g4">
     <div class="sw"><div class="chip" style="background:#33B45D;color:#152937">ubian.green</div><div class="meta"><b>#33B45D · z aplikácie</b>Značkové plochy a pás lístka, s tmavomodrým textom (5,6 : 1). Biely text na nej nie (2,7 : 1).</div></div>
     <div class="sw"><div class="chip" style="background:#1E7F3F">green.ui</div><div class="meta"><b>#1E7F3F · 5,0 : 1</b>Tlačidlá, odkazy a výber vo svetlom režime</div></div>
     <div class="sw"><div class="chip" style="background:#152937">ubian.navy</div><div class="meta"><b>#152937 · z aplikácie</b>Text, aj na zelenej</div></div>
-    <div class="sw"><div class="chip" style="background:#F4F5F7;color:#152937">canvas</div><div class="meta"><b>#F4F5F7 / #0E1013</b>Svetlé a tmavé pozadie</div></div>
+    <div class="sw"><div class="chip" style="background:#F9FAFB;color:#152937">panel</div><div class="meta"><b>#F9FAFB / #10171C</b>Pozadie panela vo svetlom a tmavom režime. Karty sú biele <code>#FFFFFF</code> / <code>#182128</code> s okrajom <code>#E2E5E7</code> / <code>#2B3840</code>.</div></div>
+  </div>
+  <h3>Stav a text</h3>
+  <div class="grid g4">
+    <div class="sw"><div class="chip" style="background:#1E7F3F">načas</div><div class="meta"><b>#1E7F3F · 5,0 : 1</b>V tmavom režime <code>#7AD497</code> (9,1 : 1)</div></div>
+    <div class="sw"><div class="chip" style="background:#A35200">+2 min</div><div class="meta"><b>#A35200 · 5,6 : 1</b>V tmavom režime <code>#F5A524</code> (8,0 : 1)</div></div>
+    <div class="sw"><div class="chip" style="background:#5F6C74">sekundárny text</div><div class="meta"><b>#5F6C74 · 5,4 : 1</b>V tmavom režime <code>#91A0A8</code> (6,1 : 1)</div></div>
+    <div class="sw"><div class="chip" style="background:#152937">odpočet</div><div class="meta"><b>#152937</b>Odpočet a dĺžka cesty sú v bežnej farbe textu, farbu má len stav.</div></div>
   </div>
   <h3>Farby druhov dopravy</h3>
   <div class="grid g3">
@@ -1004,16 +1056,16 @@ h1,h2,h3,h4{font-weight:800}
   <h3>Karta odchodov</h3>
   <div class="grid g2">
     <div class="card" style="padding:12px">
-      <div class="pcard" style="margin:0">
-        <div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span></div>
-        <div class="dep live-row sel"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
-        <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
-        <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b></div></div>
+      <div class="pcard focus" style="margin:0">
+        <div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span><i class="xchev">›</i></div>
+        <div class="dep live-row"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">Na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
+        <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">Nasleduje Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
+        <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b><span class="st ok">14:24</span></div></div>
       </div>
     </div>
     <div class="card small muted">
-      <h4 style="color:var(--text)">Formát riadku</h4>
-      <ul class="clean"><li>Linka, cieľ a nástupište. Nástupište je svetlé písmeno alebo číslo za názvom („A“, „C“, koľaj „3“).</li><li>Druhý riadok hovorí, kde je vozidlo: „na zastávke Letná · 4 zast.“ Spolu s mapou je jasné, že električka o „1 min“ je ešte dve zastávky ďaleko.</li><li>Vpravo čas a stav, napríklad „načas“ alebo „+2 min“. Bez živých dát len čas.</li><li>Ťuknutie na riadok otvorí Detail spoja s vozidlom zvýrazneným na mape.</li></ul>
+      <h4 style="color:var(--text)">Karta zastávky a riadok odchodu</h4>
+      <ul class="clean"><li>Odchody z piatich najbližších zastávok sú v kartách podľa zastávky. Hlavička karty ukazuje názov, chôdzu v minútach a šípku na zbalenie. Karta zastávky, ktorú práve ukazuje mapa, má zelený okraj.</li><li>Riadok: odznak linky, cieľ a nástupište ako malý sivý štítok za cieľom („A“, „C“, koľaj „3“).</li><li>Druhý riadok hovorí, kde je vozidlo, ako hlásenie vo vozidle: „Na zastávke Hlavná · 2 zast.“ alebo „Nasleduje Letná · 4 zast.“</li><li>Vpravo odpočet v bežnej farbe textu a pod ním „načas“ zelenou alebo „+2 min“ oranžovou. Bez živých dát je pod odpočtom plánovaný čas odchodu.</li><li>Ťuknutie na riadok otvorí Detail spoja s vozidlom zvýrazneným na mape.</li></ul>
     </div>
   </div>
 
@@ -1164,7 +1216,7 @@ h1,h2,h3,h4{font-weight:800}
 </div>
   <div class="xsheet glass">
     <div class="xgrab" data-go="dep"></div>
-    <div class="sh-head"><div class="sh-search" data-go="search"><svg width="18" height="18"><use href="#i-search"/></svg><span class="ph">Kam?</span><span class="q caret">Domov</span><svg class="mic" width="18" height="18"><use href="#i-mic"/></svg></div><span class="sh-cancel" data-go="dep">Zrušiť</span><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div><div class="sh-btn av" aria-label="Účet">DM</div></div>
+    <div class="sh-head"><div class="sh-search" data-go="search"><svg width="18" height="18"><use href="#i-search"/></svg><span class="ph">Kam?</span><span class="q caret">Domov</span></div><span class="sh-cancel" data-go="dep">Zrušiť</span><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div><div class="sh-btn av" aria-label="Účet">DM</div></div>
     <div class="xsc xsc-dep">
       <div class="xtitle">Moje miesta <span>›</span></div>
       <div class="plc">
@@ -1173,11 +1225,11 @@ h1,h2,h3,h4{font-weight:800}
         <div data-go="res"><i class="c-school">🎓</i>Škola<small>25 min</small></div>
         <div><i class="c-add">＋</i>Pridať<small>&nbsp;</small></div>
       </div>
-      <div class="xtitle">Odchody <span>›</span></div>
-      <div class="pcard xcard"><div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span></div>
-      <div class="dep live-row sel" data-go="det" style="cursor:pointer"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
-      <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
-      <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b></div></div></div>
+      <div class="xtitle">Odchody<span class="xrefresh">↻ Obnoviť</span></div>
+      <div class="pcard xcard focus"><div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span><i class="xchev">›</i></div>
+      <div class="dep live-row" data-go="det" style="cursor:pointer"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">Na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
+      <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">Nasleduje Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
+      <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b><span class="st ok">14:24</span></div></div></div>
     </div>
     <div class="xsc xsc-search">
       <div class="pl-row" style="margin:0 14px 8px"><span class="dot"></span><span class="muted">Odkiaľ</span><b>Moja poloha</b><span class="pl-swap"><svg width="16" height="16" fill="currentColor"><use href="#i-swap"/></svg></span></div>
@@ -1235,7 +1287,7 @@ h1,h2,h3,h4{font-weight:800}
     </div>
   </div>
   <div class="home-ind"></div>
-</div></div><div class="dev-cap"><b>iOS 26 · MapKit</b>Panel pláva s efektom Liquid Glass a vyhľadávanie sedí na jeho hornej hrane v dolnej polovici obrazovky. Zbalený panel sa zmení na plávajúcu kapsulu, veľký siaha od okraja po okraj.</div></div>
+</div></div><div class="dev-cap"><b>iOS 26 · MapKit</b>Panel s plnou plochou siaha od okraja po okraj a má horné rohy zaoblené na 28 px, ako v POC. Vyhľadávanie je na jeho hornej hrane.</div></div>
     <div class="dev-col"><div class="phone android"><div class="screen xs" data-view="dep">
   <div class="xmap"><svg viewBox="0 0 393 852" preserveAspectRatio="xMidYMid slice">
   <rect class="m-blk" x="20" y="90" width="80" height="70" rx="5"/><rect class="m-blk" x="140" y="80" width="110" height="80" rx="5"/><rect class="m-blk" x="290" y="90" width="90" height="70" rx="5"/>
@@ -1296,11 +1348,11 @@ h1,h2,h3,h4{font-weight:800}
         <div data-go="res"><i class="c-school">🎓</i>Škola<small>25 min</small></div>
         <div><i class="c-add">＋</i>Pridať<small>&nbsp;</small></div>
       </div>
-      <div class="xtitle">Odchody <span>›</span></div>
-      <div class="pcard xcard"><div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span></div>
-      <div class="dep live-row sel" data-go="det" style="cursor:pointer"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
-      <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">na zastávke Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
-      <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b></div></div></div>
+      <div class="xtitle">Odchody<span class="xrefresh">↻ Obnoviť</span></div>
+      <div class="pcard xcard focus"><div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span><i class="xchev">›</i></div>
+      <div class="dep live-row" data-go="det" style="cursor:pointer"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">Na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
+      <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">Nasleduje Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
+      <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b><span class="st ok">14:24</span></div></div></div>
     </div>
     <div class="xsc xsc-search">
       <div class="pl-row" style="margin:0 14px 8px"><span class="dot"></span><span class="muted">Odkiaľ</span><b>Moja poloha</b><span class="pl-swap"><svg width="16" height="16" fill="currentColor"><use href="#i-swap"/></svg></span></div>
@@ -1358,7 +1410,7 @@ h1,h2,h3,h4{font-weight:800}
     </div>
   </div>
   <div class="a-gest"></div>
-</div></div><div class="dev-cap"><b>Android · MapLibre</b>Štandardný spodný panel ako v Google Maps: od okraja po okraj, s úchytom, vyhľadávacím poľom s avatarom a tlačidlom peňaženky. Peňaženka sa otvára na celú obrazovku.</div></div>
+</div></div><div class="dev-cap"><b>Android · MapLibre</b>Rovnaký panel ako na iOS, vyhľadávacie pole s avatarom a tlačidlo peňaženky. Peňaženka sa otvára na celú obrazovku.</div></div>
   </div>
   <p class="small muted" style="text-align:center">Vyberte stav hore, ťuknite do telefónu alebo ich nechajte striedať. Oba telefóny ukazujú vždy ten istý stav. Po ťuknutí na „Sledovať“ sa jazda sleduje, kým neťuknete na „Ukončiť“.</p>
 </section>
