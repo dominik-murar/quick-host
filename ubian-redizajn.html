@@ -956,7 +956,7 @@ h1,h2,h3,h4{font-weight:800}
     <tr><td>Prepínanie medzi spojeniami a odchodmi</td><td>Odchody sú predvolený obsah panela, vyhľadávanie je na jeho hrane.</td></tr>
     <tr><td>Tlačidlo vyhľadávania, ktoré vyzerá neaktívne</td><td>Výber cieľa rovno spustí vyhľadávanie.</td></tr>
     <tr><td>Výber mesta zo zoznamu</td><td>Mesto podľa polohy a trasy, ručná zmena ako možnosť.</td></tr>
-    <tr><td>7 kombinácií druhov dopravy</td><td>3 nezávislé prepínače vo Filtroch, zapnúť sa dá ľubovoľná kombinácia.</td></tr>
+    <tr><td>7 kombinácií druhov dopravy</td><td>3 nezávislé prepínače vo Filtroch (Vlaky · Autobusy · MHD). Zapnúť sa dá jeden, dva aj všetky tri, nejde o výber jednej možnosti.</td></tr>
     <tr><td>AI agent ako samostatný chat</td><td>Požiadavka bežnou vetou priamo vo vyhľadávaní.</td></tr>
   </table></div>
 </section>
@@ -1001,7 +1001,7 @@ h1,h2,h3,h4{font-weight:800}
   <div class="eyebrow">05 · Komponenty</div>
   <h2>Hlavné komponenty</h2>
 
-  <h3>Riadok odchodu</h3>
+  <h3>Karta odchodov</h3>
   <div class="grid g2">
     <div class="card" style="padding:12px">
       <div class="pcard" style="margin:0">
@@ -1017,18 +1017,17 @@ h1,h2,h3,h4{font-weight:800}
     </div>
   </div>
 
-  <h3>Plánovač s bežnou vetou</h3>
+  <h3>Moje miesta</h3>
   <div class="grid g2">
-    <div class="card">
-      <div class="planner static">
-        <div class="pl-row focus"><svg width="16" height="16" fill="var(--accent)"><use href="#i-spark"/></svg><b class="caret">zajtra ráno do Prešova bez prestupu</b></div>
-        <div class="pl-parse"><span class="chipx blue">Odkiaľ: Moja poloha</span><span class="chipx blue">Kam: Prešov</span><span class="chipx blue">Zajtra · odchod 6:00–9:00</span><span class="chipx blue">Bez prestupu</span></div>
-        <div class="pl-chips"><span class="chipx">Odchod ▾</span><span class="chipx">Filtre</span></div>
-      </div>
-    </div>
+    <div class="card"><div class="plc" style="padding:0">
+      <div><i class="c-home">🏠</i>Domov<small>58 min</small></div>
+      <div><i class="c-work">💼</i>Práca<small>Tu ste</small></div>
+      <div><i class="c-school">🎓</i>Škola<small>25 min</small></div>
+      <div><i class="c-add">＋</i>Pridať<small>&nbsp;</small></div>
+    </div></div>
     <div class="card small muted">
-      <h4 style="color:var(--text)">AI agent vo vyhľadávaní</h4>
-      <ul class="clean"><li>To isté pole prijme názov zastávky, uložené miesto aj celú vetu.</li><li>Model nevedie rozhovor. Vetu prevedie na vyplnený formulár a výsledok ukáže ako čipy, ktoré sa dajú jedným ťuknutím opraviť.</li><li>Vlaky, autobusy a MHD sú vo Filtroch tri nezávislé prepínače. Zapnúť sa dá jeden, dva aj všetky tri, nejde o výber jednej možnosti.</li><li>Do modelu ide len text požiadavky, bez údajov o používateľovi. Spojenia hľadá vyhľadávač Ubianu.</li></ul>
+      <h4 style="color:var(--text)">Skratky do cieľa</h4>
+      <ul class="clean"><li>Štart je takmer vždy aktuálna poloha, preto skratka ukazuje, ako dlho trvá cesta odtiaľto, od dverí k dverám.</li><li>Ťuknutie ukáže výsledky. Pri mieste, kde práve ste, je „Tu ste“.</li><li>Cieľ môže byť aj v inom meste, napríklad práca v Košiciach pri bývaní v Prešove.</li></ul>
     </div>
   </div>
 
@@ -1061,7 +1060,7 @@ h1,h2,h3,h4{font-weight:800}
     </div>
   </div>
 
-  <h3>Pásik jazdy a Jazda</h3>
+  <h3>Aktuálna jazda</h3>
   <div class="grid g2">
     <div class="card">
       <div class="trip">
@@ -1091,17 +1090,18 @@ h1,h2,h3,h4{font-weight:800}
     </div>
   </div>
 
-  <h3>Moje miesta</h3>
+  <h3>NLP plánovanie</h3>
   <div class="grid g2">
-    <div class="card"><div class="plc" style="padding:0">
-      <div><i class="c-home">🏠</i>Domov<small>58 min</small></div>
-      <div><i class="c-work">💼</i>Práca<small>Tu ste</small></div>
-      <div><i class="c-school">🎓</i>Škola<small>25 min</small></div>
-      <div><i class="c-add">＋</i>Pridať<small>&nbsp;</small></div>
-    </div></div>
+    <div class="card">
+      <div class="planner static">
+        <div class="pl-row focus"><svg width="16" height="16" fill="var(--accent)"><use href="#i-spark"/></svg><b class="caret">zajtra ráno do Prešova bez prestupu</b></div>
+        <div class="pl-parse"><span class="chipx blue">Odkiaľ: Moja poloha</span><span class="chipx blue">Kam: Prešov</span><span class="chipx blue">Zajtra · odchod 6:00–9:00</span><span class="chipx blue">Bez prestupu</span></div>
+        <div class="pl-chips"><span class="chipx">Odchod ▾</span><span class="chipx">Filtre</span></div>
+      </div>
+    </div>
     <div class="card small muted">
-      <h4 style="color:var(--text)">Skratky do cieľa</h4>
-      <ul class="clean"><li>Štart je takmer vždy aktuálna poloha, preto skratka ukazuje, ako dlho trvá cesta odtiaľto, od dverí k dverám.</li><li>Ťuknutie ukáže výsledky. Pri mieste, kde práve ste, je „Tu ste“.</li><li>Cieľ môže byť aj v inom meste, napríklad práca v Košiciach pri bývaní v Prešove.</li></ul>
+      <h4 style="color:var(--text)">Vízia pre AI plánovač</h4>
+      <ul class="clean"><li>NLP, teda spracovanie prirodzeného jazyka, má v návrhu najnižšiu prioritu. Je to skôr vízia, ako do vyhľadávania začleniť dnešného AI agenta.</li><li>To isté pole prijme názov zastávky, uložené miesto aj celú vetu.</li><li>Model nevedie rozhovor. Vetu prevedie na vyplnený formulár a výsledok ukáže ako čipy, ktoré sa dajú jedným ťuknutím opraviť.</li><li>Do modelu ide len text požiadavky, bez údajov o používateľovi. Spojenia hľadá vyhľadávač Ubianu.</li></ul>
     </div>
   </div>
 </section>
