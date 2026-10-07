@@ -831,10 +831,10 @@ h1,h2,h3,h4{font-weight:800}
 </svg>
 
 <header class="top"><div class="top-in">
-  <div class="brand"><span class="wordmark">ubian<i></i></span><span class="tag">Návrh redizajnu</span></div>
+  <div class="brand"><span class="tag">Návrh redizajnu · Ubian</span></div>
   <nav>
     <a href="#today">Dnes</a><a href="#principles">Princípy</a><a href="#ia">Štruktúra</a><a href="#foundations">Základy</a>
-    <a href="#components">Komponenty</a><a href="#screens">Obrazovky</a><a href="#roadmap">Postup</a>
+    <a href="#components">Komponenty</a><a href="#screens">Obrazovky</a>
   </nav>
   <button class="toggle" id="themeBtn">◐ Tmavý</button>
 </div></header>
@@ -843,13 +843,13 @@ h1,h2,h3,h4{font-weight:800}
 <div class="hero">
   <div>
     <div class="eyebrow">Návrh redizajnu · Ubian</div>
-    <h1>Celá doprava Slovenska.<br><em>Jedna pokojná aplikácia.</em></h1>
+    <h1>UBIAN<br><em>Na jeden dotyk.</em></h1>
     <p>Ubian už dnes robí to, čo žiadna iná slovenská aplikácia: cestovné poriadky a polohy vozidiel vlakov, regionálnych autobusov a MHD v približne 55 mestách, k tomu kredit, dopravné karty, lístky, študentské preukazy, parkovanie a bikesharing. Návrh to všetko zachováva a stavia aplikáciu okolo tých pár sekúnd, ktoré v nej ľudia naozaj strávia.</p>
     <div class="pill-row">
       <span class="lb tram">2</span><span class="lb trolley">38</span><span class="lb bus">23</span><span class="lb regional">701</span><span class="lb train">Os 8813</span><span class="lb night">N1</span>
     </div>
     <a class="cta" href="https://spoj.vercel.app" target="_blank" rel="noreferrer">Vyskúšať funkčný POC →</a>
-    <p class="small muted" style="margin-top:16px">Nevyžiadaný koncept, bez prepojenia s Ubianom. Farby vychádzajú z dnešnej aplikácie: zelená, tmavomodrá a oranžové, modré a červené ikony druhov dopravy. Logo je len zástupné.</p>
+    <p class="small muted" style="margin-top:16px">Nevyžiadaný koncept, bez prepojenia s Ubianom. Farby vychádzajú z dnešnej aplikácie: zelená, tmavomodrá a oranžové, modré a červené ikony druhov dopravy.</p>
   </div>
   <div class="hero-art ub-art">
     <svg viewBox="0 0 400 360" preserveAspectRatio="xMidYMid slice">
@@ -881,13 +881,13 @@ h1,h2,h3,h4{font-weight:800}
       </ul>
     </div>
     <div class="card">
-      <h4><span class="chipx warn">Kde to drhne</span></h4>
+      <h4><span class="chipx warn">Príležitosti</span></h4>
       <ul class="clean small muted">
         <li><b>Mesto sa vyberá ručne</b> zo zoznamu približne 55 položiek „MHD &lt;mesto&gt;“, hoci telefón vie, kde ste.</li>
-        <li><b>Druh dopravy je jedna zo 7 kombinácií</b> („Vlaky / Autobusy / MHD“, „Vlaky / MHD“…). To isté zvládnu tri prepínače.</li>
+        <li><b>Druh dopravy je jedna zo 7 kombinácií</b> („Vlaky / Autobusy / MHD“, „Vlaky / MHD“…). To isté zvládnu tri nezávislé prepínače, z ktorých sa dá zapnúť ľubovoľná kombinácia.</li>
         <li><b>Nákup je rozdelený</b> na e-shop, košík, peňaženku, kartu a preukaz. Kto chce niečo kúpiť, musí poznať vnútorný model Ubianu.</li>
-        <li><b>Mapa so živými polohami</b>, najcennejšie dáta Ubianu, je na samostatnej obrazovke, dve ťuknutia ďaleko.</li>
-        <li><b>Meškania vlakov</b> sú samostatná stránka a <b>AI agent</b> samostatný chat, namiesto toho, aby boli súčasťou každého spojenia a vyhľadávania.</li>
+        <li><b>Mapa so živými polohami</b>, najcennejšie dáta Ubianu, je na samostatnej obrazovke, o ťuknutie ďalej.</li>
+        <li><b>AI agent</b> je samostatný chat namiesto toho, aby bol súčasťou vyhľadávania.</li>
       </ul>
     </div>
   </div>
@@ -925,18 +925,18 @@ h1,h2,h3,h4{font-weight:800}
 <section id="ia">
   <div class="eyebrow">03 · Štruktúra</div>
   <h2>Jedna mapa. Jeden panel. Jedno tlačidlo peňaženky.</h2>
-  <p class="muted">Živé polohy vozidiel sú najcennejšie dáta Ubianu, no dnes sú dve ťuknutia ďaleko. V návrhu je mapa samotnou aplikáciou: <b>živá mapa nikdy nezmizne z obrazovky</b> a všetko ostatné leží na nej v jednom vysúvacom paneli. Bez záložiek, a teda bez prepínania medzi nimi.</p>
+  <p class="muted">Živé polohy vozidiel sú najcennejšie dáta Ubianu, no dnes sú na samostatnej obrazovke. V návrhu je mapa samotnou aplikáciou: <b>živá mapa nikdy nezmizne z obrazovky</b> a všetko ostatné leží na nej v jednom vysúvacom paneli. Bez záložiek, a teda bez prepínania medzi nimi.</p>
   <div class="grid g4">
     <div class="card"><span class="tag red">Plátno</span><h4 style="margin-top:8px">Živá mapa</h4><p class="small muted" style="margin:0">Vozidlá, vaše zastávky a miesta, bikesharing. Mapa ukazuje to, čo práve zobrazuje panel.</p></div>
     <div class="card"><span class="tag blue">Predvolené</span><h4 style="margin-top:8px">Odchody v paneli</h4><p class="small muted" style="margin:0">Najbližšie zastávky a tie, ktoré si pripnete. Mapa ukazuje vozidlá týchto odchodov, ako sa naozaj blížia.</p></div>
-    <div class="card"><span class="tag">Na požiadanie</span><h4 style="margin-top:8px">Vyhľadávanie na hrane panela</h4><p class="small muted" style="margin:0">„Kam a kedy?“ sedí na hornej hrane panela ako v Apple Maps. Ťuknutím sa panel rozšíri na plánovač.</p></div>
+    <div class="card"><span class="tag">Na požiadanie</span><h4 style="margin-top:8px">Vyhľadávanie na hrane panela</h4><p class="small muted" style="margin:0">„Kam?“ sedí na hornej hrane panela ako v Apple Maps. Ťuknutím sa panel rozšíri na plánovač.</p></div>
     <div class="card"><span class="tag">Vždy 1 ťuknutie</span><h4 style="margin-top:8px">🎫 Peňaženka</h4><p class="small muted" style="margin:0">Samostatné tlačidlo vedľa vyhľadávania otvorí peňaženku na celú obrazovku. Pri kontrole lístkov netreba nič hľadať.</p></div>
   </div>
 
   <h3>Panel</h3>
   <div class="card small muted">
     <ul class="clean">
-      <li><b>Tri výšky ako v Apple Maps</b>: <i>zbalený</i> (len hlavička, celá mapa), <i>stredný, predvolený</i> (skratky Kam a Odchody z najbližších zastávok) a <i>veľký</i> (celý zoznam alebo plánovač).</li>
+      <li><b>Tri výšky ako v Apple Maps</b>: <i>zbalený</i> (104 bodov, len vyhľadávacie pole nad celou mapou), <i>stredný, predvolený</i> (62 % viditeľnej výšky, najviac 560 bodov, s Odchodmi z najbližších zastávok) a <i>veľký</i> (celá výška, 12 bodov pod horným bezpečným okrajom, pre celý zoznam alebo plánovač). Jazda sa otvára v strednej výške, takže mapa s vozidlom zostáva hore.</li>
       <li><b>Obsah sa nahrádza, história zostáva</b>: otvorenie niečoho nahradí obsah panela a zatvorenie vráti predchádzajúci v pôvodnej výške. Panel je vždy len jeden.</li>
       <li><b>Sledovaná jazda</b> pláva ako pásik nad panelom v každom stave. Ťuknutím sa z neho stane Jazda, zmenšením sa vráti späť.</li>
     </ul>
@@ -950,8 +950,7 @@ h1,h2,h3,h4{font-weight:800}
     <tr><td>Prepínač Spojenia | Odchody</td><td>Odchody sú predvolený obsah panela, vyhľadávanie sedí na jeho hrane</td></tr>
     <tr><td>Tlačidlo Hľadať, ktoré vyzerá neaktívne</td><td>Výber cieľa rovno vyhľadáva</td></tr>
     <tr><td>Výber mesta z približne 55 položiek</td><td>Mesto podľa polohy a trasy, „Mesto: Košice ▾“ len na zmenu</td></tr>
-    <tr><td>7 kombinácií druhov dopravy</td><td>3 prepínače vo Filtroch: Vlaky · Autobusy · MHD</td></tr>
-    <tr><td>Stránka Meškania vlakov</td><td>Meškanie v každom riadku, výsledku aj Jazde</td></tr>
+    <tr><td>7 kombinácií druhov dopravy</td><td>3 nezávislé prepínače vo Filtroch (Vlaky · Autobusy · MHD), zapnúť sa dá ľubovoľná kombinácia</td></tr>
     <tr><td>AI agent ako samostatný chat</td><td>Zadanie bežnou vetou v tom istom vyhľadávacom poli</td></tr>
   </table></div>
 </section>
@@ -964,7 +963,7 @@ h1,h2,h3,h4{font-weight:800}
   <div class="grid g4">
     <div class="sw"><div class="chip" style="background:#33B45D;color:#152937">ubian.green</div><div class="meta"><b>#33B45D · z aplikácie</b>Značkové plochy a pás lístka, s tmavomodrým textom (5,6 : 1). Nikdy nie biely text (2,7 : 1).</div></div>
     <div class="sw"><div class="chip" style="background:#1E7F3F">green.ui</div><div class="meta"><b>#1E7F3F · 5,0 : 1</b>Tlačidlá, odkazy a výber vo svetlom režime</div></div>
-    <div class="sw"><div class="chip" style="background:#152937">ubian.navy</div><div class="meta"><b>#152937 · z aplikácie</b>Text, logo a text na zelenej</div></div>
+    <div class="sw"><div class="chip" style="background:#152937">ubian.navy</div><div class="meta"><b>#152937 · z aplikácie</b>Text a text na zelenej</div></div>
     <div class="sw"><div class="chip" style="background:#F4F5F7;color:#152937">canvas</div><div class="meta"><b>#F4F5F7 / #0E1013</b>Svetlé a tmavé pozadie</div></div>
   </div>
   <h3>Druhy dopravy, ako ich pozná Ubian</h3>
@@ -1023,7 +1022,7 @@ h1,h2,h3,h4{font-weight:800}
     </div>
     <div class="card small muted">
       <h4 style="color:var(--text)">AI agent ako súčasť vyhľadávania</h4>
-      <ul class="clean"><li>To isté pole prijme „Hlavná“, „Domov“ aj celú vetu. Model nečetuje, len <b>vyplní formulár</b> ako upraviteľné čipy.</li><li>Čipy ukazujú, ako vetu pochopil, a dajú sa opraviť jedným ťuknutím.</li><li>Tri prepínače (Vlaky · Autobusy · MHD) vo <b>Filtroch</b> nahrádzajú 7 kombinácií druhov dopravy.</li><li>Do modelu nejdú osobné údaje. Spracovaná požiadavka ide do vyhľadávača Ubianu.</li></ul>
+      <ul class="clean"><li>To isté pole prijme „Hlavná“, „Domov“ aj celú vetu. Model nečetuje, len <b>vyplní formulár</b> ako upraviteľné čipy.</li><li>Čipy ukazujú, ako vetu pochopil, a dajú sa opraviť jedným ťuknutím.</li><li>Tri nezávislé prepínače (Vlaky · Autobusy · MHD) vo <b>Filtroch</b> nahrádzajú 7 kombinácií druhov dopravy. Je to <b>viacnásobný výber</b>, nie výber jednej možnosti: zapnúť sa dá jeden, dva aj všetky tri.</li><li>Do modelu nejdú osobné údaje. Spracovaná požiadavka ide do vyhľadávača Ubianu.</li></ul>
     </div>
   </div>
 
@@ -1042,10 +1041,17 @@ h1,h2,h3,h4{font-weight:800}
         <div class="op rc-more">Arriva · bez prestupu</div></div><span class="rc-go" aria-hidden="true">›</span></div>
         <div class="rc-cta rc-more"><div class="m-btn tonal">Sledovať</div><div class="m-btn">2,90 €</div></div>
       </div>
+    
+      <div class="m-card rcard" data-rc="2">
+        <div class="rc-h"><b class="rc-t">14:05 – 14:21</b><b>16 min</b></div>
+        <div class="rc-top"><div class="rc-main"><div class="legs"><span class="lb tram sm">4</span></div>
+        <div class="op">DPMK · bez prestupu</div></div><span class="rc-go" aria-hidden="true">›</span></div>
+        <div class="rc-cta"><div class="m-btn tonal">Sledovať</div><div class="m-btn">✓ Platí · +1 osoba 1,10 €</div></div>
+      </div>
     </div>
     <div class="card small muted">
       <h4 style="color:var(--text)">Ukázať, sledovať, kúpiť</h4>
-      <ul class="clean"><li><b>Prvé ťuknutie vyberie</b>: trasa sa nakreslí na mapu a karta ukáže úseky, dopravcov a dve akcie. Druhé ťuknutie otvorí <b>Detail spoja</b>.</li><li><b>Cena je tlačidlo nákupu</b>: „3,40 €“ hovorí, čo ťuknutie urobí, takže netreba „Kúpiť“. Z výsledkov kupuje celú cestu, z odchodov jednorazový lístok na linku.</li><li>Detail opakuje obe akcie, takže sa netreba vracať.</li></ul>
+      <ul class="clean"><li><b>Prvé ťuknutie vyberie</b>: trasa sa nakreslí na mapu a karta ukáže úseky, dopravcov a dve akcie. Druhé ťuknutie otvorí <b>Detail spoja</b>.</li><li><b>Cena je tlačidlo nákupu</b>: „3,40 €“ hovorí, čo ťuknutie urobí, takže netreba „Kúpiť“. Z výsledkov kupuje celú cestu, z odchodov jednorazový lístok na linku.</li><li><b>Platný predplatný lístok</b>: ak už máte lístok, ktorý pokrýva celú trasu, tlačidlo namiesto ceny ukáže „✓ Platí · +1 osoba 1,10 €“. Hneď vidíte, že nič kupovať netreba, a jedným ťuknutím dokúpite jednorazový lístok pre spolucestujúceho.</li><li>Detail opakuje obe akcie, takže sa netreba vracať.</li></ul>
     </div>
   </div>
 
@@ -1152,7 +1158,7 @@ h1,h2,h3,h4{font-weight:800}
 </div>
   <div class="xsheet glass">
     <div class="xgrab" data-go="dep"></div>
-    <div class="sh-head"><div class="sh-search" data-go="search"><svg width="18" height="18"><use href="#i-search"/></svg><span class="ph">Kam a kedy?</span><span class="q caret">Domov</span><svg class="mic" width="18" height="18"><use href="#i-mic"/></svg></div><span class="sh-cancel" data-go="dep">Zrušiť</span><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div><div class="sh-btn av" aria-label="Účet">DM</div></div>
+    <div class="sh-head"><div class="sh-search" data-go="search"><svg width="18" height="18"><use href="#i-search"/></svg><span class="ph">Kam?</span><span class="q caret">Domov</span><svg class="mic" width="18" height="18"><use href="#i-mic"/></svg></div><span class="sh-cancel" data-go="dep">Zrušiť</span><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div><div class="sh-btn av" aria-label="Účet">DM</div></div>
     <div class="xsc xsc-dep">
       <div class="xtitle">Kam <span>›</span></div>
       <div class="plc">
@@ -1275,7 +1281,7 @@ h1,h2,h3,h4{font-weight:800}
 </div>
   <div class="xsheet glass">
     <div class="xgrab" data-go="dep"></div>
-    <div class="sh-head"><div class="sh-search" data-go="search"><svg width="20" height="20"><use href="#i-search"/></svg><span class="ph">Kam a kedy?</span><span class="q caret">Domov</span><span class="av-in">DM</span></div><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div></div>
+    <div class="sh-head"><div class="sh-search" data-go="search"><svg width="20" height="20"><use href="#i-search"/></svg><span class="ph">Kam?</span><span class="q caret">Domov</span><span class="av-in">DM</span></div><div class="sh-btn" data-go="wallet" aria-label="Peňaženka"><svg width="22" height="22"><use href="#i-wallet"/></svg><i class="badge"></i></div></div>
     <div class="xsc xsc-dep">
       <div class="xtitle">Kam <span>›</span></div>
       <div class="plc">
@@ -1353,18 +1359,6 @@ h1,h2,h3,h4{font-weight:800}
 
 </section>
 
-<!-- ============ POSTUP ============ -->
-<section id="roadmap">
-  <div class="eyebrow">07 · Postup</div>
-  <h2>Hodnota čo najskôr, predaj opatrne</h2>
-  <div class="tbl-wrap"><table>
-    <tr><th>Fáza</th><th>Rozsah</th><th>Overí</th><th>Náročnosť</th></tr>
-    <tr><td><b>0 · Prototyp</b></td><td><a href="https://spoj.vercel.app" target="_blank" rel="noreferrer">Funkčný POC</a> vyvinutý ako PWA na živých dátach Ubianu: Odchody, plánovač a Jazda</td><td>Že nová štruktúra funguje na reálnych dátach</td><td>Hotové</td></tr>
-    <tr><td><b>1 · Odchody a spojenia</b></td><td>Natívne iOS a Android: miesta, automatické mesto, plánovač s bežnou vetou, živá mapa</td><td>Denné používanie a návratnosť</td><td>~2–3 mesiace</td></tr>
-    <tr><td><b>2 · Jazda</b></td><td>Pásik jazdy, Jazda, Live Activities / Live Updates, widgety</td><td>Zapojenie pri každej jazde</td><td>~1–2 mesiace</td></tr>
-    <tr><td><b>3 · Peňaženka</b></td><td>Jedna peňaženka: kredit, virtuálna a čipová karta, lístky, preukazy, parkovanie, nákup z kontextu</td><td>Konverzia a menej podpory</td><td>~3 mesiace, platby migrovať postupne</td></tr>
-  </table></div>
-</section>
 </main>
 <footer>Návrh redizajnu Ubian · Nevyžiadaný koncept, autor Dominik Murar, bez prepojenia s Ubianom a bez jeho schválenia · Stav k 3. 10. 2026</footer>
 <script>
