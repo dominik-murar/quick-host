@@ -957,7 +957,13 @@ h1,h2,h3,h4{font-weight:800}
       <ul class="clean">
         <li><b>iOS 26</b>: MapKit with a persistent <code>.sheet</code> using <code>presentationDetents([.height(86), .medium, .large])</code> and <code>.medium</code> selected by default and <code>presentationBackgroundInteraction(.enabled)</code>, so the map stays interactive behind it. Liquid Glass sheet; Peňaženka is a <code>.fullScreenCover</code>. This is the Apple Maps / Find My model.</li>
         <li><b>Android</b>: MapLibre with <code>BottomSheetScaffold</code> (peek height, drag handle), the M3 <code>SearchBar</code> in the sheet (avatar inside, like Google Maps), and Peňaženka as a full-screen dialog. Predictive back collapses the sheet one level at a time.</li>
-        <li><b>Nastavenia</b> holds the defaults: the transport modes and the start view. <b>Default view</b> is just the default sheet state: <i>Odchody (medium)</i>, <i>Mapa (peek)</i> or <i>Hľadať (focused field)</i>.</li>
+        <li><b>Nastavenia</b> holds the defaults:
+          <ul>
+            <li><b>Transport modes</b>: Vlaky · Autobusy · MHD.</li>
+            <li><b>Default view</b>, which is just the default sheet state: <i>Odchody (medium)</i>, <i>Mapa (peek)</i> or <i>Hľadať (focused field)</i>.</li>
+            <li><b>Timeline times</b> for delayed rides in Detail spoja and Jazda: <i>scheduled</i>, <i>estimated</i> or <i>both</i>. The default is both: the scheduled time keeps its place and the estimate sits below it, in the warning colour when late.</li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
