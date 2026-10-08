@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spoj — repo structure &amp; testing proposal</title>
+<style>
+:root{--bg:#fbfbfa;--fg:#1d1f21;--muted:#5f6368;--surface:#f0f1f3;--border:#dadce0;--accent:#c4122f}
+@media (prefers-color-scheme: dark){:root{--bg:#121315;--fg:#e8eaed;--muted:#9aa0a6;--surface:#1e2023;--border:#33363b;--accent:#ff5a6e}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:860px;margin:0 auto;padding:28px 20px 60px}h1{font-size:1.7rem;margin:.2em 0}h2{margin-top:2em;border-bottom:1px solid var(--border);padding-bottom:.3em;font-size:1.3rem}
+h3{font-size:1.05rem;margin-top:1.4em}.sub{color:var(--muted)}a{color:var(--accent)}
+pre{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;font-size:.85rem;line-height:1.45}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em}p code,li code,td code{background:var(--surface);padding:1px 5px;border-radius:4px}
+table{width:100%;border-collapse:collapse;font-size:.92rem;margin:12px 0}th,td{border-bottom:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}th{color:var(--muted);font-weight:600}
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin:14px 0}
+@media (max-width:640px){body{font-size:15px}main{padding:18px 14px 40px}h1{font-size:1.4rem}pre{font-size:.75rem}
+table,thead,tbody,tr,td{display:block}thead{display:none}tr{border:1px solid var(--border);border-radius:8px;margin:10px 0;padding:6px}td{border:0;padding:4px 6px}td::before{content:attr(data-label);display:block;color:var(--muted);font-size:.78rem;font-weight:600}}
+</style></head><body><main>
+<h1>Spoj — repo structure &amp; testing proposal</h1>
+<p class="sub">Splitting the 2,288-line <code>app/index.tsx</code> into feature modules with a pure, unit-tested domain core. Proposal — nothing changed yet.</p>
+
+<h2>Where it stands</h2>
+<table><thead><tr><th>File</th><th>Lines</th><th>What's inside</th></tr></thead><tbody>
+<tr><td data-label="File"><code>app/index.tsx</code></td><td data-label="Lines">2,288</td><td data-label="What's inside">Screen orchestrator (~550 lines, ~28 <code>useState</code>s), ~25 components, ~90 pure helpers (formatting, ride progress, route splitting, map-stop merging), sheet gestures, 280 lines of styles.</td></tr>
+<tr><td data-label="File"><code>src/useTransitData.ts</code></td><td data-label="Lines">558</td><td data-label="What's inside">One hook fetching vehicles, departures, stops, trip stops, routes and connections; plus stop search and pure geo/region helpers.</td></tr>
+<tr><td data-label="File"><code>components/LiveMap.web.tsx</code></td><td data-label="Lines">569</td><td data-label="What's inside">MapLibre wiring plus pure GeoJSON builders, Chaikin smoothing, canvas stop images.</td></tr>
+<tr><td data-label="File"><code>app/api/ubian+api.ts</code></td><td data-label="Lines">142</td><td data-label="What's inside">Allow-listed proxy; validation and date formatting inline.</td></tr>
+</tbody></table>
+<div class="callout">Already duplicated across files: <code>normalizeStopKey</code>, <code>coordinateDistance</code>, <code>modeColor</code>. That's the clearest sign the domain logic needs one home.</div>
+
+<h2>Principles</h2>
+<ul>
+<li><strong><code>app/</code> holds routes only.</strong> Every route file is a thin entry point (expo-router convention); no logic.</li>
+<li><strong>Pure core, thin React shell.</strong> Anything that doesn't need React goes into <code>src/domain</code> as plain TS. That's where most of the logic lives and most of the tests go.</li>
+<li><strong>Group by feature, not by kind.</strong> A feature folder holds its components, hooks and styles. Shared UI primitives go in <code>src/ui</code>.</li>
+<li><strong>Top-down files.</strong> Each file opens with its exported orchestrator; helpers follow (your AGENTS.md rule, already followed in most files).</li>
+<li><strong>One-way dependencies:</strong> <code>features → data → api</code>, and everything may import <code>domain</code>. <code>domain</code> imports nothing from React or the network.</li>
+</ul>
+
+<h2>Proposed tree</h2>
+<pre><code>app/                         # expo-router: routes only
+  _layout.tsx
+  +html.tsx
+  index.tsx                  # export { TransitScreen as default } from '@/src/features/transit'
+  api/ubian+api.ts           # parse request → src/server/ubian → respond
+api/index.ts                 # Vercel adapter (unchanged)
+
+src/
+  domain/                    # pure TS, no React — the unit-test core
+    geo.ts                   # coordinateDistance, walkingMinutes (one copy)
+    stops.ts                 # stopName, platformStopName, normalizeStopKey, autocomplete labels
+    departures.ts            # departureKey, expectedDeparture, departureDelay, groupByStop
+    ride.ts                  # entry/exit stop, rideProgress, ridePosition, rideInstruction
+    journey.ts               # journeyStations, legSelection, hasTransitTrip, frames
+    routes.ts                # splitRoute, tripRouteLines, chaikin smoothing
+    mapStops.ts              # buildMapStops, mergeMapStop, stopKindPriority
+    lines.ts                 # lineShape, modeColor
+    format.ts                # formatMinutes/Clock, slovakCount, punctuality, delayStatus
+    types.ts                 # ConnectionSelection, TrackedRide, Destination, StopRange
+
+  api/                       # client side of the proxy
+    client.ts                # getUbian, postUbian, UbianError
+    types.ts                 # Ubian response shapes (today's src/types.ts)
+
+  server/
+    ubian.ts                 # resource allow-list, isConnectionSearch, formatUbianDate
+
+  data/                      # React hooks that fetch; composed, not monolithic
+    useTransitData.ts        # composes the hooks below (same public shape)
+    useVehicles.ts
+    useDepartures.ts
+    useTripDetails.ts        # trip stops + route cache
+    useConnections.ts
+    useStopSearch.ts
+    region.ts                # bufferedMapRegion, regionCoversViewport (pure)
+
+  features/
+    transit/                 # the screen orchestrator
+      TransitScreen.tsx
+      screenState.ts         # reducer + discriminated-union state (pure)
+      backSteps.ts           # drawerBackSteps (pure)
+    sheet/                   # Sheet, SheetScroll, usePullHandoff, sheetStages.ts (pure)
+    departures/              # Departures, StopHeading, DepartureRow
+    search/                  # SearchHeader, SearchField, SearchResults, StopSuggestions, OriginPicker
+    journey/                 # JourneyResults, JourneyDetails, JourneyLeg, JourneyActions, ConnectionDetails
+    ride/                    # LiveRide, RideStops, useRideCloseDrag
+    map/                     # LiveMap(.web).tsx, layers.ts (GeoJSON builders), stopImages.ts, CompassIcon
+    proposal/                # proposal.ts, useProposalNote
+
+  ui/                        # shared primitives
+    LineBadge.tsx  TripTimeline.tsx  LoadingRows.tsx  NavigationIcon.tsx
+    theme/                   # tokens.ts, createThemedStyles.ts (light + dark overrides)
+
+  platform/                  # device/environment hooks
+    useBackHandler.ts  useColorScheme.ts  useCurrentLocation.ts  useViewport.ts
+
+  test/
+    fixtures/                # captured Ubian responses (JSON)
+    factories.ts             # typed builders: aStop(), aVehicle(), aTripStop()…</code></pre>
+
+<h3>Calls worth making explicit</h3>
+<ul>
+<li><strong>Screen state as a reducer.</strong> The orchestrator's ~28 <code>useState</code>s allow impossible combinations (e.g. <code>mode: 'departures'</code> with a selected journey). A discriminated union removes those states, and the transitions become pure functions you can test:
+<pre><code>type Screen =
+  | { mode: 'departures'; focusedStop: DepartureItem | null }
+  | { mode: 'search'; query: string }
+  | { mode: 'results'; destination: Stop; selectedUid: string | null }
+  | { mode: 'details'; selection: ConnectionSelection; backTo: 'departures' | 'results' };</code></pre>
+Animated values and gesture refs stay as local hook state in <code>sheet/</code> and <code>ride/</code>.</li>
+<li><strong>Styles stay with their components.</strong> Shared tokens go in <code>ui/theme/tokens.ts</code>. Each component file defines its own light styles plus dark overrides through one <code>createThemedStyles(light, dark)</code> helper, replacing the single 280-line sheet.</li>
+<li><strong><code>components/</code> goes away.</strong> <code>LiveMap</code> moves into <code>features/map</code>. The <code>.web.tsx</code> platform-extension split still works there.</li>
+<li><strong>No barrel files</strong>, except one <code>index.ts</code> per feature that exposes its public component. Barrels slow Metro and hide cycles.</li>
+</ul>
+
+<h2>Unit tests</h2>
+<h3>Tooling</h3>
+<ul>
+<li><strong><code>jest-expo</code></strong> preset with <strong><code>@testing-library/react-native</code></strong>: one runner that handles the RN, Expo and <code>.web.tsx</code> transforms. Vitest would be quicker for the pure core but means maintaining two runners, which isn't worth it at this size.</li>
+<li>Tests sit next to the code they test: <code>ride.ts</code> → <code>ride.test.ts</code>.</li>
+<li>Scripts: <code>"test": "jest"</code>, <code>"test:watch"</code>, plus a <code>check</code> script that runs typecheck, lint and test together. A GitHub Action runs <code>check</code> on PRs (there's no CI yet).</li>
+</ul>
+
+<h3>What to test, by priority</h3>
+<table><thead><tr><th>Layer</th><th>Approach</th><th>Examples</th></tr></thead><tbody>
+<tr><td data-label="Layer"><code>domain/</code></td><td data-label="Approach">Table-driven pure tests; the bulk of the suite</td><td data-label="Examples">ride progress/exit detection across delays, <code>splitRoute</code> boundaries, <code>mergeMapStop</code> priority, <code>slovakCount</code> 1/2–4/5+, rail stop-name completion, <code>groupByStop</code></td></tr>
+<tr><td data-label="Layer"><code>features/*/…​.ts</code> (pure)</td><td data-label="Approach">Reducer transitions, back-step stack</td><td data-label="Examples">search → results → details → back returns to results; sheet <code>nearestStage</code></td></tr>
+<tr><td data-label="Layer"><code>server/ubian.ts</code></td><td data-label="Approach">Validation and allow-list</td><td data-label="Examples">rejects unknown resources and malformed connection searches; date format</td></tr>
+<tr><td data-label="Layer"><code>data/</code> hooks</td><td data-label="Approach"><code>renderHook</code> + mocked <code>fetch</code> + fake timers; only a few</td><td data-label="Examples">refresh intervals, abort on unmount, refetch after moving 150 m</td></tr>
+<tr><td data-label="Layer">Components</td><td data-label="Approach">Behaviour smoke tests via RNTL; no snapshots</td><td data-label="Examples">Departures empty/error/retry states; tapping a row opens details</td></tr>
+<tr><td data-label="Layer">Map (MapLibre)</td><td data-label="Approach">Test <code>layers.ts</code> builders only; leave the canvas untested</td><td data-label="Examples">GeoJSON for selected vehicle, route styles</td></tr>
+</tbody></table>
+<p>No type-level tests. Strict TS with <code>noUncheckedIndexedAccess</code> already covers that. Fixtures come from real captured Ubian responses, so tests match what the API actually returns.</p>
+
+<h2>Migration — each step a behaviour-neutral PR</h2>
+<ol>
+<li><strong>Test harness + <code>domain/</code>.</strong> Add jest-expo. Move the pure helpers out of <code>index.tsx</code>, <code>useTransitData.ts</code> and <code>LiveMap.web.tsx</code> into <code>src/domain</code>, removing the duplicates. Write tests as they move. Removes roughly 600 lines from <code>index.tsx</code>.</li>
+<li><strong>Move <code>api/</code>, <code>server/</code>, <code>platform/</code>.</strong> Mechanical moves; the proxy route ends up about 20 lines.</li>
+<li><strong>UI primitives + theme.</strong> Extract <code>ui/</code> and <code>createThemedStyles</code>.</li>
+<li><strong>Feature components.</strong> Move departures, search, journey, ride, sheet and map into <code>features/</code>, one feature per commit.</li>
+<li><strong>Split <code>useTransitData</code></strong> into composed hooks, keeping its return shape so callers don't change.</li>
+<li><strong>Screen reducer.</strong> The only step that changes how state is modelled, so it goes last, once the rest of the suite is in place.</li>
+</ol>
+<p class="sub">Steps 1–5 move code without changing behaviour. Step 6 is a real refactor and gets its own review.</p>
+</main></body></html>
