@@ -33,7 +33,7 @@ tr:last-child td{border-bottom:none}
 <body>
 <main>
 <h1>Trip feedback, prioritised</h1>
-<p class="sub">Feedback from the last trip, grouped into 13 items and ranked by impact on the core flow (find a connection, then ride it) and on the honest-data principle, against effort in the current codebase. Effort: S under a day, M a few days, L a week or more, XL needs a data source we don't have yet.</p>
+<p class="sub">Feedback from the last trip, grouped into 15 items and ranked by impact on the core flow (find a connection, then ride it) and on the honest-data principle, against effort in the current codebase. Effort: S under a day, M a few days, L a week or more, XL needs a data source we don't have yet.</p>
 
 <h2><span class="tag" style="background:var(--p0)">P0</span>Now: bugs and cheap trust wins</h2>
 <p class="why">Small fixes for things that broke or misled you during the trip. Ship these as one batch.</p>
@@ -78,10 +78,22 @@ tr:last-child td{border-bottom:none}
 <div class="card"><h3><span class="n">9</span>Departures from a journey stop at the tracked arrival time<span>M · needs a spike</span></h3>
 <p>Useful for planning transfers. <code>planned_departures</code> is currently called without a time parameter. Check first whether Ubian accepts a start time. If it doesn't, a limit plus client-side filtering works only for arrivals in the near future.</p></div>
 
+<div class="card"><h3><span class="n">14</span>Accurate walking and route paths from OSM<span>M–L</span></h3>
+<p>One routing setup on OSM data covers both the times and the paths drawn on the map.</p>
+<ul>
+<li><strong>Walking:</strong> <code>walkingMinutes</code> (<code>geo.ts</code>) uses straight-line distance, and walking legs are drawn as straight lines (<code>routes.ts</code>). Route them over the OSM footpath network, including footbridges, underpasses and station entrances, to get real times for Odchody cards, transfers and journeys, and the actual path on the map. The quickest way to start is a hosted walking-route service with a free tier (openrouteservice or GraphHopper), with the key kept on the server behind the existing <code>/api</code> proxy. Self-hosting a router with a Slovakia extract is the fallback.</li>
+<li><strong>Trains:</strong> Ubian only gives 2 points per segment, so train paths are straight lines. Snap the trip's stations onto the OSM rail network and take the shortest path between them. The Slovak rail network is small, so this can be precomputed or bundled. It's the same rail data as #6b, so build them together.</li>
+<li><strong>Buses:</strong> Ubian's bus routes already follow the roads (we sampled 235–1,311 points per trip). Only the odd 2-point segment is a straight line, and those can be routed over OSM roads.</li>
+</ul></div>
+
 <h2><span class="tag" style="background:var(--p2)">P2</span>Later: map scale and personalisation</h2>
 
 <div class="card"><h3><span class="n">10</span>Zoom-out: trains and long-distance only, stops into city targets<span>M–L</span></h3>
-<p>Today, when you're zoomed out beyond what one request covers, the map is intentionally empty. Instead, request only trains and long-distance or regional vehicles. Don't bundle stops: collapse them into one target per city, where a tap shows the main train and regional bus hubs, or zooms in. This depends on #4 for city grouping and may need different upstream filters (<code>cityID</code>, radius).</p></div>
+<p>Today, when you're zoomed out beyond what one request covers, the map is intentionally empty. Instead, request only trains and long-distance or regional vehicles. Don't bundle stops: collapse them into one target per city, where a tap shows the main train and regional bus hubs, or zooms in. This depends on #4 for city grouping and may need different upstream filters (<code>cityID</code>, radius).</p>
+<p><strong>For consideration:</strong> use OSM municipality boundaries to group stops by the town they're actually in, rather than by distance.</p></div>
+
+<div class="card"><h3><span class="n">15</span>Stop details: wheelchair access glyph first<span>S–M</span></h3>
+<p>OSM bus stops around Košice have <code>wheelchair</code> on 374 of 469 and <code>shelter</code> on 468 of 469. Benches, tactile paving and live departure boards are also tagged. Start with a wheelchair glyph on stop cards and map labels, matching Ubian stops to OSM by name and distance. Shelter and the other details, plus an "accessible only" journey filter, can follow. Coverage is weaker outside cities, so a missing tag must read as "unknown", never "no".</p></div>
 
 <div class="card"><h3><span class="n">11</span>Saved places<span>L</span></h3>
 <ul>
@@ -93,10 +105,18 @@ tr:last-child td{border-bottom:none}
 <h2><span class="tag" style="background:var(--p3)">P3</span>Research first: offline</h2>
 
 <div class="card"><h3><span class="n">12</span>Offline access: local stops, timetables, approximate connections<span>XL</span></h3>
-<p>The service worker only caches the app shell, and every endpoint we use is live and undocumented, with no bulk export. Doing this properly needs a timetable source (GTFS or CIS JŘ exports) plus local routing, which makes it a project of its own. Start with a spike on data availability. A cheap interim step is caching the last stops and departures responses for saved places.</p></div>
+<p>The service worker only caches the app shell, and every endpoint we use is live and undocumented, with no bulk export. Doing this properly needs a timetable source (GTFS or CIS JŘ exports) plus local routing, which makes it a project of its own. Start with a spike on data availability. A cheap interim step is caching the last stops and departures responses for saved places.</p>
+<p><strong>May consider:</strong> OSM route relations (107 bus, tram, trolleybus and train routes around Košice, each with its stops in order) could supply line shapes and stop sequences offline. OSM has no timetables, so they don't replace a timetable source. This overlaps with the route drawing in #14, so share the OSM extract and the code that processes it.</p></div>
 
 <div class="card"><h3><span class="n">13</span>"Timetables last updated" message<span>S · with #12</span></h3>
 <p>Trivial to build, but it only means something once there is offline data. Ship it together with #12.</p></div>
+
+<h2>Parked</h2>
+<div class="card"><h3>OSM data we looked at and set aside</h3>
+<ul>
+<li><strong>Train details</strong> (electrification, track speed limits): not useful for riders.</li>
+<li><strong>Platform locations:</strong> there are 147 <code>railway=platform</code> features around Košice, but only 2 have a <code>ref</code> (platform number), so Ubian's platform numbers can't be matched to them at scale. Keep this in mind; worth trying later as coverage improves.</li>
+</ul></div>
 
 <h2>Suggested order</h2>
 <table>
@@ -104,8 +124,8 @@ tr:last-child td{border-bottom:none}
 <tr><td>1</td><td>#1, #2, #3, #4</td><td>Trip-proof basics</td></tr>
 <tr><td>2</td><td>#6a, #5</td><td>Honest trains; clean first launch</td></tr>
 <tr><td>3</td><td>#7, #8</td><td>Real A→B planning</td></tr>
-<tr><td>4</td><td>#6b, #9</td><td>Track sections; transfers</td></tr>
-<tr><td>5</td><td>#10, #11</td><td>Country-scale map; personal app</td></tr>
+<tr><td>4</td><td>#6b, #14, #9</td><td>Track sections; walking and route paths; transfers</td></tr>
+<tr><td>5</td><td>#15, #10, #11</td><td>Accessibility; country-scale map; personal app</td></tr>
 <tr><td>Spike</td><td>#12, #13</td><td>Decide whether offline is feasible</td></tr>
 </table>
 </main>
