@@ -57,9 +57,10 @@ tr:last-child td{border-bottom:none}
 <p class="why">The highest product value. The first item is about trust and is cheap to start, so it leads.</p>
 
 <div class="card"><h3><span class="n">6</span>Trains: show "last reported", not "is here"<span>S → L, in two steps</span></h3>
+<p><strong>What Ubian gives us</strong> (checked against live trains around Košice). Report points aren't flagged, but they can be inferred. Reported positions snap exactly onto station coordinates and stay unchanged between jumps. <code>trip_stops</code> lists the stations a train passes without stopping (<code>crossing: 1</code>, with coordinates but no times): EN 442 has 83 stations, of which 15 are stops. That list isn't complete, because some trains sit on points that match no listed station, probably junctions. <code>lastStopOrder</code> points to the last stopping station, not the last report point. <code>lastCommunication</code> is always <code>0001-01-01</code>, so there is no report time. Train route geometry is straight lines between stopping stations. We don't scrape mapa.zsr.sk, because its terms forbid automated use.</p>
 <ul>
-<li><strong>6a, glyph (S–M):</strong> mark the stations where the train position refreshes, and label the train with "reported at X, Y min ago". That is enough to stop implying a live position.</li>
-<li><strong>6b, track section (M–L):</strong> instead of a single point, draw the stretch of track between the last report and the next report station. <code>trip_stops?withRoute</code> already returns route geometry, so the work is slicing the line between two stations and styling it.</li>
+<li><strong>6a, glyph (S–M):</strong> match the vehicle's coordinates to a station in its trip stop list, mark that station as the last report point and the next listed station as the next one, and label the train "reported at X". The age ("Y min ago") comes from when we saw the position change, so it's unknown until the first jump after load. When the position matches no listed station, fall back to "between X and Y".</li>
+<li><strong>6b, track section (M–L):</strong> draw the track between the last and the next report point. This needs real track geometry from OpenStreetMap railways (ODbL), either from the base map's own rail layer or a precomputed extract. Ubian's own route data is only straight lines.</li>
 <li>Countdown to arrival based on the user's location builds on 6a and can wait.</li>
 </ul></div>
 
