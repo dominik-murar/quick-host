@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spoj: trip feedback, prioritised</title>
+<style>
+:root{--bg:#F5F6F8;--surface:#fff;--line:#D8DCE2;--text:#1A1A1A;--text-2:#4A4F57;--text-3:#6E737B;--accent:#0066B3;
+--p0:#B3261E;--p1:#A35200;--p2:#0066B3;--p3:#6E737B;--font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1013;--surface:#16191E;--line:#2C323B;--text:#F1F3F5;--text-2:#B8BEC7;--text-3:#8B929C;--accent:#4DA3FF;
+--p0:#FF6B63;--p1:#F5A524;--p2:#4DA3FF;--p3:#8B929C}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--font)}
+main{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:26px;margin:0 0 4px}
+.sub{color:var(--text-2);margin:0 0 24px}
+h2{font-size:18px;margin:32px 0 4px;display:flex;align-items:center;gap:10px}
+h2 .tag{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff}
+.why{color:var(--text-2);margin:0 0 12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:8px 0}
+.card h3{font-size:15px;margin:0 0 4px;display:flex;justify-content:space-between;gap:12px}
+.card h3 span{font-weight:500;color:var(--text-3);white-space:nowrap;font-size:13px}
+.card p{margin:4px 0;color:var(--text-2)}
+.card ul{margin:4px 0;padding-left:18px;color:var(--text-2)}
+code{font-size:13px}
+.n{display:inline-block;min-width:22px;color:var(--text-3)}
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--text-3);font-weight:600}
+tr:last-child td{border-bottom:none}
+</style>
+</head>
+<body>
+<main>
+<h1>Trip feedback, prioritised</h1>
+<p class="sub">Feedback from the last trip, grouped into 13 items and ranked by impact on the core flow (find a connection, then ride it) and on the honest-data principle, against effort in the current codebase. Effort: S under a day, M a few days, L a week or more, XL needs a data source we don't have yet.</p>
+
+<h2><span class="tag" style="background:var(--p0)">P0</span>Now: bugs and cheap trust wins</h2>
+<p class="why">Small fixes for things that broke or misled you during the trip. Ship these as one batch.</p>
+
+<div class="card"><h3><span class="n">1</span>Train in station covers the station touch target<span>S · bug</span></h3>
+<p>The vehicle marker sits on top of the stop, so you can't tap the stop. Fix the hit order or offset in <code>LiveMap.web.tsx</code>. #6 changes the train marker anyway, so this fix may come out of that work.</p></div>
+
+<div class="card"><h3><span class="n">2</span>Stop highlight in Odchody for low-height stop cards<span>S · bug</span></h3>
+<p>Follow-up to the focus and highlight fix in <code>def8715</code>: collapsed or short cards lose the highlight.</p></div>
+
+<div class="card"><h3><span class="n">3</span>Persist the tracked journey across reload<span>S</span></h3>
+<p>Mobile browsers kill backgrounded PWAs all the time, so today you lose Jazda mid-ride. Store the tripID and selection in <code>localStorage</code> (the same pattern as search selections in <code>useTransitData.ts</code>) and restore it if the trip hasn't ended.</p></div>
+
+<div class="card"><h3><span class="n">4</span>Town names for regional bus stops and train stations<span>S</span></h3>
+<p>The Ubian payloads already carry <code>stopCity</code>, so this is mostly rendering. Show it for regional and train stops, and wherever the stop name doesn't already contain the town. This removes ambiguity in search results.</p></div>
+
+<div class="card"><h3><span class="n">5</span>Location permission on load, with an explainer<span>S–M</span></h3>
+<p>Show a short "what Spoj does" screen with a <em>Share location</em> button. Remember the first grant, and on later visits request it on load so the browser can re-prompt without the explainer. Without a grant, search falls back to the Odkiaľ-first flow in #7.</p></div>
+
+<h2><span class="tag" style="background:var(--p1)">P1</span>Next: the honest-data principle and journey planning</h2>
+<p class="why">The highest product value. The first item is about trust and is cheap to start, so it leads.</p>
+
+<div class="card"><h3><span class="n">6</span>Trains: show "last reported", not "is here"<span>S → L, in two steps</span></h3>
+<ul>
+<li><strong>6a, glyph (S–M):</strong> mark the stations where the train position refreshes, and label the train with "reported at X, Y min ago". That is enough to stop implying a live position.</li>
+<li><strong>6b, track section (M–L):</strong> instead of a single point, draw the stretch of track between the last report and the next report station. <code>trip_stops?withRoute</code> already returns route geometry, so the work is slicing the line between two stations and styling it.</li>
+<li>Countdown to arrival based on the user's location builds on 6a and can wait.</li>
+</ul></div>
+
+<div class="card"><h3><span class="n">7</span>Two-row search: Odkiaľ / Kam<span>M</span></h3>
+<p>The placeholder becomes "Hľadať spoj". Tapping it expands into two rows: Odkiaľ on top, Kam focused. Without a location grant, Odkiaľ gets focus first. Today the field is a single "Kam?" with a separate Odkiaľ row, and <code>/navigation/connections</code> already takes both ends.</p></div>
+
+<div class="card"><h3><span class="n">8</span>Search by location or pin<span>M · after #7</span></h3>
+<p>This is an input mode of the same two fields: "pick on map" or "current location" as Odkiaľ or Kam. Build it once #7 exists so it isn't designed twice.</p></div>
+
+<div class="card"><h3><span class="n">9</span>Departures from a journey stop at the tracked arrival time<span>M · needs a spike</span></h3>
+<p>Useful for planning transfers. <code>planned_departures</code> is currently called without a time parameter. Check first whether Ubian accepts a start time. If it doesn't, a limit plus client-side filtering works only for arrivals in the near future.</p></div>
+
+<h2><span class="tag" style="background:var(--p2)">P2</span>Later: map scale and personalisation</h2>
+
+<div class="card"><h3><span class="n">10</span>Zoom-out: trains and long-distance only, stops into city targets<span>M–L</span></h3>
+<p>Today, when you're zoomed out beyond what one request covers, the map is intentionally empty. Instead, request only trains and long-distance or regional vehicles. Don't bundle stops: collapse them into one target per city, where a tap shows the main train and regional bus hubs, or zooms in. This depends on #4 for city grouping and may need different upstream filters (<code>cityID</code>, radius).</p></div>
+
+<div class="card"><h3><span class="n">11</span>Saved places<span>L</span></h3>
+<ul>
+<li>Basic saved places first (name and location). These also seed the Odkiaľ/Kam suggestions in #7.</li>
+<li>Annotating direct connections in Odchody needs the stop list for each departure, which means N extra <code>trip_stops</code> calls. Cache them per trip and limit them to visible cards.</li>
+<li>Per-place stop radius and a stop allow/deny list come last. This is power-user tuning.</li>
+</ul></div>
+
+<h2><span class="tag" style="background:var(--p3)">P3</span>Research first: offline</h2>
+
+<div class="card"><h3><span class="n">12</span>Offline access: local stops, timetables, approximate connections<span>XL</span></h3>
+<p>The service worker only caches the app shell, and every endpoint we use is live and undocumented, with no bulk export. Doing this properly needs a timetable source (GTFS or CIS JŘ exports) plus local routing, which makes it a project of its own. Start with a spike on data availability. A cheap interim step is caching the last stops and departures responses for saved places.</p></div>
+
+<div class="card"><h3><span class="n">13</span>"Timetables last updated" message<span>S · with #12</span></h3>
+<p>Trivial to build, but it only means something once there is offline data. Ship it together with #12.</p></div>
+
+<h2>Suggested order</h2>
+<table>
+<tr><th>Batch</th><th>Items</th><th>Outcome</th></tr>
+<tr><td>1</td><td>#1, #2, #3, #4</td><td>Trip-proof basics</td></tr>
+<tr><td>2</td><td>#6a, #5</td><td>Honest trains; clean first launch</td></tr>
+<tr><td>3</td><td>#7, #8</td><td>Real A→B planning</td></tr>
+<tr><td>4</td><td>#6b, #9</td><td>Track sections; transfers</td></tr>
+<tr><td>5</td><td>#10, #11</td><td>Country-scale map; personal app</td></tr>
+<tr><td>Spike</td><td>#12, #13</td><td>Decide whether offline is feasible</td></tr>
+</table>
+</main>
+</body>
+</html>
