@@ -41,14 +41,14 @@ tr:last-child td{border-bottom:none}
 <div class="card"><h3><span class="n">1</span>Train in station covers the station touch target<span>S · bug</span></h3>
 <p>The vehicle marker sits on top of the stop, so you can't tap the stop. Fix the hit order or offset in <code>LiveMap.web.tsx</code>. #6 changes the train marker anyway, so this fix may come out of that work.</p></div>
 
-<div class="card"><h3><span class="n">2</span>Stop highlight in Odchody for low-height stop cards<span>S · bug</span></h3>
-<p>Follow-up to the focus and highlight fix in <code>def8715</code>: collapsed or short cards lose the highlight.</p></div>
+<div class="card"><h3><span class="n">2</span>Make the stop highlight work for short Odchody cards<span>S · bug</span></h3>
+<p>The highlight on short cards never shows at all. The cause is in <code>focusedGroup</code> (<code>TransitScreen.tsx</code>): a card only gets focus if it covers at least half of the visible list. A stop card with a single departure is far shorter than that, so no card qualifies and nothing is highlighted. Fix the rule, for example by focusing the card that sits nearest a focus line near the top of the list, or the card with the largest visible share, with no minimum.</p></div>
 
 <div class="card"><h3><span class="n">3</span>Persist the tracked journey across reload<span>S</span></h3>
 <p>Mobile browsers kill backgrounded PWAs all the time, so today you lose Jazda mid-ride. Store the tripID and selection in <code>localStorage</code> (the same pattern as search selections in <code>useTransitData.ts</code>) and restore it if the trip hasn't ended.</p></div>
 
-<div class="card"><h3><span class="n">4</span>Town names for regional bus stops and train stations<span>S</span></h3>
-<p>The Ubian payloads already carry <code>stopCity</code>, so this is mostly rendering. Show it for regional and train stops, and wherever the stop name doesn't already contain the town. This removes ambiguity in search results.</p></div>
+<div class="card"><h3><span class="n">4</span>Show town names consistently: always for regional bus stops and train stations, never for MHD or mixed stops<span>S</span></h3>
+<p>Search results already follow this rule (<code>autocompleteStopName</code> in <code>domain/stops.ts</code>). Nearby stops don't: Odchody card headings show no town at all ("žel.st.", "OcÚ"), and on the map train stations get the town but regional bus stops don't ("žel. stanica"). The fix is to apply the same naming rule, from one shared function, to nearby stops on the map, Odchody headings and Jazda.</p></div>
 
 <div class="card"><h3><span class="n">5</span>Location permission on load, with an explainer<span>S–M</span></h3>
 <p>Show a short "what Spoj does" screen with a <em>Share location</em> button. Remember the first grant, and on later visits request it on load so the browser can re-prompt without the explainer. Without a grant, search falls back to the Odkiaľ-first flow in #7.</p></div>
