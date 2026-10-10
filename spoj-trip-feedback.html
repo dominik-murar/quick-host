@@ -42,7 +42,12 @@ tr:last-child td{border-bottom:none}
 <p>The vehicle marker sits on top of the stop, so you can't tap the stop. Fix the hit order or offset in <code>LiveMap.web.tsx</code>. #6 changes the train marker anyway, so this fix may come out of that work.</p></div>
 
 <div class="card"><h3><span class="n">2</span>Make the stop highlight work for short Odchody cards<span>S · bug</span></h3>
-<p>The highlight on short cards never shows at all. The cause is in <code>focusedGroup</code> (<code>TransitScreen.tsx</code>): a card only gets focus if it covers at least half of the visible list. A stop card with a single departure is far shorter than that, so no card qualifies and nothing is highlighted. Fix the rule, for example by focusing the card that sits nearest a focus line near the top of the list, or the card with the largest visible share, with no minimum.</p></div>
+<p>The highlight on short cards never shows. <code>focusedGroup</code> (<code>TransitScreen.tsx</code>) only focuses a card that covers at least half of the visible list, which a stop card with a single departure never does. Even with that rule fixed, the last few cards can't scroll up to a focus line near the top.</p>
+<ul>
+<li><strong>A focus line that slides near the end:</strong> the focus line stays fixed near the top. Once the remaining scroll distance is less than one visible list height <code>H</code>, it moves down by the same amount you scroll (<code>line = top + max(0, H − remaining)</code>), so it reaches the bottom of the list at the end. Every card crosses the line once, in order, without extra padding or a longer scroll.</li>
+<li><strong>Tap to focus:</strong> tapping a stop heading focuses that stop. This covers lists too short to scroll.</li>
+<li><strong>Rejected:</strong> dynamic bottom padding. It adds up to a screen of empty space after short cards, and the scroll length changes whenever departures refresh.</li>
+</ul></div>
 
 <div class="card"><h3><span class="n">3</span>Persist the tracked journey across reload<span>S</span></h3>
 <p>Mobile browsers kill backgrounded PWAs all the time, so today you lose Jazda mid-ride. Store the tripID and selection in <code>localStorage</code> (the same pattern as search selections in <code>useTransitData.ts</code>) and restore it if the trip hasn't ended.</p></div>
