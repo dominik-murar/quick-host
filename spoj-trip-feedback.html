@@ -36,7 +36,7 @@ tr:last-child td{border-bottom:none}
 <p class="sub">Feedback from the last trip, grouped into 15 items and ranked by impact on the core flow (find a connection, then ride it) and on the honest-data principle, against effort in the current codebase. Effort: S under a day, M a few days, L a week or more, XL needs a data source we don't have yet.</p>
 
 <h2><span class="tag" style="background:var(--p0)">P0</span>Now: bugs and cheap trust wins</h2>
-<p class="why">Small fixes for things that broke or misled you during the trip. Ship these as one batch.</p>
+<p class="why"><strong>Shipped in <a href="https://github.com/dominik-murar/spoj/pull/46">#46</a>.</strong> The same PR also keeps live data independent of the map view, fixes ride ending and transfers in tracking, and lists stops up to the exit with numbered transfer and destination markers.</p>
 
 <div class="card"><h3><span class="n">1</span>Train in station covers the station touch target<span>S · bug</span></h3>
 <p>The vehicle marker sits on top of the stop, so you can't tap the stop. Fix the hit order or offset in <code>LiveMap.web.tsx</code>. #6 changes the train marker anyway, so this fix may come out of that work.</p></div>
