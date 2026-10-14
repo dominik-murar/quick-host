@@ -862,7 +862,10 @@ h1,h2,h3,h4{font-weight:800}
 .motto{display:block;font-size:.62em;letter-spacing:-.015em;margin-top:.15em}
 .motto .old{position:relative;color:var(--text-3);white-space:nowrap}
 .motto .old::after{content:"";position:absolute;left:-4%;right:-4%;top:52%;height:.09em;border-radius:.05em;background:var(--accent);transform-origin:left;transform:rotate(-3deg);animation:strike .45s cubic-bezier(.6,0,.3,1) .7s both}
-.motto em{display:inline-block;white-space:nowrap;animation:newmotto .5s cubic-bezier(.3,1.4,.4,1) 1.2s both}
+.motto{padding-bottom:1.2em}
+.motto .swap{position:relative;display:inline-block}
+.motto em{position:absolute;left:50%;top:100%;translate:-50% 0;white-space:nowrap;animation:newmotto .5s cubic-bezier(.3,1.4,.4,1) 1.2s both}
+@media(max-width:640px){.motto{padding-bottom:0}.motto .swap{display:inline}.motto em{position:static;display:block;translate:none}}
 @keyframes strike{from{transform:rotate(-3deg) scaleX(0)}}
 @keyframes newmotto{from{opacity:0;transform:translateY(.3em) scale(.9)}}
 .feat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:48px;align-items:center;padding:40px 0;border-top:1px solid var(--line)}
@@ -1173,7 +1176,7 @@ h1,h2,h3,h4{font-weight:800}
 <main>
 <div class="hero">
   <div>
-    <h1>UBIAN<span class="motto">cestovanie na <span class="old">pár klikov</span> <em>jeden dotyk</em></span></h1>
+    <h1>UBIAN<span class="motto">cestovanie na <span class="swap"><span class="old">pár klikov</span> <em>jeden dotyk</em></span></span></h1>
     <p>Ubian spája cestovné poriadky a polohy vozidiel vlakov, regionálnych autobusov a MHD z desiatok miest s predajom lístkov, kreditu, dopravných kariet, študentských preukazov a parkovania. Návrh všetko z toho zachováva a skracuje cestu k nim. Celý tok aplikácie si môžete preklikať vo funkčnom POC.</p>
     <div class="pill-row">
       <span class="lb tram">2</span><span class="lb trolley">38</span><span class="lb bus">23</span><span class="lb regional">701</span><span class="lb train">Os 8813</span><span class="lb night">N1</span>
