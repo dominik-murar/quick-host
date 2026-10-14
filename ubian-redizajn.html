@@ -858,8 +858,44 @@ h1,h2,h3,h4{font-weight:800}
 .m-btn{height:44px;border-radius:22px;font-weight:800}
 .m-btn.tonal{background:var(--poc-tonal)}
 </style>
+<style>
+.feat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:48px;align-items:center;padding:40px 0;border-top:1px solid var(--line)}
+.feat:first-of-type{border-top:0;padding-top:16px}
+.feat:nth-of-type(even){grid-template-columns:auto minmax(0,1fr)}
+.feat:nth-of-type(even) .feat-fig{order:-1}
+.feat h3{font-size:26px;margin:6px 0 14px;letter-spacing:-.01em}
+.feat p{font-size:17px;color:var(--text-2);margin:0}
+.feat-fig{margin:0;display:flex;gap:28px;justify-content:center;flex-wrap:wrap}
+.feat-fig figcaption{font-size:13px;color:var(--text-2);text-align:center;margin-top:10px}
+.feat-fig figcaption b{color:var(--text);display:block}
+@media(max-width:900px){.feat,.feat:nth-of-type(even){grid-template-columns:1fr;gap:24px}.feat:nth-of-type(even) .feat-fig{order:0}}
+.keep h4{display:flex;gap:8px;align-items:center}
+.keep li+li{margin-top:6px}
+.hl-home .xs[data-view=dep] .plc>div:first-child i{animation:tap 1.4s ease-out infinite}
+@keyframes tap{from{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}to{box-shadow:0 0 0 18px transparent}}
+.rail{width:min(460px,100%);display:grid;gap:18px}
+.rail svg{width:100%;display:block;overflow:visible}
+.rail text{font:700 11px var(--font);fill:var(--text-2)}
+.rail .nm{font-weight:800;fill:var(--text)}
+.rl-line{stroke:var(--line);stroke-width:6;fill:none;stroke-linecap:round}
+.rl-hl{stroke:var(--mode-train);stroke-width:6;fill:none;stroke-linecap:round;animation:rl-hl 6s infinite}
+.rl-st{fill:var(--surface);stroke:var(--text);stroke-width:2.5}
+.rl-halt{stroke:var(--text-3);stroke-width:2.5}
+.rl-train rect{stroke:var(--mode-train);stroke-width:2.5;animation:rl-fill 6s infinite}
+.rl-train text{font:900 10px var(--font);text-anchor:middle;dominant-baseline:central;animation:rl-ink 6s infinite}
+.rl-say{font:800 13px var(--font)!important;fill:var(--text)!important}
+.rl-say.b{opacity:0;animation:rl-b 6s infinite}.rl-say.a{animation:rl-a 6s infinite}
+.rl-fixed rect{fill:var(--mode-train);stroke:var(--mode-train);stroke-width:2.5}
+.rl-fixed text{font:900 10px var(--font);fill:#fff;text-anchor:middle;dominant-baseline:central}
+@keyframes rl-hl{0%,48%{opacity:0}52%,100%{opacity:1}}
+@keyframes rl-fill{0%,48%{fill:var(--mode-train)}52%,100%{fill:var(--surface)}}
+@keyframes rl-ink{0%,48%{fill:#fff}52%,100%{fill:var(--mode-train)}}
+@keyframes rl-a{0%,48%{opacity:1}52%,100%{opacity:0}}
+@keyframes rl-b{0%,48%{opacity:0}52%,100%{opacity:1}}
+</style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute">
 <svg width="0" height="0" style="position:absolute">
   <symbol id="i-map" viewBox="0 0 24 24"><path d="M15 5.1 9 3 3 5v16l6-2.1 6 2.1 6-2V3l-6 2.1Zm-1 13.6-4-1.4V5.3l4 1.4v12Z"/></symbol>
   <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2.5a2.5 2.5 0 0 0 0 5V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2.5a2.5 2.5 0 0 0 0-5V7Zm11 0v2h2V7h-2Zm0 4v2h2v-2h-2Zm0 4v2h2v-2h-2Z"/></symbol>
@@ -874,298 +910,8 @@ h1,h2,h3,h4{font-weight:800}
   <symbol id="i-loc" viewBox="0 0 24 24"><path d="M21 3 3 10.5l7.5 3 3 7.5L21 3Z"/></symbol>
   <symbol id="i-p" viewBox="0 0 24 24"><path d="M5 3h8a6 6 0 0 1 0 12H9v6H5V3Zm4 4v4h4a2 2 0 0 0 0-4H9Z"/></symbol>
 </svg>
-
-<header class="top"><div class="top-in">
-  <div class="brand"><span class="tag">Návrh redizajnu</span></div>
-  <nav>
-    <a href="#today">Dnes</a><a href="#principles">Princípy</a><a href="#ia">Štruktúra</a><a href="#foundations">Základy</a>
-    <a href="#components">Komponenty</a><a href="#screens">Obrazovky</a>
-  </nav>
-  <button class="toggle" id="themeBtn">◐ Tmavý</button>
-</div></header>
-
-<main>
-<div class="hero">
-  <div>
-    <h1>UBIAN<br><em>Na jeden dotyk.</em></h1>
-    <p>Ubian spája cestovné poriadky a polohy vozidiel vlakov, regionálnych autobusov a MHD z desiatok miest s predajom lístkov, kreditu, dopravných kariet, študentských preukazov a parkovania. Návrh zachováva všetky tieto služby a skracuje cestu k nim.</p>
-    <div class="pill-row">
-      <span class="lb tram">2</span><span class="lb trolley">38</span><span class="lb bus">23</span><span class="lb regional">701</span><span class="lb train">Os 8813</span><span class="lb night">N1</span>
-    </div>
-    <a class="cta" href="https://spoj.vercel.app" target="_blank" rel="noreferrer">Vyskúšať funkčný POC →</a>
-    <p class="small muted" style="margin-top:16px">Nevyžiadaný koncept, bez prepojenia s Ubianom. Farby vychádzajú z dnešnej aplikácie.</p>
-  </div>
-  <div class="hero-art ub-art">
-    <svg viewBox="0 0 400 360" preserveAspectRatio="xMidYMid slice">
-      <path d="M-20 280 C80 280 120 140 220 150 S340 90 420 60" stroke="var(--ribbon-case)" stroke-width="18" fill="none" stroke-linecap="round"/>
-      <path d="M-20 280 C80 280 120 140 220 150 S340 90 420 60" stroke="var(--accent)" stroke-width="10" fill="none" stroke-linecap="round"/>
-      <path d="M-20 320 C120 320 200 250 420 240" stroke="var(--ribbon-case)" stroke-width="14" fill="none" stroke-linecap="round"/>
-      <path d="M-20 320 C120 320 200 250 420 240" stroke="var(--mode-train)" stroke-width="7" fill="none" stroke-linecap="round" opacity=".9"/>
-      <g class="veh"><circle r="12" fill="var(--mode-tram)" stroke="#fff" stroke-width="3"/><text>2</text><animateMotion dur="8s" repeatCount="indefinite" path="M-20 280 C80 280 120 140 220 150 S340 90 420 60"/></g>
-      <g class="veh"><rect x="-13" y="-10" width="26" height="20" rx="3" fill="var(--mode-train)" stroke="#fff" stroke-width="3"/><text>Os</text><animateMotion dur="11s" repeatCount="indefinite" path="M-20 320 C120 320 200 250 420 240"/></g>
-      <text x="30" y="70" class="ub-cities">Košice · Prešov · Bratislava · Žilina · Nitra</text>
-      <text x="30" y="92" class="ub-cities">Poprad · Martin · Trnava · Zvolen · +46</text>
-    </svg>
-  </div>
-</div>
-
-<!-- ============ DNES ============ -->
-<section id="today">
-  <div class="eyebrow">01 · Dnes</div>
-  <h2>Silné dáta a služby, zastarané rozhranie</h2>
-  <p class="muted small">Podľa iOS aplikácie a webu ubian.sk k 3. 10. 2026.</p>
-  <div class="grid g2">
-    <div class="card">
-      <h4><span class="chipx ok">Silné stránky</span></h4>
-      <ul class="clean small muted">
-        <li>MHD v približne 55 mestách, regionálne autobusy a vlaky v jednej aplikácii.</li>
-        <li>Živé dáta: polohy vozidiel, meškania, odrieknuté spoje, aktuálna zastávka, nízkopodlažnosť, Wi-Fi a prevoz bicyklov.</li>
-        <li>Predaj: kredit, čipová aj virtuálna karta, časové a jednorazové lístky, študentské preukazy, parkovanie, Google Pay.</li>
-        <li>AI agent (beta) na vyhľadávanie spojení a bikesharing na mape.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h4><span class="chipx warn">Príležitosti</span></h4>
-      <ul class="clean small muted">
-        <li>Mesto sa vyberá zo zoznamu „MHD &lt;mesto&gt;“, hoci ho telefón vie určiť z polohy.</li>
-        <li>Druh dopravy sa vyberá ako jedna zo 7 kombinácií („Vlaky / Autobusy / MHD“, „Vlaky / MHD“…). Rovnaký výber umožnia tri nezávislé prepínače.</li>
-        <li>Súvisiace funkcie nemajú jednu jasnú cestu. Dopravná karta aj parkovanie sú v spodnom menu a zároveň v profile. Ide o činnosti, ktoré k sebe patria, preto ich návrh spája do Peňaženky.</li>
-        <li>Živé polohy vozidiel sú na samostatnej obrazovke mapy, o ťuknutie ďalej.</li>
-        <li>AI agent je samostatný chat, nie súčasť vyhľadávania.</li>
-      </ul>
-    </div>
-  </div>
-  <div class="grid g2" style="margin-top:16px">
-    <div class="card small muted">
-      <h4 style="color:var(--text)">Čo zachovať</h4>
-      <ul class="clean">
-        <li>Kartu aktívneho lístka s ukazovateľom platnosti. Prechádza do Peňaženky.</li>
-        <li>Rýchly prepínač bez prestupov, ktorý sa v plánovači stane čipom.</li>
-        <li>Farby druhov dopravy: oranžová pre vlaky, modrá pre autobusy, červená pre MHD.</li>
-        <li>Aktuálnu polohu ako predvolený štart a výmenu štartu a cieľa.</li>
-      </ul>
-    </div>
-    <div class="card small muted">
-      <div class="banner"><div class="bi">!</div><div><b>Kontrast</b><br>Biely text na zelenej Ubian <code>#33B45D</code> má kontrast 2,7 : 1 a ikony druhov dopravy 2,1 až 3,3 : 1. Biely text v hlavičke a na tlačidlách preto nespĺňa WCAG AA.</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ PRINCÍPY ============ -->
-<section id="principles">
-  <div class="eyebrow">02 · Princípy</div>
-  <h2>Čo má nová aplikácia spĺňať</h2>
-  <div class="grid g3">
-    <div class="card"><h4>Málo ťuknutí</h4><p class="small muted" style="margin:0">Odchody hneď po otvorení, trasa na dve ťuknutia, lístok na jedno.</p></div>
-    <div class="card"><h4>Mesto podľa polohy</h4><p class="small muted" style="margin:0">Mesto, dopravca a tarifa sa určia z polohy a trasy. Ručná zmena zostane ako možnosť.</p></div>
-    <div class="card"><h4>Natívne ovládanie</h4><p class="small muted" style="margin:0">Na iOS Liquid Glass a písmo SF, na Androide Material 3 Expressive. Vzhľad Ubianu nesú linky, jazdy a karty.</p></div>
-    <div class="card"><h4>Jedna peňaženka</h4><p class="small muted" style="margin:0">Kredit, karty, lístky, preukazy a parkovanie na jednom mieste. Navrchu je to, čo práve platí.</p></div>
-    <div class="card"><h4>Jasný stav dát</h4><p class="small muted" style="margin:0">Stav „načas“ alebo „+2 min“ sa zobrazí len pri živých dátach. Offline sú k dispozícii uložené miesta a lístky.</p></div>
-    <div class="card"><h4>Prístupnosť</h4><p class="small muted" style="margin:0">WCAG 2.2 AA, písmo zväčšiteľné na 200 %, bezbariérové trasy a údaj o nízkopodlažnosti, ktorý už je v dátach.</p></div>
-  </div>
-</section>
-
-<!-- ============ ŠTRUKTÚRA ============ -->
-<section id="ia">
-  <div class="eyebrow">03 · Štruktúra</div>
-  <h2>Mapa ako základ aplikácie</h2>
-  <p class="muted">V dnešnej aplikácii je mapa samostatná obrazovka. V návrhu je mapa stále na pozadí a všetko ostatné sa zobrazuje v jednom vysúvacom paneli nad ňou. Spodná lišta so záložkami odpadá.</p>
-  <div class="grid g4">
-    <div class="card"><span class="tag red">Vždy viditeľná</span><h4 style="margin-top:8px">Mapa</h4><p class="small muted" style="margin:0">Vozidlá, zastávky, vaše miesta a bikesharing. Mapa ukazuje to, čo je práve v paneli.</p></div>
-    <div class="card"><span class="tag blue">Predvolené</span><h4 style="margin-top:8px">Odchody</h4><p class="small muted" style="margin:0">Najbližšie zastávky a zastávky, ktoré si pripnete. Na mape sú vozidlá týchto odchodov.</p></div>
-    <div class="card"><span class="tag">Na hrane panela</span><h4 style="margin-top:8px">Vyhľadávanie</h4><p class="small muted" style="margin:0">Pole „Kam?“ je na hornej hrane panela ako v Apple Maps. Ťuknutím sa panel rozšíri na plánovač.</p></div>
-    <div class="card"><span class="tag">Jedno ťuknutie</span><h4 style="margin-top:8px">Peňaženka</h4><p class="small muted" style="margin:0">Tlačidlo vedľa vyhľadávania otvorí peňaženku na celú obrazovku, aby bol lístok pri kontrole hneď po ruke.</p></div>
-  </div>
-
-  <h3>Panel</h3>
-  <div class="card small muted">
-    <ul class="clean">
-      <li>Panel má tri výšky. Hodnoty sú z POC v CSS pixeloch:
-        <ul>
-          <li><i>zbalený</i>: 104 px, len vyhľadávacie pole nad mapou;</li>
-          <li><i>stredný</i>, predvolený: 62 % viditeľnej výšky, najviac 560 px, s odchodmi z najbližších zastávok;</li>
-          <li><i>veľký</i>: celá výška, 12 px pod horným bezpečným okrajom, pre celý zoznam alebo plánovač.</li>
-        </ul>
-      </li>
-      <li>Jazda sa otvára v strednej výške, takže vozidlo na mape zostáva viditeľné.</li>
-      <li>Otvorenie detailu nahradí obsah panela. Zatvorenie vráti predchádzajúci obsah v pôvodnej výške.</li>
-      <li>Skratky Moje miesta nad odchodmi sú ďalší krok, POC ich zatiaľ nemá.</li>
-    </ul>
-  </div>
-
-  <h3>Z dnešnej aplikácie do novej štruktúry</h3>
-  <div class="tbl-wrap"><table>
-    <tr><th>Dnes</th><th>Návrh</th></tr>
-    <tr><td>Päť záložiek podľa produktov</td><td>Mapa s panelom. Karta, lístok a parkovanie sú v Peňaženke, účet má vlastné tlačidlo.</td></tr>
-    <tr><td>Mapa ako samostatná obrazovka s prepínačmi vrstiev</td><td>Mapa je stále zobrazená, vrstvy sa menia podľa kontextu.</td></tr>
-    <tr><td>Prepínanie medzi spojeniami a odchodmi</td><td>Odchody sú predvolený obsah panela, vyhľadávanie je na jeho hrane.</td></tr>
-    <tr><td>Tlačidlo vyhľadávania, ktoré vyzerá neaktívne</td><td>Výber cieľa rovno spustí vyhľadávanie.</td></tr>
-    <tr><td>Výber mesta zo zoznamu</td><td>Mesto podľa polohy a trasy, ručná zmena ako možnosť.</td></tr>
-    <tr><td>7 kombinácií druhov dopravy</td><td>3 nezávislé prepínače vo Filtroch (Vlaky · Autobusy · MHD). Zapnúť sa dá jeden, dva aj všetky tri, nejde o výber jednej možnosti.</td></tr>
-    <tr><td>AI agent ako samostatný chat</td><td>Požiadavka bežnou vetou priamo vo vyhľadávaní.</td></tr>
-  </table></div>
-</section>
-
-<!-- ============ ZÁKLADY ============ -->
-<section id="foundations">
-  <div class="eyebrow">04 · Základy</div>
-  <h2>Farby Ubianu s dostatočným kontrastom</h2>
-  <p class="muted">Paleta zachováva farby Ubianu a upravuje ich kontrast. Značková zelená zostáva na plochách s tmavomodrým textom (5,6 : 1). Odkazy a biele písmo na farbe používajú tmavšie odtiene tých istých farieb. V tmavom režime zostávajú farby liniek rovnaké a odznaky dostanú jemný svetlý okraj. Zelená sa zosvetlí na <code>#33B45D</code> s tmavomodrým textom a trasa jazdy na <code>#EA6966</code>.</p>
-  <div class="grid g4">
-    <div class="sw"><div class="chip" style="background:#33B45D;color:#152937">ubian.green</div><div class="meta"><b>#33B45D · z aplikácie</b>Značkové plochy a pás lístka, s tmavomodrým textom (5,6 : 1). Biely text na nej nie (2,7 : 1).</div></div>
-    <div class="sw"><div class="chip" style="background:#1E7F3F">green.ui</div><div class="meta"><b>#1E7F3F · 5,0 : 1</b>Tlačidlá, odkazy a výber vo svetlom režime</div></div>
-    <div class="sw"><div class="chip" style="background:#152937">ubian.navy</div><div class="meta"><b>#152937 · z aplikácie</b>Text, aj na zelenej</div></div>
-    <div class="sw"><div class="chip" style="background:#F9FAFB;color:#152937">panel</div><div class="meta"><b>#F9FAFB / #10171C</b>Pozadie panela vo svetlom a tmavom režime. Karty sú biele <code>#FFFFFF</code> / <code>#182128</code> s okrajom <code>#E2E5E7</code> / <code>#2B3840</code>.</div></div>
-  </div>
-  <h3>Stav a text</h3>
-  <div class="grid g4">
-    <div class="sw"><div class="chip" style="background:#1E7F3F">načas</div><div class="meta"><b>#1E7F3F · 5,0 : 1</b>V tmavom režime <code>#7AD497</code> (9,1 : 1)</div></div>
-    <div class="sw"><div class="chip" style="background:#A35200">+2 min</div><div class="meta"><b>#A35200 · 5,6 : 1</b>V tmavom režime <code>#F5A524</code> (8,0 : 1)</div></div>
-    <div class="sw"><div class="chip" style="background:#5F6C74">sekundárny text</div><div class="meta"><b>#5F6C74 · 5,4 : 1</b>V tmavom režime <code>#91A0A8</code> (6,1 : 1)</div></div>
-    <div class="sw"><div class="chip" style="background:#152937">odpočet</div><div class="meta"><b>#152937</b>Odpočet a dĺžka cesty sú v bežnej farbe textu, farbu má len stav.</div></div>
-  </div>
-  <h3>Farby druhov dopravy</h3>
-  <div class="grid g3">
-    <div class="sw"><div class="chip" style="background:#A85A00">Vlaky</div><div class="meta"><b>#A85A00 · 5,1 : 1 · šikmý tvar</b>Z oranžovej <code>#F99C36</code> (2,1 : 1)</div></div>
-    <div class="sw"><div class="chip" style="background:#1F6FB2">Regionálne autobusy</div><div class="meta"><b>#1F6FB2 · 5,3 : 1 · štvorec s podstavou</b>Z modrej <code>#4593D0</code> (3,3 : 1)</div></div>
-    <div class="sw"><div class="chip" style="background:#C8363A">MHD</div><div class="meta"><b>#C8363A · 5,2 : 1</b>Z červenej <code>#EA6966</code> (3,1 : 1). Električku, trolejbus a autobus MHD rozlíši tvar: ovál, zaoblený štvorec a štvorec.</div></div>
-  </div>
-  <div class="grid g2" style="margin-top:16px">
-    <div class="card">
-      <h4>Farby dopravcov</h4>
-      <p class="small muted">Ak má dopravca vlastné farby liniek, použijú sa namiesto farby druhu dopravy. Odtieň zostane, upraví sa len svetlosť, kým biely text nedosiahne kontrast 4,5 : 1.</p>
-      <div class="adapt">
-        <div><span class="chipsw" style="background:#FFD200"></span>dopravca <code>#FFD200</code></div><span>→</span><div><span class="lb bus" style="--c:#8A6F00">12</span><code>#8A6F00</code> 4,8 : 1</div>
-        <div><span class="chipsw" style="background:#7FC241"></span>dopravca <code>#7FC241</code></div><span>→</span><div><span class="lb trolley" style="--c:#3E7A12">4</span><code>#3E7A12</code> 5,3 : 1</div>
-        <div><span class="chipsw" style="background:#E30613"></span>dopravca <code>#E30613</code></div><span>→</span><div><span class="lb tram" style="--c:#D1050F">9</span><code>#D1050F</code> 5,6 : 1</div>
-      </div>
-    </div>
-    <div class="card small muted">
-      <h4 style="color:var(--text)">Tvar podľa druhu dopravy</h4>
-      <p style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="lb tram">2</span>električka · <span class="lb trolley">38</span>trolejbus · <span class="lb bus">23</span>autobus MHD · <span class="lb regional">701</span>prímestský · <span class="lb train">Os</span>vlak · <span class="lb night">N1</span>nočná</p>
-      <p style="margin:0">Druh dopravy rozlíši farba aj tvar, takže ho prečítajú aj ľudia, ktorí nerozlišujú farby.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ KOMPONENTY ============ -->
-<section id="components">
-  <div class="eyebrow">05 · Komponenty</div>
-  <h2>Hlavné komponenty</h2>
-
-  <h3>Karta odchodov</h3>
-  <div class="grid g2">
-    <div class="card" style="padding:12px">
-      <div class="pcard focus" style="margin:0">
-        <div class="xstop"><b>Technická univerzita</b><span>🚶 2 min</span><i class="xchev">›</i></div>
-        <div class="dep live-row"><span class="lb tram">4</span><div class="dest"><b>Nám. osloboditeľov<i class="plat">A</i></b><span class="pos">Na zastávke Hlavná · 2 zast.</span></div><div class="t"><b class="rt">1 min</b><span class="st ok">načas</span></div></div>
-        <div class="dep live-row"><span class="lb tram">6</span><div class="dest"><b>Ťahanovce<i class="plat">A</i></b><span class="pos">Nasleduje Letná · 4 zast.</span></div><div class="t"><b class="rt">5 min</b><span class="st warn">+2 min</span></div></div>
-        <div class="dep live-row"><span class="lb bus">23</span><div class="dest"><b>Sídlisko KVP<i class="plat">C</i></b></div><div class="t"><b>11 min</b><span class="st ok">14:24</span></div></div>
-      </div>
-    </div>
-    <div class="card small muted">
-      <h4 style="color:var(--text)">Karta zastávky a riadok odchodu</h4>
-      <ul class="clean"><li>Odchody z piatich najbližších zastávok sú v kartách podľa zastávky. Hlavička karty ukazuje názov, chôdzu v minútach a šípku na zbalenie. Karta zastávky, ktorú práve ukazuje mapa, má zelený okraj.</li><li>Riadok: odznak linky, cieľ a nástupište ako malý sivý štítok za cieľom („A“, „C“, koľaj „3“).</li><li>Druhý riadok hovorí, kde je vozidlo, ako hlásenie vo vozidle: „Na zastávke Hlavná · 2 zast.“ alebo „Nasleduje Letná · 4 zast.“</li><li>Vpravo odpočet v bežnej farbe textu a pod ním „načas“ zelenou alebo „+2 min“ oranžovou. Bez živých dát je pod odpočtom plánovaný čas odchodu.</li><li>Ťuknutie na riadok otvorí Detail spoja s vozidlom zvýrazneným na mape.</li></ul>
-    </div>
-  </div>
-
-  <h3>Moje miesta</h3>
-  <div class="grid g2">
-    <div class="card"><div class="plc" style="padding:0">
-      <div><i class="c-home">🏠</i>Domov<small>58 min</small></div>
-      <div><i class="c-work">💼</i>Práca<small>Tu ste</small></div>
-      <div><i class="c-school">🎓</i>Škola<small>25 min</small></div>
-      <div><i class="c-add">＋</i>Pridať<small>&nbsp;</small></div>
-    </div></div>
-    <div class="card small muted">
-      <h4 style="color:var(--text)">Skratky do cieľa</h4>
-      <ul class="clean"><li>Štart je takmer vždy aktuálna poloha, preto skratka ukazuje, ako dlho trvá cesta odtiaľto, od dverí k dverám.</li><li>Ťuknutie ukáže výsledky. Pri mieste, kde práve ste, je „Tu ste“.</li><li>Cieľ môže byť aj v inom meste, napríklad práca v Košiciach pri bývaní v Prešove.</li></ul>
-    </div>
-  </div>
-
-  <h3>Výsledok a Detail spoja</h3>
-  <div class="grid g2">
-    <div class="card" style="padding:6px 0">
-      <div class="m-card rcard sel" data-rc="0">
-        <div class="rc-h"><b class="rc-t">14:13 – 15:11</b><b>58 min</b></div>
-        <div class="rc-top"><div class="rc-main"><div class="legs"><span class="walk"><svg width="14" height="14" fill="currentColor"><use href="#i-walk"/></svg>2</span><span class="sep">›</span><span class="lb tram sm">4</span><span class="sep">›</span><span class="lb train sm">Os 8813</span><span class="sep">›</span><span class="lb trolley sm">38</span></div>
-        <div class="op rc-more">DPMK · ZSSK · DPMP</div></div><span class="rc-go" aria-hidden="true">›</span></div>
-        <div class="rc-cta rc-more"><div class="m-btn tonal">Sledovať</div><div class="m-btn">3,40 €</div></div>
-      </div>
-      <div class="m-card rcard" data-rc="1">
-        <div class="rc-h"><b class="rc-t">14:30 – 15:45</b><b>75 min</b></div>
-        <div class="rc-top"><div class="rc-main"><div class="legs"><span class="lb regional sm">701</span></div>
-        <div class="op rc-more">Arriva · bez prestupu</div></div><span class="rc-go" aria-hidden="true">›</span></div>
-        <div class="rc-cta rc-more"><div class="m-btn tonal">Sledovať</div><div class="m-btn">2,90 €</div></div>
-      </div>
-    
-      <div class="m-card rcard" data-rc="2">
-        <div class="rc-h"><b class="rc-t">14:05 – 14:21</b><b>16 min</b></div>
-        <div class="rc-top"><div class="rc-main"><div class="legs"><span class="lb tram sm">4</span></div>
-        <div class="op">DPMK · bez prestupu</div></div><span class="rc-go" aria-hidden="true">›</span></div>
-        <div class="rc-cta"><div class="m-btn tonal">Sledovať</div><div class="m-btn split"><span>✓ Platí</span><span>1,10 €</span></div></div>
-      </div>
-    </div>
-    <div class="card small muted">
-      <h4 style="color:var(--text)">Akcie na výsledku</h4>
-      <ul class="clean"><li>Prvé ťuknutie výsledok vyberie: trasa sa nakreslí na mapu a karta ukáže úseky, dopravcov a akcie. Druhé ťuknutie otvorí Detail spoja.</li><li>Tlačidlo nákupu ukazuje cenu, napríklad „3,40 €“, a ťuknutím ju zaplatíte. Z výsledkov sa kupuje celá cesta, z odchodov jednorazový lístok na linku.</li><li>Ak máte platný predplatný lístok na celú trasu, tlačidlo nákupu sa rozdelí na dve časti: „✓ Platí | 1,10 €“. Ťuknutie na „✓ Platí“ otvorí Peňaženku s aktívnym lístkom, ťuknutie na cenu otvorí nákup jednorazového lístka, napríklad pre spolucestujúceho.</li><li>Detail spoja má tie isté akcie, takže sa netreba vracať do zoznamu.</li></ul>
-    </div>
-  </div>
-
-  <h3>Aktuálna jazda</h3>
-  <div class="grid g2">
-    <div class="card">
-      <div class="trip">
-        <div class="trip-h"><span class="lb tram">2</span><b>smer Staničné nám.</b><span class="st warn" style="margin-left:auto">+3 min</span></div>
-        <div class="trip-track" style="--c:var(--mode-tram)"><i style="left:0"></i><i style="left:33%"></i><i style="left:66%"></i><i class="end" style="left:100%"></i><span class="trip-veh"></span></div>
-        <div class="trip-stops"><span>Havlíčkova</span><span>Hlavná</span><span>Dom umenia</span><span><b>Staničné nám.</b></span></div>
-        <div class="trip-f"><b>Vystúpte o 2 zastávky</b><span>o 6 min</span></div>
-      </div>
-    </div>
-    <div class="card small muted">
-      <h4 style="color:var(--text)">Z akých dát</h4>
-      <ul class="clean"><li>Pásik a Jazda vystačia s údajmi, ktoré už vracia živé rozhranie Ubianu: meškanie, poradie a státie na zastávke, odrieknutie, nízkopodlažnosť, dopravca a súradnice.</li><li>Live Activities na iOS a Live Updates na Androide budú navyše potrebovať notifikácie zo servera.</li><li>Nadpis sa mení podľa jazdy: „Pri vás o 2 zast.“, „Prichádza“, potom „Vystúpte o 3 zast.“ a „Vystúpte“.</li><li>Pásik je nad panelom vo všetkých stavoch. Ťuknutím sa zmení na Jazdu, mapa pritom stále ukazuje vozidlo.</li><li>Sledovanie skončí samo, keď vozidlo opustí výstupnú zastávku.</li></ul>
-    </div>
-  </div>
-
-  <h3>Peňaženka</h3>
-  <div class="grid g2">
-    <div class="card">
-      <div class="vcard">
-        <div class="vc-band"><span class="vc-clock js-clock">14:21:07</span><span class="vc-city">Virtuálna karta · Košice</span></div>
-        <div class="vc-body"><div class="qr js-qr" style="width:88px;height:88px;margin:0"></div><div><b>MHD Košice · Základný</b><div class="op">ročný · do 23. 9. 2027</div><span class="chipx ok" style="margin-top:6px">● Platný · 356 dní</span><div class="vc-prog"><b></b></div></div></div>
-      </div>
-    </div>
-    <div class="card small muted">
-      <h4 style="color:var(--text)">Poradie v peňaženke</h4>
-      <ul class="clean"><li>Navrchu je to, čo platí teraz: virtuálna karta s aktívnym produktom, lístok alebo bežiace parkovanie. Pás s hodinami a meniaci sa QR kód ukážu revízorovi, že doklad je živý.</li><li>Pod tým kredit s tlačidlom „Dobiť“.</li><li>Potom karty a preukazy: čipová a virtuálna karta, študentský alebo učiteľský preukaz.</li><li>Nákup sa začína tam, kde ho používateľ potrebuje: na výsledku trasy, na karte („Predĺžiť“) alebo v parkovacej zóne.</li></ul>
-    </div>
-  </div>
-
-  <h3>NLP plánovanie</h3>
-  <div class="grid g2">
-    <div class="card">
-      <div class="planner static">
-        <div class="pl-row focus"><svg width="16" height="16" fill="var(--accent)"><use href="#i-spark"/></svg><b class="caret">zajtra ráno do Prešova bez prestupu</b></div>
-        <div class="pl-parse"><span class="chipx blue">Odkiaľ: Moja poloha</span><span class="chipx blue">Kam: Prešov</span><span class="chipx blue">Zajtra · odchod 6:00–9:00</span><span class="chipx blue">Bez prestupu</span></div>
-        <div class="pl-chips"><span class="chipx">Odchod ▾</span><span class="chipx">Filtre</span></div>
-      </div>
-    </div>
-    <div class="card small muted">
-      <h4 style="color:var(--text)">Vízia pre AI plánovač</h4>
-      <ul class="clean"><li>NLP, teda spracovanie prirodzeného jazyka, má v návrhu najnižšiu prioritu. Je to skôr vízia, ako do vyhľadávania začleniť dnešného AI agenta.</li><li>To isté pole prijme názov zastávky, uložené miesto aj celú vetu.</li><li>Model nevedie rozhovor. Vetu prevedie na vyplnený formulár a výsledok ukáže ako čipy, ktoré sa dajú jedným ťuknutím opraviť.</li><li>Do modelu ide len text požiadavky, bez údajov o používateľovi. Spojenia hľadá vyhľadávač Ubianu.</li></ul>
-    </div>
-  </div>
-</section>
-
-<!-- ============ OBRAZOVKY ============ -->
-<section id="screens">
-  <div class="eyebrow">06 · Obrazovky</div>
-  <h2>Každá obrazovka na iOS aj Androide</h2>
-  <p class="muted">Rozloženie vychádza z Apple Maps v iOS 26 a Google Maps na Androide. Mapa zostáva na mieste, mení sa len výška a obsah panela. Telefóny ukazujú cieľový návrh vrátane skratiek Moje miesta, ktoré POC zatiaľ nemá.</p>
-  <div class="pair-ctl" id="pairctl"><button data-state="dep">Odchody</button><button data-state="search">Hľadať</button><button data-state="res">Výsledky</button><button data-state="det">Detail</button><button data-state="ride">Jazda</button><button data-state="peek">Mapa počas jazdy</button><button data-state="trkdep">Odchody počas jazdy</button><button data-state="wallet">Peňaženka</button></div>
-  <div class="devices pair">
-    <div class="dev-col"><div class="phone ios"><div class="screen xs" data-view="dep">
+</svg>
+<template id="tpl-ios"><div class="phone ios"><div class="screen xs" data-view="dep">
   <div class="xmap"><svg viewBox="0 0 393 852" preserveAspectRatio="xMidYMid slice">
   <rect class="m-blk" x="20" y="90" width="80" height="70" rx="5"/><rect class="m-blk" x="140" y="80" width="110" height="80" rx="5"/><rect class="m-blk" x="290" y="90" width="90" height="70" rx="5"/>
   <rect class="m-blk" x="20" y="200" width="80" height="80" rx="5"/><rect class="m-blk" x="300" y="190" width="80" height="90" rx="5"/>
@@ -1184,7 +930,7 @@ h1,h2,h3,h4{font-weight:800}
       <animateMotion dur="9s" repeatCount="indefinite" path="M40 305 H270"/></g>
   </g>
   <g class="veh"><circle r="11" fill="var(--mode-tram)" stroke="#fff" stroke-width="2.5"/><text>6</text><animateMotion dur="22s" repeatCount="indefinite" path="M120 -10 V305"/></g>
-  <g class="veh"><rect x="-12" y="-11" width="24" height="22" rx="3" fill="var(--mode-bus)" stroke="#fff" stroke-width="2.5"/><text>23</text><animateMotion dur="26s" repeatCount="indefinite" path="M410 175 H-10"/></g>
+  <g class="veh"><rect x="-12" y="-11" width="24" height="22" rx="3" fill="var(--mode-bus)" stroke="#fff" stroke-width="2.5"/><text>23</text><g transform="translate(17 -15)"><rect x="-14" y="-9" width="28" height="18" rx="9" fill="var(--warn)" stroke="#fff" stroke-width="2"/><text style="font-size:10px">+3</text></g><animateMotion dur="26s" repeatCount="indefinite" path="M410 175 H-10"/></g>
   <g class="veh"><rect x="-12" y="-11" width="24" height="22" rx="3" fill="var(--mode-bus)" stroke="#fff" stroke-width="2.5"/><text>16</text><animateMotion dur="30s" repeatCount="indefinite" path="M270 860 V-10"/></g>
   <g transform="translate(345 300)"><circle r="10" fill="#fff" stroke="var(--accent)" stroke-width="2.5"/><text style="font-size:10px;text-anchor:middle;dominant-baseline:central">🚲</text></g>
   <g class="ml ml-route"><g class="draw2"><path pathLength="1" d="M290 305 H370 V40" stroke="var(--ribbon-case)" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path pathLength="1" d="M290 305 H370 V40" stroke="var(--mode-tram)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>
@@ -1287,8 +1033,8 @@ h1,h2,h3,h4{font-weight:800}
     </div>
   </div>
   <div class="home-ind"></div>
-</div></div><div class="dev-cap"><b>iOS 26 · MapKit</b>Panel s plnou plochou siaha od okraja po okraj a má horné rohy zaoblené na 28 px, ako v POC. Vyhľadávanie je na jeho hornej hrane.</div></div>
-    <div class="dev-col"><div class="phone android"><div class="screen xs" data-view="dep">
+</div></div></template>
+<template id="tpl-android"><div class="phone android"><div class="screen xs" data-view="dep">
   <div class="xmap"><svg viewBox="0 0 393 852" preserveAspectRatio="xMidYMid slice">
   <rect class="m-blk" x="20" y="90" width="80" height="70" rx="5"/><rect class="m-blk" x="140" y="80" width="110" height="80" rx="5"/><rect class="m-blk" x="290" y="90" width="90" height="70" rx="5"/>
   <rect class="m-blk" x="20" y="200" width="80" height="80" rx="5"/><rect class="m-blk" x="300" y="190" width="80" height="90" rx="5"/>
@@ -1307,7 +1053,7 @@ h1,h2,h3,h4{font-weight:800}
       <animateMotion dur="9s" repeatCount="indefinite" path="M40 305 H270"/></g>
   </g>
   <g class="veh"><circle r="11" fill="var(--mode-tram)" stroke="#fff" stroke-width="2.5"/><text>6</text><animateMotion dur="22s" repeatCount="indefinite" path="M120 -10 V305"/></g>
-  <g class="veh"><rect x="-12" y="-11" width="24" height="22" rx="3" fill="var(--mode-bus)" stroke="#fff" stroke-width="2.5"/><text>23</text><animateMotion dur="26s" repeatCount="indefinite" path="M410 175 H-10"/></g>
+  <g class="veh"><rect x="-12" y="-11" width="24" height="22" rx="3" fill="var(--mode-bus)" stroke="#fff" stroke-width="2.5"/><text>23</text><g transform="translate(17 -15)"><rect x="-14" y="-9" width="28" height="18" rx="9" fill="var(--warn)" stroke="#fff" stroke-width="2"/><text style="font-size:10px">+3</text></g><animateMotion dur="26s" repeatCount="indefinite" path="M410 175 H-10"/></g>
   <g class="veh"><rect x="-12" y="-11" width="24" height="22" rx="3" fill="var(--mode-bus)" stroke="#fff" stroke-width="2.5"/><text>16</text><animateMotion dur="30s" repeatCount="indefinite" path="M270 860 V-10"/></g>
   <g transform="translate(345 300)"><circle r="10" fill="#fff" stroke="var(--accent)" stroke-width="2.5"/><text style="font-size:10px;text-anchor:middle;dominant-baseline:central">🚲</text></g>
   <g class="ml ml-route"><g class="draw2"><path pathLength="1" d="M290 305 H370 V40" stroke="var(--ribbon-case)" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path pathLength="1" d="M290 305 H370 V40" stroke="var(--mode-tram)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>
@@ -1410,74 +1156,165 @@ h1,h2,h3,h4{font-weight:800}
     </div>
   </div>
   <div class="a-gest"></div>
-</div></div><div class="dev-cap"><b>Android · MapLibre</b>Rovnaký panel ako na iOS, vyhľadávacie pole s avatarom a tlačidlo peňaženky. Peňaženka sa otvára na celú obrazovku.</div></div>
+</div></div></template>
+
+<header class="top"><div class="top-in">
+  <div class="brand"><span class="tag">Návrh redizajnu</span></div>
+  <nav><a href="#keep">Čo ponechávame</a><a href="#better">Čo zlepšujeme</a></nav>
+  <button class="toggle" id="themeBtn">◐ Tmavý</button>
+</div></header>
+
+<main>
+<div class="hero">
+  <div>
+    <h1>UBIAN<br><em>Na jeden dotyk.</em></h1>
+    <p>Ubian spája cestovné poriadky a polohy vozidiel vlakov, regionálnych autobusov a MHD z desiatok miest s predajom lístkov, kreditu, dopravných kariet, študentských preukazov a parkovania. Návrh všetko z toho zachováva a skracuje cestu k nim. Celý tok aplikácie si môžete preklikať vo funkčnom POC.</p>
+    <div class="pill-row">
+      <span class="lb tram">2</span><span class="lb trolley">38</span><span class="lb bus">23</span><span class="lb regional">701</span><span class="lb train">Os 8813</span><span class="lb night">N1</span>
+    </div>
+    <a class="cta" href="https://spoj.vercel.app" target="_blank" rel="noreferrer">Vyskúšať funkčný POC →</a>
+    <p class="small muted" style="margin-top:16px">Nevyžiadaný koncept, bez prepojenia s Ubianom. Farby vychádzajú z dnešnej aplikácie.</p>
   </div>
-  <p class="small muted" style="text-align:center">Vyberte stav hore, ťuknite do telefónu alebo ich nechajte striedať. Oba telefóny ukazujú vždy ten istý stav. Po ťuknutí na „Sledovať“ sa jazda sleduje, kým neťuknete na „Ukončiť“.</p>
+  <div class="hero-art ub-art">
+    <svg viewBox="0 0 400 360" preserveAspectRatio="xMidYMid slice">
+      <path d="M-20 280 C80 280 120 140 220 150 S340 90 420 60" stroke="var(--ribbon-case)" stroke-width="18" fill="none" stroke-linecap="round"/>
+      <path d="M-20 280 C80 280 120 140 220 150 S340 90 420 60" stroke="var(--accent)" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M-20 320 C120 320 200 250 420 240" stroke="var(--ribbon-case)" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <path d="M-20 320 C120 320 200 250 420 240" stroke="var(--mode-train)" stroke-width="7" fill="none" stroke-linecap="round" opacity=".9"/>
+      <g class="veh"><circle r="12" fill="var(--mode-tram)" stroke="#fff" stroke-width="3"/><text>2</text><animateMotion dur="8s" repeatCount="indefinite" path="M-20 280 C80 280 120 140 220 150 S340 90 420 60"/></g>
+      <g class="veh"><rect x="-13" y="-10" width="26" height="20" rx="3" fill="var(--mode-train)" stroke="#fff" stroke-width="3"/><text>Os</text><animateMotion dur="11s" repeatCount="indefinite" path="M-20 320 C120 320 200 250 420 240"/></g>
+      <text x="30" y="70" class="ub-cities">Košice · Prešov · Bratislava · Žilina · Nitra</text>
+      <text x="30" y="92" class="ub-cities">Poprad · Martin · Trnava · Zvolen · +46</text>
+    </svg>
+  </div>
+</div>
+
+<section id="keep">
+  <div class="eyebrow">01 · Čo ponechávame</div>
+  <h2>Silný základ, na ktorom návrh stavia</h2>
+  <p class="muted">Ubian má to, čo väčšina dopravných aplikácií nemá: živé dáta aj predaj pre celé Slovensko na jednom mieste. Návrh z toho nič neuberá.</p>
+  <div class="grid g2 keep">
+    <div class="card">
+      <h4><span class="chipx ok">Dáta a služby</span></h4>
+      <ul class="clean small muted">
+        <li>MHD v približne 55 mestách, regionálne autobusy a vlaky v jednej aplikácii.</li>
+        <li>Živé dáta: polohy vozidiel, meškania, odrieknuté spoje, aktuálna zastávka, nízkopodlažnosť, Wi-Fi a prevoz bicyklov.</li>
+        <li>Predaj: kredit, čipová aj virtuálna karta, časové a jednorazové lístky, študentské preukazy, parkovanie a Google Pay.</li>
+        <li>AI agent (beta) na vyhľadávanie spojení a bikesharing na mape.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4><span class="chipx ok">Z rozhrania</span></h4>
+      <ul class="clean small muted">
+        <li>Karta aktívneho lístka s ukazovateľom platnosti. Prechádza do Peňaženky.</li>
+        <li>Rýchly prepínač bez prestupov, ktorý sa v plánovači stane čipom.</li>
+        <li>Farby druhov dopravy: oranžová pre vlaky, modrá pre autobusy, červená pre MHD.</li>
+        <li>Aktuálna poloha ako predvolený štart a výmena štartu a cieľa.</li>
+        <li>Zelená a tmavomodrá Ubianu ako farby značky.</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
+<section id="better">
+  <div class="eyebrow">02 · Čo zlepšujeme</div>
+  <h2>Šesť zmien, ktoré pocíti každý cestujúci</h2>
+  <article class="feat">
+    <div>
+      <div class="eyebrow">01</div>
+      <h3>Nová domovská obrazovka: cestovanie na jeden dotyk</h3>
+      <p>Dnes treba pred hľadaním vybrať mesto zo zoznamu, jednu zo siedmich kombinácií druhov dopravy a prepnúť sa medzi spojeniami a odchodmi. V návrhu sa aplikácia otvorí rovno na odchodoch z najbližších zastávok a mesto, dopravcu aj tarifu určí z polohy. Nad odchodmi sú Moje miesta ako Domov, Práca či Škola a každé ukazuje, ako dlho trvá cesta odtiaľto. Jedno ťuknutie na miesto ukáže spojenia, ďalšie kúpi lístok za cenu, ktorá je na tlačidle.</p>
+    </div>
+    <figure class="feat-fig"><div data-phone="ios" data-steps="dep,res" class="hl-home"></div></figure>
+  </article>
+  <article class="feat">
+    <div>
+      <div class="eyebrow">02</div>
+      <h3>Mapa vždy poruke</h3>
+      <p>Živé polohy vozidiel sú dnes na samostatnej obrazovke, o ťuknutie ďalej. V návrhu je mapa stále na pozadí a všetko ostatné je v jednom paneli nad ňou, ktorý sa dá stiahnuť dole, nechať v strede alebo vytiahnuť na celú výšku. Mapa ukazuje to, čo je práve v paneli: vozidlá najbližších odchodov, trasu vybraného spojenia alebo vozidlo, ktorým idete. Meškajúce vozidlá majú meškanie priamo na značke, takže ho netreba hľadať.</p>
+    </div>
+    <figure class="feat-fig"><div data-phone="ios" data-steps="dep,peek,res" class=""></div></figure>
+  </article>
+  <article class="feat">
+    <div>
+      <div class="eyebrow">03</div>
+      <h3>Sledovanie cesty</h3>
+      <p>Ťuknutím na „Sledovať“ pri spojení alebo odchode sa nad panelom objaví pásik jazdy. Hovorí to, čo by povedal spolucestujúci: „Pri vás o 2 zast.“, „Prichádza“, „Vystúpte o 3 zast.“ a nakoniec „Vystúpte“. Pásik sa roztiahne na Jazdu so zoznamom zastávok, pričom mapa stále ukazuje vozidlo, a sledovanie skončí samo, keď vozidlo opustí výstupnú zastávku. Stačia na to dáta, ktoré živé rozhranie Ubianu už vracia. Live Activities na iOS a Live Updates na Androide budú navyše potrebovať notifikácie zo servera.</p>
+    </div>
+    <figure class="feat-fig"><div data-phone="ios" data-steps="dep+trk,dep+trk+jz,peek+trk" class=""></div></figure>
+  </article>
+  <article class="feat">
+    <div>
+      <div class="eyebrow">04</div>
+      <h3>Pravdivá poloha vlakov</h3>
+      <p>Vlaky hlásia polohu len v staniciach a odbočkách, nie na zastávkach. Medzi hláseniami sa poloha nemení a trasa je rovná čiara medzi stanicami, takže mapa ukazuje vlak na mieste, ktoré už mohol dávno opustiť. Návrh pozná z OpenStreetMap všetky body, v ktorých vlaky hlásia polohu, a podľa toho vlak opíše pravdivo: kým v stanici stojí, má plnú značku a popis „Na stanici Košice“, po odchode prázdnu značku, popis „Medzi stanicami Košice – Kysak“ a zvýraznený úsek trate. Od Ubianu to nepotrebuje žiadne nové dáta.</p>
+    </div>
+    <figure class="feat-fig"><div class="card rail">
+      <div><span class="tag">Dnes</span>
+        <svg viewBox="0 0 360 74" role="img" aria-label="Dnes: vlak stojí na poslednej hlásenej stanici na rovnej čiare">
+          <line class="rl-line" x1="30" y1="44" x2="330" y2="44"/>
+          <circle class="rl-st" cx="30" cy="44" r="7"/><circle class="rl-st" cx="180" cy="44" r="7"/><circle class="rl-st" cx="330" cy="44" r="7"/>
+          <text x="30" y="70" text-anchor="middle">Košice, žel.st.</text><text x="180" y="70" text-anchor="middle">Ťahanovce, žel.st.</text><text x="330" y="70" text-anchor="middle">Kysak, žel.st.</text>
+          <g class="rl-fixed" transform="translate(30 18)"><rect x="-16" y="-11" width="32" height="22" rx="3"/><text>Os</text></g>
+        </svg>
+      </div>
+      <div><span class="tag blue">Návrh</span>
+        <svg viewBox="0 0 360 120" role="img" aria-label="Návrh: vlak na stanici má plnú značku, po odchode prázdnu a zvýraznený úsek trate">
+          <text class="rl-say a" x="0" y="16">Na stanici Košice</text><text class="rl-say b" x="0" y="16">Medzi stanicami Košice – Kysak</text>
+          <path class="rl-line" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
+          <path class="rl-hl" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
+          <rect class="rl-st" x="23" y="83" width="14" height="14" rx="2"/><line class="rl-halt" x1="180" y1="48" x2="180" y2="64"/><rect class="rl-st" x="323" y="63" width="14" height="14" rx="2"/>
+          <text class="nm" x="30" y="116" text-anchor="middle">Košice</text><text x="180" y="82" text-anchor="middle">Ťahanovce · nehlási</text><text class="nm" x="330" y="100" text-anchor="middle">Kysak</text>
+          <g class="rl-train" transform="translate(30 62)"><rect x="-16" y="-11" width="32" height="22" rx="3"/><text>Os</text></g>
+        </svg>
+      </div>
+    </div></figure>
+  </article>
+  <article class="feat">
+    <div>
+      <div class="eyebrow">05</div>
+      <h3>Všetky lístky a nákupy v peňaženke</h3>
+      <p>Dopravná karta aj parkovanie sú dnes v spodnom menu a zároveň v profile. V návrhu je všetko v Peňaženke, jedno ťuknutie od vyhľadávania: navrchu to, čo práve platí, s pásom hodín a meniacim sa QR kódom pre revízora, pod tým kredit, karty, preukazy a parkovanie. Nakupuje sa tam, kde to človek potrebuje: cena na výsledku trasy je zároveň tlačidlo nákupu a ak už máte platný predplatný lístok, tlačidlo ukáže „✓ Platí“ a vedľa neho cenu jednorazového lístka, napríklad pre spolucestujúceho.</p>
+    </div>
+    <figure class="feat-fig"><div data-phone="ios" data-steps="res,wallet+trk" class=""></div></figure>
+  </article>
+  <article class="feat">
+    <div>
+      <div class="eyebrow">06</div>
+      <h3>Príprava na natívny dizajn</h3>
+      <p>POC je napísaný v Expo, teda v React Native, takže jeho logika a komponenty poslúžia aj natívnym aplikáciám. Nové bude treba len to, čo je dnes iba webové, hlavne mapu. Ovládanie potom preberie zvyklosti platformy: na iOS Liquid Glass a písmo SF, na Androide Material 3 Expressive. Vzhľad Ubianu nesú obsahové prvky, teda odznaky liniek, karty odchodov, Jazda a Peňaženka, takže aplikácia pôsobí na oboch platformách ako doma a zároveň ako Ubian.</p>
+    </div>
+    <figure class="feat-fig"><div><div data-phone="ios" data-steps="dep,res" class=""></div><figcaption><b>iOS 26</b>Liquid Glass, SF</figcaption></div><div><div data-phone="android" data-steps="dep,res" class=""></div><figcaption><b>Android</b>Material 3 Expressive</figcaption></div></figure>
+  </article>
 </section>
 </main>
-<footer>Návrh redizajnu Ubian · Nevyžiadaný koncept, autor Dominik Murar, bez prepojenia s Ubianom a bez jeho schválenia · Stav k 3. 10. 2026</footer>
+<footer>Návrh redizajnu Ubian · Nevyžiadaný koncept, autor Dominik Murar, bez prepojenia s Ubianom a bez jeho schválenia · Stav k 14. 10. 2026</footer>
 <script>
 const root=document.documentElement, btn=document.getElementById('themeBtn');
 const setTheme=t=>{root.dataset.theme=t;btn.textContent=t==='dark'?'☀ Svetlý':'◐ Tmavý'};
 setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
 btn.onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// each step is a view plus flags: trk = trip is tracked, jz = the strip is grown into Jazda
+const play=(screen,steps)=>{
+  const apply=step=>{const [view,...flags]=step.split('+');screen.dataset.view=view;screen.classList.toggle('trk',flags.includes('trk'));screen.classList.toggle('jz',flags.includes('jz'))};
+  let i=0;apply(steps[0]);
+  if(!reduced&&steps.length>1)setInterval(()=>apply(steps[++i%steps.length]),3400);
+};
+document.querySelectorAll('[data-phone]').forEach(slot=>{
+  const phone=document.getElementById(`tpl-${slot.dataset.phone}`).content.firstElementChild.cloneNode(true);
+  slot.append(phone);play(phone.querySelector('.xs'),slot.dataset.steps.split(','));
+});
+
 const finder=(r,c)=>{for(const [y,x] of [[0,0],[0,14],[14,0]]){const dy=r-y,dx=c-x;if(dy>=0&&dy<7&&dx>=0&&dx<7)return dy===0||dy===6||dx===0||dx===6||(dy>1&&dy<5&&dx>1&&dx<5)?1:0}return -1};
 const drawQr=seed=>document.querySelectorAll('.js-qr').forEach(q=>{let h='';for(let r=0;r<21;r++)for(let c=0;c<21;c++){const f=finder(r,c);const on=f>=0?f:((r*31+c*17+seed*7)^(r*c+seed))%3===0;h+=`<i class="${on?'':'o'}"></i>`}q.innerHTML=h});
 const pad=n=>String(n).padStart(2,'0');
-const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-let left=58*60+12, seed=1;
-drawQr(seed);
+let seed=1;drawQr(seed);
 setInterval(()=>{
-  const d=new Date(),t=`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-  document.querySelectorAll('.js-clock').forEach(e=>e.textContent=t);
-  left=Math.max(0,left-1);document.querySelectorAll('.js-left').forEach(e=>e.textContent=`${pad(Math.floor(left/60))}:${pad(left%60)}`);
-  if(left%15===0)drawQr(++seed);
+  const d=new Date();document.querySelectorAll('.js-clock').forEach(e=>e.textContent=`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`);
+  if(d.getSeconds()%15===0)drawQr(++seed);
 },1000);
-document.querySelectorAll('.lock').forEach(l=>l.onclick=()=>l.style.filter=l.style.filter?'':'invert(1)');
-
-const order=['dep','search','res','det','ride','peek','trkdep','wallet'];
-const screens=[...document.querySelectorAll('.xs')], segBtns=[...document.querySelectorAll('#pairctl button')];
-let tracking=false, expanded=false, cur='dep', detFrom='res';
-const show=v=>{
-  if(v==='end'){tracking=false;v='dep'}
-  if(v==='back')v=detFrom;
-  if(v==='track'){tracking=true;v=cur}
-  if(v==='mini')v=cur;
-  expanded=v==='ride';
-  if(expanded){tracking=true;v=['search','wallet'].includes(cur)?'dep':cur}
-  if(v==='det'&&cur!=='det')detFrom=['dep','trkdep'].includes(cur)?cur:'res';
-  if(['peek','trkdep'].includes(v))tracking=true;
-  if(!order.includes(v))return;
-  cur=v; const view=v==='trkdep'?'dep':v;
-  screens.forEach(x=>{x.dataset.view=view;x.classList.toggle('trk',tracking);x.classList.toggle('jz',expanded)});
-  segBtns.forEach(b=>b.classList.toggle('on',b.dataset.state===(expanded?'ride':v)));
-};
-let auto=reduced?null:setInterval(()=>{const n=order[(order.indexOf(expanded?'ride':cur)+1)%order.length];if(n==='dep')tracking=false;show(n)},4200);
-const stop=()=>{clearInterval(auto);auto=null};
-segBtns.forEach(b=>b.addEventListener('click',()=>{stop();if(['dep','search','res'].includes(b.dataset.state))tracking=false;show(b.dataset.state)}));
-document.querySelectorAll('.xs [data-go]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();stop();show(el.dataset.go)}));
-document.querySelectorAll('.xs .rcard').forEach(c=>c.addEventListener('click',()=>{stop();if(c.classList.contains('sel'))return show('det');document.querySelectorAll('.xs .rcard').forEach(o=>o.classList.toggle('sel',o.dataset.rc===c.dataset.rc))}));
-show('dep');
-
-const list=document.getElementById('deplist');
-const next=[['tram','4','Nám. osloboditeľov','16 min'],['bus','23','Sídlisko KVP','19 min'],['tram','6','Ťahanovce','22 min']];
-let k=0;
-const tick=()=>{
-  const rows=list.querySelectorAll('.dep');
-  rows[0].classList.add('leave');
-  setTimeout(()=>{
-    rows[0].remove();
-    const first=list.querySelector('.dep .t b');first.textContent='teraz';first.classList.add('rt','now');
-    const [m,l,d,t]=next[k++%next.length];
-    list.insertAdjacentHTML('beforeend',`<div class="dep enter"><span class="lb ${m}">${l}</span><div class="dest"><b>${d}</b></div><div class="t"><b>${t}</b></div></div>`);
-  },460);
-};
-if(list&&!reduced)setInterval(tick,5200);
-
-const qv=new URLSearchParams(location.search).get('view');if(qv){clearInterval(auto);auto=null;if(qv==='wallet')tracking=true;show(qv)}
-
 </script>
 </body>
 </html>
