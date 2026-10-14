@@ -864,9 +864,7 @@ h1,h2,h3,h4{font-weight:800}
 .motto .old::after{content:"";position:absolute;left:-4%;right:-4%;top:52%;height:.09em;border-radius:.05em;background:var(--accent);transform-origin:left;transform:rotate(-3deg);animation:strike .45s cubic-bezier(.6,0,.3,1) .7s both}
 .motto{padding-bottom:1.2em}
 .motto .swap{position:relative;display:inline-block}
-.motto em{position:absolute;left:50%;top:100%;translate:-50% 0;white-space:nowrap;animation:newmotto .5s cubic-bezier(.3,1.4,.4,1) 1.2s both}
-@media(max-width:640px){.motto{padding-bottom:0}.motto .swap{display:inline}.motto em{position:static;display:block;translate:none}}
-@keyframes strike{from{transform:rotate(-3deg) scaleX(0)}}
+.motto em{position:absolute;left:50%;top:100%;translate:-50% 0;white-space:nowrap;animation:newmotto .5s cubic-bezier(.3,1.4,.4,1) 1.2s both}@keyframes strike{from{transform:rotate(-3deg) scaleX(0)}}
 @keyframes newmotto{from{opacity:0;transform:translateY(.3em) scale(.9)}}
 .feat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:48px;align-items:center;padding:40px 0;border-top:1px solid var(--line)}
 .feat:first-of-type{border-top:0;padding-top:16px}
