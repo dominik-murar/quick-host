@@ -905,7 +905,7 @@ h1,h2,h3,h4{font-weight:800}
 .feat.wide{grid-template-columns:minmax(0,1fr);gap:28px}
 .cmp{align-items:flex-start}
 .old-shot{position:relative;width:291px}
-.old-shot img{display:block;width:100%;height:auto}
+.old-shot img{display:block;width:100%;height:auto;border-radius:28px;border:1px solid var(--line);box-shadow:var(--shadow)}
 .mark{position:absolute;border:3px solid var(--mark);border-radius:16px;transform:rotate(-1deg)}
 .mark::after{content:attr(data-n);position:absolute;right:-13px;top:-13px;width:24px;height:24px;border-radius:50%;background:var(--mark);color:#fff;font:900 13px/24px var(--font);text-align:center}
 .marks{list-style:none;padding:0;margin:0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));counter-reset:m}
@@ -921,6 +921,71 @@ h1,h2,h3,h4{font-weight:800}
 .steps li+li::before{content:" › ";color:var(--text-3)}
 .taps tfoot td{font-weight:800;background:var(--surface-2)}
 .taps tfoot .n:not(.ok){background:var(--surface)}
+/* frameless slice of a screen: just the panel and a strip of map above it */
+.slice{position:relative;width:393px;height:650px;overflow:hidden;border-radius:28px;border:1px solid var(--line);box-shadow:var(--shadow);zoom:.8}
+.slice .screen{position:absolute;left:0;right:0;bottom:0;width:auto;height:852px;border-radius:0}
+.slice .sbar,.slice .home-ind,.slice .a-gest{display:none}
+.slice.ios .xsheet{left:10px!important;right:10px!important;bottom:10px!important;height:518px!important;border-radius:42px!important;background:color-mix(in srgb,var(--poc-bg) 58%,transparent)!important;backdrop-filter:blur(26px) saturate(1.8)!important;-webkit-backdrop-filter:blur(26px) saturate(1.8)!important;border:1px solid rgba(255,255,255,.6)!important;box-shadow:0 12px 40px rgba(21,41,55,.24)!important}
+[data-theme=dark] .slice.ios .xsheet{border-color:rgba(255,255,255,.12)!important}
+.slice.ios :is(.sh-search,.pcard,.fav>div:not(.add)){background:color-mix(in srgb,var(--poc-card) 66%,transparent)!important}
+.slice.ios .sh-btn{background:color-mix(in srgb,var(--poc-card) 50%,transparent)}
+/* live trip strip that grows into Jazda */
+.lt-card{width:396px;max-width:calc(100vw - 32px)}
+.lt-legend{display:flex;gap:6px}
+.lt-legend .tag{transition:background .3s,color .3s}
+.lt-legend .tag.on{background:var(--accent-soft);color:var(--accent)}
+.lt-stage{position:relative;height:480px;border-radius:20px;overflow:hidden;background:#E9ECE6;--sp:cubic-bezier(.3,1.12,.4,1)}
+[data-theme=dark] .lt-stage{background:#151A20}
+.lt-map{position:absolute;inset:0;width:100%;height:100%}
+.lt{position:absolute;left:10px;right:10px;bottom:16px;height:70px;border-radius:20px;overflow:hidden;box-shadow:0 4px 12px rgba(21,41,55,.18);transition:left .55s var(--sp),right .55s var(--sp),bottom .55s var(--sp),height .55s var(--sp),border-radius .55s var(--sp)}
+.lt > *{position:absolute;transition:left .55s var(--sp),right .55s var(--sp),top .55s var(--sp),width .55s var(--sp),height .55s var(--sp),transform .55s var(--sp),opacity .25s}
+.lt-glass,.lt-fill{inset:0}
+.lt-glass{background:color-mix(in srgb,var(--poc-card) 72%,transparent);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border:.5px solid rgba(21,41,55,.14);border-radius:inherit}
+.lt-fill{background:var(--poc-bg);opacity:0}
+.lt-grab{left:50%;top:10px;width:42px;height:5px;margin-left:-21px;border-radius:3px;background:var(--poc-grab);opacity:0}
+.lt-lb{left:12px;top:20px;height:30px;min-width:38px;transform-origin:0 0}
+.lt-head{left:72px;top:32px;font-size:16px;line-height:36px;opacity:0}
+.lt-title{left:60px;top:16px;font-size:14px;line-height:18px;white-space:nowrap;transform-origin:0 0}
+.lt-min{right:12px;top:15px;font-size:17px;line-height:20px;font-weight:900;color:var(--ok);font-variant-numeric:tabular-nums;transform-origin:100% 0}
+.lt-dest{right:12px;top:41px;font-size:12px;color:var(--poc-text-2)}
+.lt-track{left:60px;top:43px;width:180px;height:4px;border-radius:3px;background:var(--poc-line);overflow:hidden}
+.lt-track i{display:block;height:100%;width:40%;border-radius:3px;background:var(--poc-route)}
+.lt-close{right:16px;top:33px;width:32px;height:32px;border-radius:50%;background:var(--poc-tonal);display:grid;place-items:center;color:var(--text);opacity:0}
+.lt-body{left:16px;right:16px;top:146px;opacity:0;transform:translateY(10px)}
+.lt-ctl{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--poc-text-2)}
+.lt-ctl span+span{color:var(--ok);font-weight:700}
+.lt-ctl i{margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--poc-tonal);display:grid;place-items:center}
+.lt-ctl i::after{content:"";width:10px;height:10px;border-radius:2px;background:var(--text)}
+.lt-tl{margin-top:20px}
+.lt-tl > div{position:relative;display:flex;min-height:50px;font-size:14px;color:var(--poc-text-2)}
+.lt-tl time{width:48px;font-size:12px;font-variant-numeric:tabular-nums}
+.lt-rail{position:relative;width:24px;display:flex;justify-content:center}
+.lt-rail i{width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--poc-route);box-sizing:border-box;z-index:2;margin-top:4px}
+.lt-tl > div:not(:last-child) .lt-rail::after{content:"";position:absolute;top:10px;bottom:-4px;width:3px;background:var(--poc-route)}
+.lt-veh{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:var(--poc-route);border:3px solid #fff;box-sizing:border-box;z-index:3;box-shadow:0 0 6px color-mix(in srgb,var(--poc-route) 50%,transparent)}
+.lt-tl .next,.lt-tl .exit{color:var(--text);font-weight:900}
+.lt-tl .exit{font-weight:800}
+.lt-rail .flag{width:18px;height:18px;border-radius:6px;margin-top:0;border:2px solid var(--text);background:repeating-conic-gradient(var(--text) 0 25%,#fff 0 50%) 0 0/7px 7px}
+.lt-stage.open .lt{left:0;right:0;bottom:0;height:400px;border-radius:28px 28px 0 0}
+.lt-stage.open .lt-fill{opacity:1}
+.lt-stage.open .lt-lb{left:16px;top:32px;transform:scale(1.2)}
+.lt-stage.open .lt-title{left:16px;top:84px;transform:scale(1.6)}
+.lt-stage.open .lt-min{right:16px;top:84px;transform:scale(1.4)}
+.lt-stage.open .lt-track{left:16px;top:128px;width:328px;height:6px}
+.lt-stage.open .lt-dest{opacity:0}
+.lt-stage.open :is(.lt-grab,.lt-head,.lt-close){opacity:1;transition-delay:.15s}
+.lt-stage.open .lt-body{opacity:1;transform:none;transition:opacity .3s .22s,transform .45s .22s var(--sp)}
+@media (prefers-reduced-motion:reduce){.lt,.lt > *{transition:opacity .2s!important}}
+/* trains: today jumps between reporting stations, the proposal estimates the reach */
+.rl-jump{animation:rl-jump 6s infinite}
+@keyframes rl-jump{0%,48%{transform:translate(30px,30px)}52%,100%{transform:translate(330px,30px)}}
+.rl-reach{stroke:var(--mode-train);stroke-width:6;fill:none;stroke-linecap:round;stroke-dasharray:1;animation:rl-reach 6s linear infinite}
+@keyframes rl-reach{from{stroke-dashoffset:1}80%,to{stroke-dashoffset:.38}}
+.rl-arrow path{fill:var(--mode-train);stroke:#fff;stroke-width:2;stroke-linejoin:round;animation:rl-pulse 1.4s ease-in-out infinite}
+@keyframes rl-pulse{50%{opacity:.6}}
+.rail p svg{display:inline;width:14px}
+.rl-off path{fill:none;stroke:var(--text-3);stroke-width:1.6}
+.rl-off line{stroke:var(--text-3);stroke-width:1.6;stroke-linecap:round}
 </style>
 </head>
 <body>
@@ -1258,20 +1323,24 @@ h1,h2,h3,h4{font-weight:800}
     <figure class="feat-fig cmp">
       <div>
         <div class="old-shot">
-          <img src="ubian-dnes-domov.webp" width="586" height="1276" alt="Dnešná obrazovka Spojenia v aplikácii Ubian">
-          <span class="mark" data-n="1" style="left:2.7%;top:17.9%;width:93.5%;height:5.5%"></span>
-          <span class="mark" data-n="2" style="left:2.7%;top:87%;width:36.2%;height:5.8%"></span>
-          <span class="mark" data-n="3" style="left:2.7%;top:58.9%;width:93.5%;height:27.8%"></span>
+          <img src="ubian-dnes-domov.webp?v=2" width="1125" height="2436" alt="Dnešná obrazovka Spojenia v aplikácii Ubian">
+          <span class="mark" data-n="1" style="left:2.3%;top:19.4%;width:95.3%;height:6.3%"></span>
+          <span class="mark" data-n="2" style="left:3%;top:12.9%;width:94%;height:4.9%"></span>
+          <span class="mark" data-n="3" style="left:3%;top:79.9%;width:94%;height:9.8%"></span>
         </div>
-        <figcaption><b>Ubian dnes</b>obrazovka Spojenia z ubian.sk</figcaption>
+        <figcaption><b>Ubian dnes</b>obrazovka Spojenia v mojom telefóne</figcaption>
       </div>
       <div><div data-phone="ios" data-steps="dep,res" class="hl-home"></div><figcaption><b>Návrh</b>domovská obrazovka v Proof of Concept</figcaption></div>
     </figure>
     <ol class="marks">
-      <li><b>Výber druhu dopravy</b>Celý riadok pre nastavenie, ktoré väčšina ľudí nezmení nikdy. Z vlakov, autobusov a MHD sa dá poskladať sedem kombinácií. Návrh hľadá vo všetkých naraz.</li>
-      <li><b>Prepínanie medzi spojeniami a odchodmi</b>Spojenia aj Odchody majú v spodnom menu každé svoju kartu, hoci odpovedajú na tú istú otázku: čím a kedy odtiaľto pôjdem. V návrhu sú odchody priamo pod vyhľadávaním a netreba nič prepínať.</li>
-      <li><b>Rýchle odkazy na kredit a lístky</b>Virtuálna karta, Časový lístok na kartu a Kredit na kartu zaberajú tretinu obrazovky a v menu majú ešte Kartu a MHD lístok. Kredit dobíjam raz za čas, odchody pozerám každý deň. Patria do jednotnej Peňaženky mimo domovskej obrazovky, no stále prehľadne a na dosah: v návrhu je to tlačidlo hneď vedľa vyhľadávania.</li>
+      <li><b>Výber druhu dopravy</b>Celý riadok pre nastavenie, ktoré väčšina ľudí nezmení nikdy. Ubian už dnes vracia zastávky aj dopravcov podľa polohy, takže výber z vlakov, autobusov a MHD hľadanie len zužuje. Návrh hľadá vo všetkých naraz.</li>
+      <li><b>Prepínanie medzi spojeniami a odchodmi</b>Spojenia a Odchody sú dva režimy s vlastným prepínačom navrchu obrazovky, hoci odpovedajú na tú istú otázku: čím a kedy odtiaľto pôjdem. V návrhu sú odchody priamo pod vyhľadávaním a netreba nič prepínať.</li>
+      <li><b>Rýchle odkazy na kredit a lístky</b>Kredit na kartu a MHD lístok z Ubian kreditu zaberajú spodok obrazovky, hoci v menu majú ešte Kartu, MHD lístok a Parkovanie. Kredit dobíjam raz za čas, odchody pozerám každý deň. Patria do jednotnej Peňaženky mimo domovskej obrazovky, no stále prehľadne a na dosah: v návrhu je to tlačidlo hneď vedľa vyhľadávania.</li>
     </ol>
+    <div>
+      <h4>Mapa vždy poruke</h4>
+      <p class="muted">Živé polohy vozidiel sú dnes na samostatnej obrazovke za tlačidlom Mapa. V návrhu je mapa stále na pozadí a všetko ostatné je v jednom paneli nad ňou, ktorý sa dá stiahnuť dole, nechať v strede alebo vytiahnuť na celú výšku. Mapa ukazuje to, čo je práve v paneli: vozidlá najbližších odchodov, trasu vybraného spojenia alebo vozidlo, ktorým idem. Meškajúce vozidlá majú meškanie priamo na značke, takže ho netreba hľadať.</p>
+    </div>
     <div>
       <h4>Koľko dotykov ma stojí bežná cesta</h4>
       <p class="small muted">Rátam aj otvorenie aplikácie, písanie na klávesnici nerátam.</p>
@@ -1290,61 +1359,93 @@ h1,h2,h3,h4{font-weight:800}
   <article class="feat">
     <div>
       <div class="eyebrow">02</div>
-      <h3>Mapa vždy poruke</h3>
-      <p>Živé polohy vozidiel sú dnes na samostatnej obrazovke, o ťuknutie ďalej. V návrhu je mapa stále na pozadí a všetko ostatné je v jednom paneli nad ňou, ktorý sa dá stiahnuť dole, nechať v strede alebo vytiahnuť na celú výšku. Mapa ukazuje to, čo je práve v paneli: vozidlá najbližších odchodov, trasu vybraného spojenia alebo vozidlo, ktorým idete. Meškajúce vozidlá majú meškanie priamo na značke, takže ho netreba hľadať.</p>
-    </div>
-    <figure class="feat-fig"><div data-phone="ios" data-steps="dep,peek,res" class=""></div></figure>
-  </article>
-  <article class="feat">
-    <div>
-      <div class="eyebrow">03</div>
       <h3>Sledovanie cesty</h3>
-      <p>Ťuknutím na „Sledovať“ pri spojení alebo odchode sa nad panelom objaví pásik jazdy. Hovorí to, čo by povedal spolucestujúci: „Pri vás o 2 zast.“, „Prichádza“, „Vystúpte o 3 zast.“ a nakoniec „Vystúpte“. Pásik sa roztiahne na Jazdu so zoznamom zastávok, pričom mapa stále ukazuje vozidlo, a sledovanie skončí samo, keď vozidlo opustí výstupnú zastávku. Stačia na to dáta, ktoré živé rozhranie Ubianu už vracia. Live Activities na iOS a Live Updates na Androide budú navyše potrebovať notifikácie zo servera.</p>
+      <p>Ťuknutím na „Sledovať“ pri spojení alebo odchode sa nad panelom objaví pásik jazdy. Hovorí to, čo by povedal spolucestujúci: „Pri vás o 2 zast.“, „Prichádza“, „Vystúpte o 3 zast.“ a nakoniec „Vystúpte“. Ťuknutím alebo potiahnutím sa pásik roztiahne na Jazdu so zoznamom zastávok až po moju výstupnú, pričom mapa nad ňou stále ukazuje vozidlo. Sledovanie skončí samo, keď vozidlo opustí výstupnú zastávku.</p>
+      <p>Sledovanie bude dostupné priamo v aplikácii a stačia mu dáta, ktoré živé rozhranie Ubianu už vracia. Ten istý pásik sa dá neskôr rozšíriť na Live Activities na iOS a Live Updates na Androide, teda na zamknutú obrazovku a Dynamic Island. Na to už bude treba notifikácie zo servera.</p>
     </div>
-    <figure class="feat-fig"><div data-phone="ios" data-steps="dep+trk,dep+trk+jz,peek+trk" class=""></div></figure>
-  </article>
-  <article class="feat">
-    <div>
-      <div class="eyebrow">04</div>
-      <h3>Pravdivá poloha vlakov</h3>
-      <p>Vlaky hlásia polohu len v staniciach a odbočkách, nie na zastávkach. Medzi hláseniami sa poloha nemení a trasa je rovná čiara medzi stanicami, takže mapa ukazuje vlak na mieste, ktoré už mohol dávno opustiť. Návrh pozná z OpenStreetMap všetky body, v ktorých vlaky hlásia polohu, a podľa toho vlak opíše pravdivo: kým v stanici stojí, má plnú značku a popis „Na stanici Košice“, po odchode prázdnu značku, popis „Medzi stanicami Košice – Kysak“ a zvýraznený úsek trate. Od Ubianu to nepotrebuje žiadne nové dáta.</p>
-    </div>
-    <figure class="feat-fig"><div class="card rail">
-      <div><span class="tag">Dnes</span>
-        <svg viewBox="0 0 360 74" role="img" aria-label="Dnes: vlak stojí na poslednej hlásenej stanici na rovnej čiare">
-          <line class="rl-line" x1="30" y1="44" x2="330" y2="44"/>
-          <circle class="rl-st" cx="30" cy="44" r="7"/><circle class="rl-st" cx="180" cy="44" r="7"/><circle class="rl-st" cx="330" cy="44" r="7"/>
-          <text x="30" y="70" text-anchor="middle">Košice, žel.st.</text><text x="180" y="70" text-anchor="middle">Ťahanovce, žel.st.</text><text x="330" y="70" text-anchor="middle">Kysak, žel.st.</text>
-          <g class="rl-fixed" transform="translate(30 18)"><rect x="-16" y="-11" width="32" height="22" rx="3"/><text>Os</text></g>
+    <figure class="feat-fig"><div class="card rail lt-card">
+      <div class="lt-legend"><span class="tag on">Pásik nad panelom</span><span class="tag">Jazda</span></div>
+      <div class="lt-stage">
+        <svg class="lt-map" viewBox="0 0 360 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect class="m-blk" x="14" y="10" width="90" height="34" rx="5"/><rect class="m-blk" x="140" y="6" width="120" height="38" rx="5"/><rect class="m-blk" x="290" y="10" width="60" height="34" rx="5"/>
+          <rect class="m-blk" x="14" y="100" width="90" height="80" rx="5"/><path class="m-park" d="M140 100h120v80H140z"/><rect class="m-blk" x="14" y="230" width="90" height="90" rx="5"/><rect class="m-blk" x="140" y="230" width="120" height="90" rx="5"/>
+          <path class="m-water" d="M-10 360c80-30 160 30 250 0s120-30 130-10v60c-80-10-130 30-220 20S50 400-10 420Z"/>
+          <path class="m-road" stroke-width="12" d="M-10 72H370"/><path class="m-road" stroke-width="9" d="M120-10V490M276-10V490"/><path class="m-road2" stroke-width="6" d="M-10 205H370"/>
+          <path d="M40 72H276V490" stroke="var(--ribbon-case)" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M40 72H276V490" stroke="var(--poc-route)" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="120" cy="72" r="5" fill="#fff" stroke="var(--poc-route)" stroke-width="2.5"/><circle cx="276" cy="140" r="5" fill="#fff" stroke="var(--poc-route)" stroke-width="2.5"/>
+          <g class="veh"><circle r="22" fill="var(--mode-tram)" opacity=".16"/><circle r="13" fill="var(--mode-tram)" stroke="#fff" stroke-width="3"/><text style="font-size:11px">4</text><animateMotion dur="9s" repeatCount="indefinite" path="M120 72H276V140"/></g>
         </svg>
-      </div>
-      <div><span class="tag blue">Návrh</span>
-        <svg viewBox="0 0 360 120" role="img" aria-label="Návrh: vlak na stanici má plnú značku, po odchode prázdnu a zvýraznený úsek trate">
-          <text class="rl-say a" x="0" y="16">Na stanici Košice</text><text class="rl-say b" x="0" y="16">Medzi stanicami Košice – Kysak</text>
-          <path class="rl-line" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
-          <path class="rl-hl" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
-          <rect class="rl-st" x="23" y="83" width="14" height="14" rx="2"/><line class="rl-halt" x1="180" y1="48" x2="180" y2="64"/><rect class="rl-st" x="323" y="63" width="14" height="14" rx="2"/>
-          <text class="nm" x="30" y="116" text-anchor="middle">Košice</text><text x="180" y="82" text-anchor="middle">Ťahanovce · nehlási</text><text class="nm" x="330" y="100" text-anchor="middle">Kysak</text>
-          <g class="rl-train" transform="translate(30 62)"><rect x="-16" y="-11" width="32" height="22" rx="3"/><text>Os</text></g>
-        </svg>
+        <div class="lt">
+          <i class="lt-glass"></i><i class="lt-fill"></i>
+          <span class="lt-grab"></span>
+          <span class="lb tram lt-lb">4</span>
+          <b class="lt-head">→ Staničné nám.</b>
+          <b class="lt-title">Vystúpte o 3 zast.</b>
+          <b class="lt-min">6 min</b>
+          <span class="lt-dest">Staničné nám.</span>
+          <span class="lt-track"><i></i></span>
+          <span class="lt-close" aria-label="Zmenšiť do pásika"><svg width="18" height="18" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div class="lt-body">
+            <div class="lt-ctl"><span>Nasleduje Nám. Maratónu mieru</span><span>Načas</span><i aria-label="Ukončiť sledovanie"></i></div>
+            <div class="lt-tl">
+              <div><time>14:16</time><span class="lt-rail"><i></i><b class="lt-veh"></b></span>Hlavná</div>
+              <div class="next"><time>14:18</time><span class="lt-rail"><i></i></span>Nám. Maratónu mieru</div>
+              <div><time>14:19</time><span class="lt-rail"><i></i></span>Mestská hala</div>
+              <div class="exit"><time>14:21</time><span class="lt-rail"><i class="flag"></i></span>Staničné námestie</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div></figure>
   </article>
   <article class="feat">
     <div>
-      <div class="eyebrow">05</div>
-      <h3>Všetky lístky a nákupy v peňaženke</h3>
-      <p>Dopravná karta aj parkovanie sú dnes v spodnom menu a zároveň v profile. V návrhu je všetko v Peňaženke, jedno ťuknutie od vyhľadávania: navrchu to, čo práve platí, s pásom hodín a meniacim sa QR kódom pre revízora, pod tým kredit, karty, preukazy a parkovanie. Nakupuje sa tam, kde to človek potrebuje: cena na výsledku trasy je zároveň tlačidlo nákupu a ak už máte platný predplatný lístok, tlačidlo ukáže „✓ Platí“ a vedľa neho cenu jednorazového lístka, napríklad pre spolucestujúceho.</p>
+      <div class="eyebrow">03</div>
+      <h3>Pravdivá poloha vlakov</h3>
+      <p>Vlaky hlásia polohu len v staniciach a odbočkách, nie na zastávkach. Dnes preto mapa ukáže vlak v stanici, ktorá ho naposledy ohlásila, a presunie ho až do ďalšej, ktorá polohu aktualizuje. Medzi nimi vlak na mape stojí, hoci už dávno ide.</p>
+      <p>Návrh nechá vlak tam, kde sa naposledy ohlásil, a pridá pulzujúcu šípku, ktorá podľa cestovného poriadku a meškania odhaduje, kam sa odvtedy dostal. Zastávky, ktoré polohu nezverejňujú, majú vlastnú ikonu, a text pomenuje úsek, v ktorom vlak určite je. Body, v ktorých vlaky hlásia polohu, pozná návrh z OpenStreetMap, takže od Ubianu nepotrebuje žiadne nové dáta.</p>
     </div>
-    <figure class="feat-fig"><div data-phone="ios" data-steps="res,wallet+trk" class=""></div></figure>
+    <figure class="feat-fig"><div class="card rail">
+      <div><span class="tag">Dnes</span>
+        <svg viewBox="0 0 360 84" role="img" aria-label="Dnes: vlak stojí na mape v stanici, ktorá ho naposledy ohlásila, a potom preskočí do ďalšej">
+          <text class="rl-say a" x="0" y="16">Na stanici Košice</text><text class="rl-say b" x="0" y="16">Na stanici Kysak</text>
+          <line class="rl-line" x1="30" y1="56" x2="330" y2="56"/>
+          <circle class="rl-st" cx="30" cy="56" r="7"/><circle class="rl-st" cx="180" cy="56" r="7"/><circle class="rl-st" cx="330" cy="56" r="7"/>
+          <text x="30" y="82" text-anchor="middle">Košice</text><text x="180" y="82" text-anchor="middle">Ťahanovce</text><text x="330" y="82" text-anchor="middle">Kysak</text>
+          <g class="rl-fixed rl-jump"><rect x="-16" y="-11" width="32" height="22" rx="3"/><text>Os</text></g>
+        </svg>
+      </div>
+      <div><span class="tag blue">Návrh</span>
+        <svg viewBox="0 0 360 120" role="img" aria-label="Návrh: vlak ostáva v stanici, kde sa ohlásil, pulzujúca šípka odhaduje jeho polohu a zastávka bez hlásenia má ikonu">
+          <text class="rl-say" x="0" y="16">Košice → Kysak</text>
+          <path class="rl-line" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
+          <path class="rl-reach" pathLength="1" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
+          <rect class="rl-st" x="23" y="83" width="14" height="14" rx="2"/><circle class="rl-st" cx="180" cy="56" r="6"/><rect class="rl-st" x="323" y="63" width="14" height="14" rx="2"/>
+          <g transform="translate(180 32)" class="rl-off"><path d="M-7 4a4 4 0 0 1 .6-8 6 6 0 0 1 11.2 1.4A3.4 3.4 0 0 1 4.6 4Z"/><line x1="-8" y1="-8" x2="8" y2="8"/></g>
+          <text class="nm" x="30" y="116" text-anchor="middle">Košice</text><text x="180" y="82" text-anchor="middle">Ťahanovce</text><text class="nm" x="330" y="100" text-anchor="middle">Kysak</text>
+          <g class="rl-fixed" transform="translate(30 66)"><rect x="-16" y="-11" width="32" height="22" rx="3"/><text>Os</text></g>
+          <g class="rl-arrow"><path d="M0-11 10 8 0 3-10 8Z"/><animateMotion dur="6s" repeatCount="indefinite" rotate="auto" keyPoints="0;.62;.62" keyTimes="0;.8;1" calcMode="linear" path="M30 90 C90 90 110 52 180 56 S290 90 330 70"/></g>
+        </svg>
+      </div>
+      <p class="small muted" style="margin:0"><svg width="14" height="14" viewBox="-9 -9 18 18" class="rl-off" style="vertical-align:-2px"><path d="M-7 4a4 4 0 0 1 .6-8 6 6 0 0 1 11.2 1.4A3.4 3.4 0 0 1 4.6 4Z"/><line x1="-8" y1="-8" x2="8" y2="8"/></svg> zastávka nehlási polohu · <svg width="14" height="14" viewBox="-11 -12 22 22" class="rl-arrow" style="vertical-align:-2px;transform:rotate(90deg)"><path d="M0-11 10 8 0 3-10 8Z"/></svg> odhad podľa cestovného poriadku a meškania</p>
+    </div></figure>
   </article>
   <article class="feat">
     <div>
-      <div class="eyebrow">06</div>
-      <h3>Príprava na natívny dizajn</h3>
-      <p>POC je napísaný v Expo, teda v React Native, takže jeho logika a komponenty poslúžia aj natívnym aplikáciám. Nové bude treba len to, čo je dnes iba webové, hlavne mapu. Ovládanie potom preberie zvyklosti platformy: na iOS Liquid Glass a písmo SF, na Androide Material 3 Expressive. Vzhľad Ubianu nesú obsahové prvky, teda odznaky liniek, karty odchodov, Jazda a Peňaženka, takže aplikácia pôsobí na oboch platformách ako doma a zároveň ako Ubian.</p>
+      <div class="eyebrow">04</div>
+      <h3>Všetky lístky a nákupy v peňaženke</h3>
+      <p>Dopravná karta aj parkovanie sú dnes v spodnom menu a zároveň v profile. V návrhu je všetko v Peňaženke, jedno ťuknutie od vyhľadávania: navrchu to, čo práve platí, s pásom hodín a meniacim sa QR kódom pre revízora, pod tým kredit, karty, preukazy a parkovanie. Nakupuje sa tam, kde to človek potrebuje: cena na výsledku trasy je zároveň tlačidlo nákupu a ak už mám platný predplatný lístok, tlačidlo ukáže „✓ Platí“ a vedľa neho cenu jednorazového lístka, napríklad pre spolucestujúceho.</p>
     </div>
-    <figure class="feat-fig"><div><div data-phone="ios" data-steps="dep,res" class=""></div><figcaption><b>iOS 26</b>Liquid Glass, SF</figcaption></div><div><div data-phone="android" data-steps="dep,res" class=""></div><figcaption><b>Android</b>Material 3 Expressive</figcaption></div></figure>
+    <figure class="feat-fig"><div data-phone="ios" data-steps="wallet"></div></figure>
+  </article>
+  <article class="feat">
+    <div>
+      <div class="eyebrow">05</div>
+      <h3>Príprava na natívny dizajn</h3>
+      <p>POC je napísaný v Expo, teda v React Native, takže jeho logika a komponenty poslúžia aj natívnym aplikáciám. Nové bude treba len to, čo je dnes iba webové, hlavne mapu. Rozloženie panela ostáva rovnaké, ovládanie však preberie zvyklosti platformy: na iOS pláva nad mapou karta z Liquid Glass ako v Apple Maps, na Androide je spodný panel Material 3 Expressive. Vzhľad Ubianu nesú obsahové prvky, teda odznaky liniek, karty odchodov, Jazda a Peňaženka, takže aplikácia pôsobí na oboch platformách ako doma a zároveň ako Ubian.</p>
+    </div>
+    <figure class="feat-fig"><div><div data-phone="ios" data-steps="dep" data-slice></div><figcaption><b>iOS 26</b>karta z Liquid Glass, SF</figcaption></div><div><div data-phone="android" data-steps="dep" data-slice></div><figcaption><b>Android</b>spodný panel Material 3 Expressive</figcaption></div></figure>
   </article>
 </section>
 </main>
@@ -1364,7 +1465,16 @@ const play=(screen,steps)=>{
 };
 document.querySelectorAll('[data-phone]').forEach(slot=>{
   const phone=document.getElementById(`tpl-${slot.dataset.phone}`).content.firstElementChild.cloneNode(true);
-  slot.append(phone);play(phone.querySelector('.xs'),slot.dataset.steps.split(','));
+  const screen=phone.querySelector('.xs');
+  if('slice' in slot.dataset){const slice=document.createElement('div');slice.className=`slice ${slot.dataset.phone}`;slice.append(screen);slot.append(slice)}
+  else slot.append(phone);
+  play(screen,slot.dataset.steps.split(','));
+});
+// the live trip strip grows into Jazda and back
+document.querySelectorAll('.lt-card').forEach(card=>{
+  const stage=card.querySelector('.lt-stage'),tags=card.querySelectorAll('.lt-legend .tag');
+  const set=open=>{stage.classList.toggle('open',open);tags.forEach((t,i)=>t.classList.toggle('on',i===+open))};
+  if(!reduced)setInterval(()=>set(!stage.classList.contains('open')),3400);
 });
 
 const finder=(r,c)=>{for(const [y,x] of [[0,0],[0,14],[14,0]]){const dy=r-y,dx=c-x;if(dy>=0&&dy<7&&dx>=0&&dx<7)return dy===0||dy===6||dx===0||dx===6||(dy>1&&dy<5&&dx>1&&dx<5)?1:0}return -1};
