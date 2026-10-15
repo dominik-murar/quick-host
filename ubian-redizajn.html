@@ -49,7 +49,7 @@ p{margin:0 0 1em;max-width:74ch}
 ul.clean{padding-left:18px;margin:0}
 
 /* ---------- Layout ---------- */
-.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .top-in{max-width:1240px;margin:auto;display:flex;align-items:center;gap:20px;padding:10px 24px}
 .brand{display:flex;align-items:center;gap:12px}
 .brand img{height:44px;display:block}
@@ -1266,7 +1266,7 @@ h1,h2,h3,h4{font-weight:800}
 
 <header class="top"><div class="top-in">
   <div class="brand"><span class="tag">Návrh redizajnu</span></div>
-  <nav><a href="#keep">Čo ponechávame</a><a href="#better">Čo zlepšujeme</a></nav>
+  <nav><a href="#keep">Čo ponechávam</a><a href="#home">Domovská obrazovka</a><a href="#trip">Sledovanie cesty</a><a href="#trains">Poloha vlakov</a><a href="#wallet">Peňaženka</a><a href="#native">Natívny dizajn</a></nav>
   <button class="toggle" id="themeBtn">◐ Tmavý</button>
 </div></header>
 
@@ -1323,7 +1323,7 @@ h1,h2,h3,h4{font-weight:800}
 <section id="better">
   <div class="eyebrow">02 · Zlepšenia</div>
   <h2>Zmeny, ktoré pocíti každý cestujúci</h2>
-  <article class="feat wide">
+  <article class="feat wide" id="home">
     <div>
       <div class="eyebrow">01</div>
       <h3>Nová domovská obrazovka: cestovanie na jeden dotyk</h3>
@@ -1365,7 +1365,7 @@ h1,h2,h3,h4{font-weight:800}
       </table></div>
     </div>
   </article>
-  <article class="feat">
+  <article class="feat" id="trip">
     <div>
       <div class="eyebrow">02</div>
       <h3>Sledovanie cesty</h3>
@@ -1408,7 +1408,7 @@ h1,h2,h3,h4{font-weight:800}
       </div>
     </div></figure>
   </article>
-  <article class="feat">
+  <article class="feat" id="trains">
     <div>
       <div class="eyebrow">03</div>
       <h3>Pravdivá poloha vlakov</h3>
@@ -1440,7 +1440,7 @@ h1,h2,h3,h4{font-weight:800}
       <p class="small muted" style="margin:0"><svg width="14" height="14" viewBox="-9 -9 18 18" class="rl-off" style="vertical-align:-2px"><path d="M-7 4a4 4 0 0 1 .6-8 6 6 0 0 1 11.2 1.4A3.4 3.4 0 0 1 4.6 4Z"/><line x1="-8" y1="-8" x2="8" y2="8"/></svg> zastávka nehlási polohu · <svg width="14" height="14" viewBox="-11 -11 22 22" class="rl-arrow" style="vertical-align:-2px"><path d="M11 0-8 10-3 0-8-10Z"/></svg> odhad podľa cestovného poriadku a meškania</p>
     </div></figure>
   </article>
-  <article class="feat">
+  <article class="feat" id="wallet">
     <div>
       <div class="eyebrow">04</div>
       <h3>Všetky lístky a nákupy v peňaženke</h3>
@@ -1448,7 +1448,7 @@ h1,h2,h3,h4{font-weight:800}
     </div>
     <figure class="feat-fig"><div data-phone="ios" data-steps="wallet"></div></figure>
   </article>
-  <article class="feat">
+  <article class="feat" id="native">
     <div>
       <div class="eyebrow">05</div>
       <h3>Príprava na natívny dizajn</h3>
