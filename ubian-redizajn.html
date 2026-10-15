@@ -870,7 +870,6 @@ h1,h2,h3,h4{font-weight:800}
 @media(max-width:900px){.feat,.feat:nth-of-type(even){grid-template-columns:1fr;gap:24px}.feat:nth-of-type(even) .feat-fig{order:0}}
 .keep h4{display:flex;gap:8px;align-items:center}
 .keep li+li{margin-top:6px}
-.hl-home .xs[data-view=dep] .fav>div:first-child{animation:tap 1.4s ease-out infinite}
 @keyframes tap{from{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}to{box-shadow:0 0 0 18px transparent}}
 .rail{width:min(460px,100%);display:grid;gap:18px}
 .rail svg{width:100%;display:block;overflow:visible}
@@ -979,6 +978,16 @@ h1,h2,h3,h4{font-weight:800}
 /* trains: today jumps between reporting stations, the proposal estimates the reach */
 .rl-jump{animation:rl-jump 6s infinite}
 @keyframes rl-jump{0%,48%{transform:translate(30px,30px)}52%,100%{transform:translate(330px,30px)}}
+/* iOS search field and buttons at the 44 pt the PoC and Liquid Glass use */
+.ios .sh-search{height:44px;border-radius:22px;font-size:16px}
+.ios .sh-btn{width:44px;height:44px}
+.ios .xsc{top:72px}
+/* sign-off */
+.sign{display:flex;gap:22px;align-items:center;max-width:720px;margin:56px auto 0;padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--shadow)}
+.sign img{width:96px;height:96px;border-radius:50%;flex:none;object-fit:cover}
+.sign p{margin:0;color:var(--text-2)}
+.sign b{display:block;color:var(--text);font-size:18px;margin-bottom:4px}
+@media(max-width:520px){.sign{flex-direction:column;text-align:center}}
 .rl-reach{stroke:var(--mode-train);stroke-width:6;fill:none;stroke-linecap:round;stroke-dasharray:1;animation:rl-reach 6s linear infinite}
 @keyframes rl-reach{from{stroke-dashoffset:1}80%,to{stroke-dashoffset:.38}}
 .rl-arrow path{fill:var(--mode-train);stroke:#fff;stroke-width:2;stroke-linejoin:round;animation:rl-pulse 1.4s ease-in-out infinite}
@@ -1330,7 +1339,7 @@ h1,h2,h3,h4{font-weight:800}
         </div>
         <figcaption><b>Ubian dnes</b>obrazovka Spojenia v mojom telefóne</figcaption>
       </div>
-      <div><div data-phone="ios" data-steps="dep,res" class="hl-home"></div><figcaption><b>Návrh</b>domovská obrazovka v Proof of Concept</figcaption></div>
+      <div><div data-phone="ios" data-steps="dep"></div><figcaption><b>Návrh</b>domovská obrazovka v Proof of Concept</figcaption></div>
     </figure>
     <ol class="marks">
       <li><b>Výber druhu dopravy</b>Celý riadok pre nastavenie, ktoré väčšina ľudí nezmení nikdy. Ubian už dnes vracia zastávky aj dopravcov podľa polohy, takže výber z vlakov, autobusov a MHD hľadanie len zužuje. Návrh hľadá vo všetkých naraz.</li>
@@ -1409,26 +1418,26 @@ h1,h2,h3,h4{font-weight:800}
     <figure class="feat-fig"><div class="card rail">
       <div><span class="tag">Dnes</span>
         <svg viewBox="0 0 360 84" role="img" aria-label="Dnes: vlak stojí na mape v stanici, ktorá ho naposledy ohlásila, a potom preskočí do ďalšej">
-          <text class="rl-say a" x="0" y="16">Na stanici Košice</text><text class="rl-say b" x="0" y="16">Na stanici Kysak</text>
+          <text class="rl-say a" x="0" y="16">Na stanici Košice</text><text class="rl-say b" x="0" y="16">Na stanici Kostolany nad Hornádom</text>
           <line class="rl-line" x1="30" y1="56" x2="330" y2="56"/>
           <circle class="rl-st" cx="30" cy="56" r="7"/><circle class="rl-st" cx="180" cy="56" r="7"/><circle class="rl-st" cx="330" cy="56" r="7"/>
-          <text x="30" y="82" text-anchor="middle">Košice</text><text x="180" y="82" text-anchor="middle">Ťahanovce</text><text x="330" y="82" text-anchor="middle">Kysak</text>
+          <text x="30" y="82" text-anchor="middle">Košice</text><text x="180" y="82" text-anchor="middle">Ťahanovce</text><text x="345" y="82" text-anchor="end">Kostolany n. H.</text>
           <g class="rl-fixed rl-jump"><rect x="-16" y="-11" width="32" height="22" rx="3"/><text>Os</text></g>
         </svg>
       </div>
       <div><span class="tag blue">Návrh</span>
         <svg viewBox="0 0 360 120" role="img" aria-label="Návrh: vlak ostáva v stanici, kde sa ohlásil, pulzujúca šípka odhaduje jeho polohu a zastávka bez hlásenia má ikonu">
-          <text class="rl-say" x="0" y="16">Košice → Kysak</text>
+          <text class="rl-say" x="0" y="16">Košice → Kostolany nad Hornádom</text>
           <path class="rl-line" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
           <path class="rl-reach" pathLength="1" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
           <rect class="rl-st" x="23" y="83" width="14" height="14" rx="2"/><circle class="rl-st" cx="180" cy="56" r="6"/><rect class="rl-st" x="323" y="63" width="14" height="14" rx="2"/>
           <g transform="translate(180 32)" class="rl-off"><path d="M-7 4a4 4 0 0 1 .6-8 6 6 0 0 1 11.2 1.4A3.4 3.4 0 0 1 4.6 4Z"/><line x1="-8" y1="-8" x2="8" y2="8"/></g>
-          <text class="nm" x="30" y="116" text-anchor="middle">Košice</text><text x="180" y="82" text-anchor="middle">Ťahanovce</text><text class="nm" x="330" y="100" text-anchor="middle">Kysak</text>
+          <text class="nm" x="30" y="116" text-anchor="middle">Košice</text><text x="180" y="82" text-anchor="middle">Ťahanovce</text><text class="nm" x="345" y="100" text-anchor="end">Kostolany n. H.</text>
           <g class="rl-fixed" transform="translate(30 66)"><rect x="-16" y="-11" width="32" height="22" rx="3"/><text>Os</text></g>
-          <g class="rl-arrow"><path d="M0-11 10 8 0 3-10 8Z"/><animateMotion dur="6s" repeatCount="indefinite" rotate="auto" keyPoints="0;.62;.62" keyTimes="0;.8;1" calcMode="linear" path="M30 90 C90 90 110 52 180 56 S290 90 330 70"/></g>
+          <g class="rl-arrow"><path d="M11 0-8 10-3 0-8-10Z"/><animateMotion dur="6s" repeatCount="indefinite" rotate="auto" keyPoints="0;.62;.62" keyTimes="0;.8;1" calcMode="linear" path="M30 90 C90 90 110 52 180 56 S290 90 330 70"/></g>
         </svg>
       </div>
-      <p class="small muted" style="margin:0"><svg width="14" height="14" viewBox="-9 -9 18 18" class="rl-off" style="vertical-align:-2px"><path d="M-7 4a4 4 0 0 1 .6-8 6 6 0 0 1 11.2 1.4A3.4 3.4 0 0 1 4.6 4Z"/><line x1="-8" y1="-8" x2="8" y2="8"/></svg> zastávka nehlási polohu · <svg width="14" height="14" viewBox="-11 -12 22 22" class="rl-arrow" style="vertical-align:-2px;transform:rotate(90deg)"><path d="M0-11 10 8 0 3-10 8Z"/></svg> odhad podľa cestovného poriadku a meškania</p>
+      <p class="small muted" style="margin:0"><svg width="14" height="14" viewBox="-9 -9 18 18" class="rl-off" style="vertical-align:-2px"><path d="M-7 4a4 4 0 0 1 .6-8 6 6 0 0 1 11.2 1.4A3.4 3.4 0 0 1 4.6 4Z"/><line x1="-8" y1="-8" x2="8" y2="8"/></svg> zastávka nehlási polohu · <svg width="14" height="14" viewBox="-11 -11 22 22" class="rl-arrow" style="vertical-align:-2px"><path d="M11 0-8 10-3 0-8-10Z"/></svg> odhad podľa cestovného poriadku a meškania</p>
     </div></figure>
   </article>
   <article class="feat">
@@ -1448,6 +1457,10 @@ h1,h2,h3,h4{font-weight:800}
     <figure class="feat-fig"><div><div data-phone="ios" data-steps="dep" data-slice></div><figcaption><b>iOS 26</b>karta z Liquid Glass, SF</figcaption></div><div><div data-phone="android" data-steps="dep" data-slice></div><figcaption><b>Android</b>spodný panel Material 3 Expressive</figcaption></div></figure>
   </article>
 </section>
+<aside class="sign">
+  <img src="dominik-murar.webp" width="96" height="96" alt="Dominik Murar">
+  <div><b>Dominik Murar</b><p>Som programátor zo železničiarskej rodiny s vášňou pre verejnú dopravu. Tento návrh som pripravil, lebo verím, že cestovanie vlakom, autobusom aj MHD na Slovensku môže byť jednoduché. Rád ho s vami preberiem.</p></div>
+</aside>
 </main>
 <footer>Návrh redizajnu Ubian · Nevyžiadaný koncept, autor Dominik Murar, bez prepojenia s Ubianom a bez jeho schválenia · Stav k 14. 10. 2026</footer>
 <script>
