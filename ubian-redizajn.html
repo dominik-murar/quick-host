@@ -1327,7 +1327,7 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">01</div>
       <h3>Nová domovská obrazovka: cestovanie na jeden dotyk</h3>
-      <p>Domovskú obrazovku otváram niekoľkokrát denne, preto som začal ňou. Vľavo je dnešný Ubian, vpravo môj Proof of Concept. Ten sa otvorí rovno na odchodoch z najbližších zastávok, nad nimi sú moje obľúbené miesta, vedľa vyhľadávania Peňaženka a na pozadí mapa so živými polohami vozidiel. Mesto, dopravcu aj tarifu určí aplikácia z polohy a tlačidlo Vyhľadať nepotrebuje: spojenia ukáže hneď, ako vyberiem cieľ.</p>
+      <p>Domovskú obrazovku otvára používateľ Ubianu pravdepodobne niekoľkokrát denne. A často to býva v situácii keď už kráča k zastávke a chce vedieť, či sa má ponáhľať, alebo nie. Nový dizajn oproti súčasnému Ubianu šetrí priestorom a zobrazuje informácie, ktoré sú s takejto situácii naozaj podstatné - okamžitý náhľad na mapu v okolí, obľúbené ciele na jeden dotyk a najbližšie odchody z okolitých zastávok.</p>
     </div>
     <figure class="feat-fig cmp">
       <div>
@@ -1369,8 +1369,8 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">02</div>
       <h3>Sledovanie cesty</h3>
-      <p>Ťuknutím na „Sledovať“ pri spojení alebo odchode sa nad panelom objaví pásik jazdy. Hovorí to, čo by povedal spolucestujúci: „Pri vás o 2 zast.“, „Prichádza“, „Vystúpte o 3 zast.“ a nakoniec „Vystúpte“. Ťuknutím alebo potiahnutím sa pásik roztiahne na Jazdu so zoznamom zastávok až po moju výstupnú, pričom mapa nad ňou stále ukazuje vozidlo. Sledovanie skončí samo, keď vozidlo opustí výstupnú zastávku.</p>
-      <p>Sledovanie bude dostupné priamo v aplikácii a stačia mu dáta, ktoré živé rozhranie Ubianu už vracia. Ten istý pásik sa dá neskôr rozšíriť na Live Activities na iOS a Live Updates na Androide, teda na zamknutú obrazovku a Dynamic Island. Na to už bude treba notifikácie zo servera.</p>
+      <p>Pri ceste vo svojom meste, stačí vedieť kedy odchádza spoj. Ak však používateľ ide do cudzieho mesta, alebo na regionálnu železničnú trať so staršími súpravami v najhoršom prípade oznamovania staníc, musí byť obzvlášť v strehu. A tu je potenciál pre Ubian. V PoC sa po ťuknutí na „Sledovať“ pri spojení alebo odchode nad panelom objaví pásik jazdy. Oznamuje bez zbytočných detailov to, čo cestujúci potrebuje vedieť: „Pri vás o 2 zast.“, „Prichádza“, „Vystúpte o 3 zast.“ a nakoniec „Vystúpte“. Ťuknutím alebo potiahnutím sa pásik roztiahne na Jazdu so zoznamom zastávok až po výstupnú, pričom mapa je celý čas centrovaná na vozidlo. Sledovanie skončí samo, keď vozidlo opustí výstupnú zastávku.</p>
+      <p>Sledovaniu dostupnému priamo v aplikácii stačia dáta, ktoré Ubian už vracia. Ten istý pásik sa dá neskôr rozšíriť na Live Activities na iOS a Live Updates na Androide, teda na zamknutú obrazovku a Dynamic Island. Na to už môžu byť potrebné notifikácie zo servera.</p>
     </div>
     <figure class="feat-fig"><div class="card rail lt-card">
       <div class="lt-legend"><span class="tag on">Pásik nad panelom</span><span class="tag">Jazda</span></div>
@@ -1412,8 +1412,8 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">03</div>
       <h3>Pravdivá poloha vlakov</h3>
-      <p>Vlaky hlásia polohu len v staniciach a odbočkách, nie na zastávkach. Dnes preto mapa ukáže vlak v stanici, ktorá ho naposledy ohlásila, a presunie ho až do ďalšej, ktorá polohu aktualizuje. Medzi nimi vlak na mape stojí, hoci už dávno ide.</p>
-      <p>Návrh nechá vlak tam, kde sa naposledy ohlásil, a pridá pulzujúcu šípku, ktorá podľa cestovného poriadku a meškania odhaduje, kam sa odvtedy dostal. Zastávky, ktoré polohu nezverejňujú, majú vlastnú ikonu, a text pomenuje úsek, v ktorom vlak určite je. Body, v ktorých vlaky hlásia polohu, pozná návrh z OpenStreetMap, takže od Ubianu nepotrebuje žiadne nové dáta.</p>
+      <p>Tu ma motivuje osobná skúsenosť. Svokor (železničiar) mi pred odchodom z návštevy hovorí - ale nepozeraj si meškania v Ubiane a CPčku. Pozri mapa.zsr.sk, tam majú správne dáta. Ubian je pri vlakoch v takom zvláštnom vákuu. Železničiarom nie je dosť dôveryhodný, no zároveň bežným cestujúcim môže pripadať jeho hlásenie polohy a meškania nejasné. Predkladám dizajn, ktorý - verím - môže vyjsť v ústrety obom.</p>
+      <p>Návrh necháva vlak tam, kde sa naposledy ohlásil, a pridá pulzujúcu šípku, ktorá podľa cestovného poriadku a meškania odhaduje, kam sa odvtedy dostal. Zastávky, ktoré polohu nezverejňujú, majú vlastnú ikonu, a text pomenuje úsek, v ktorom vlak určite je. Body, v ktorých vlaky hlásia polohu, rozoznáva návrh z OpenStreetMap, avšak v produkcii by mohlo byť spoľahlivejšie ich poskytovať priamo z backendu, ak ŽSR Ubianu tieto dáta poskytuje.</p>
     </div>
     <figure class="feat-fig"><div class="card rail">
       <div><span class="tag">Dnes</span>
@@ -1444,7 +1444,7 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">04</div>
       <h3>Všetky lístky a nákupy v peňaženke</h3>
-      <p>Dopravná karta aj parkovanie sú dnes v spodnom menu a zároveň v profile. V návrhu je všetko v Peňaženke, jedno ťuknutie od vyhľadávania: navrchu to, čo práve platí, s pásom hodín a meniacim sa QR kódom pre revízora, pod tým kredit, karty, preukazy a parkovanie. Nakupuje sa tam, kde to človek potrebuje: cena na výsledku trasy je zároveň tlačidlo nákupu a ak už mám platný predplatný lístok, tlačidlo ukáže „✓ Platí“ a vedľa neho cenu jednorazového lístka, napríklad pre spolucestujúceho.</p>
+      <p>Ako sa Ubian rozrastal, funkcie pribúdali a nie vždy si našli systematické miesto. Je čas upratať. Mnoho funkcií sa dá elegantne presunúť na osobitnú obrazovku - Peňaženka - čo priamo využíva známu metaforu. V peňaženke ľudia nosia predplatné lístky, aktívne lístky, všetky karty - dopravné aj študentské, parkovacie lístky... Takto budú mať tie virtuálne rovnako v peňaženke aj v Ubiane</p>
     </div>
     <figure class="feat-fig"><div data-phone="ios" data-steps="wallet"></div></figure>
   </article>
@@ -1452,7 +1452,7 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">05</div>
       <h3>Príprava na natívny dizajn</h3>
-      <p>POC je napísaný v Expo, teda v React Native, takže jeho logika a komponenty poslúžia aj natívnym aplikáciám. Nové bude treba len to, čo je dnes iba webové, hlavne mapu. Rozloženie panela ostáva rovnaké, ovládanie však preberie zvyklosti platformy: na iOS pláva nad mapou karta z Liquid Glass ako v Apple Maps, na Androide je spodný panel Material 3 Expressive. Vzhľad Ubianu nesú obsahové prvky, teda odznaky liniek, karty odchodov, Jazda a Peňaženka, takže aplikácia pôsobí na oboch platformách ako doma a zároveň ako Ubian.</p>
+      <p>Dizajn sa neznaží vynájsť koleso. Vychádza z existujúcich vzorcov, ktoré dizajnové jazyky pre iOS a Android odporúčajú. To znamená, že celý koncept najviac zažiari vo forme natívnej aplikácie plne využívajúcej Liquid Glass a Material 3 Expressive. PoC je iba ochutnávka a demonštrácia funkčnosti týchto vzorcov.</p>
     </div>
     <figure class="feat-fig"><div><div data-phone="ios" data-steps="dep" data-slice></div><figcaption><b>iOS 26</b>karta z Liquid Glass, SF</figcaption></div><div><div data-phone="android" data-steps="dep" data-slice></div><figcaption><b>Android</b>spodný panel Material 3 Expressive</figcaption></div></figure>
   </article>
