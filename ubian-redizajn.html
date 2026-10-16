@@ -903,6 +903,9 @@ h1,h2,h3,h4{font-weight:800}
 :root{--mark:#E5484D}
 .feat.wide{grid-template-columns:minmax(0,1fr);gap:28px}
 .cmp{align-items:flex-start}
+.cmp-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:center}
+.cmp-row .marks{grid-template-columns:1fr;gap:28px}
+@media(max-width:1000px){.cmp-row{grid-template-columns:1fr;gap:28px}.cmp-row .marks{grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:16px}}
 .old-shot{position:relative;width:291px}
 .old-shot img{display:block;width:100%;height:auto;border-radius:28px;border:1px solid var(--line);box-shadow:var(--shadow)}
 .mark{position:absolute;border:3px solid var(--mark);border-radius:16px;transform:rotate(-1deg)}
@@ -1327,25 +1330,27 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">01</div>
       <h3>Nová domovská obrazovka: cestovanie na jeden dotyk</h3>
-      <p>Domovskú obrazovku otvára používateľ Ubianu pravdepodobne niekoľkokrát denne. A často to býva v situácii keď už kráča k zastávke a chce vedieť, či sa má ponáhľať, alebo nie. Nový dizajn oproti súčasnému Ubianu šetrí priestorom a zobrazuje informácie, ktoré sú s takejto situácii naozaj podstatné - okamžitý náhľad na mapu v okolí, obľúbené ciele na jeden dotyk a najbližšie odchody z okolitých zastávok.</p>
+      <p>Domovskú obrazovku otvára používateľ Ubianu pravdepodobne niekoľkokrát denne. A často to býva v situácii, keď už kráča k zastávke a chce vedieť, či sa má ponáhľať, alebo nie. Nový dizajn oproti súčasnému Ubianu šetrí priestorom a zobrazuje informácie, ktoré sú v takejto situácii naozaj podstatné: okamžitý náhľad na mapu v okolí, obľúbené ciele na jeden dotyk a najbližšie odchody z okolitých zastávok.</p>
     </div>
-    <figure class="feat-fig cmp">
-      <div>
-        <div class="old-shot">
-          <img src="ubian-dnes-domov.webp?v=2" width="1125" height="2436" alt="Dnešná obrazovka Spojenia v aplikácii Ubian">
-          <span class="mark" data-n="1" style="left:2.3%;top:19.4%;width:95.3%;height:6.3%"></span>
-          <span class="mark" data-n="2" style="left:3%;top:12.9%;width:94%;height:4.9%"></span>
-          <span class="mark" data-n="3" style="left:3%;top:79.9%;width:94%;height:9.8%"></span>
+    <div class="cmp-row">
+      <ol class="marks">
+        <li><b>Prepínanie medzi spojeniami a odchodmi</b>Spojenia a Odchody sú dva režimy s vlastným prepínačom navrchu obrazovky, hoci odpovedajú na tú istú otázku: čím a kedy odtiaľto pôjdem. V návrhu sú odchody priamo pod vyhľadávaním a netreba nič prepínať.</li>
+        <li><b>Výber druhu dopravy</b>Celý riadok pre nastavenie, ktoré väčšina ľudí nezmení nikdy. Ubian už dnes vracia zastávky aj dopravcov podľa polohy, takže výber z vlakov, autobusov a MHD hľadanie len zužuje. Návrh hľadá vo všetkých naraz.</li>
+        <li><b>Rýchle odkazy na kredit a lístky</b>Kredit na kartu a MHD lístok z Ubian kreditu zaberajú spodok obrazovky, hoci v menu majú ešte Kartu, MHD lístok a Parkovanie. Kredit dobíjam raz za čas, odchody pozerám každý deň. Patria do jednotnej Peňaženky mimo domovskej obrazovky, no stále prehľadne a na dosah: v návrhu je to tlačidlo hneď vedľa vyhľadávania.</li>
+      </ol>
+      <figure class="feat-fig cmp">
+        <div>
+          <div class="old-shot">
+            <img src="ubian-dnes-domov.webp?v=2" width="1125" height="2436" alt="Dnešná obrazovka Spojenia v aplikácii Ubian">
+            <span class="mark" data-n="2" style="left:2.3%;top:19.4%;width:95.3%;height:6.3%"></span>
+            <span class="mark" data-n="1" style="left:3%;top:12.9%;width:94%;height:4.9%"></span>
+            <span class="mark" data-n="3" style="left:3%;top:79.9%;width:94%;height:9.8%"></span>
+          </div>
+          <figcaption><b>Ubian dnes</b>obrazovka Spojenia v mojom telefóne</figcaption>
         </div>
-        <figcaption><b>Ubian dnes</b>obrazovka Spojenia v mojom telefóne</figcaption>
-      </div>
-      <div><div data-phone="ios" data-steps="dep"></div><figcaption><b>Návrh</b>domovská obrazovka v Proof of Concept</figcaption></div>
-    </figure>
-    <ol class="marks">
-      <li><b>Výber druhu dopravy</b>Celý riadok pre nastavenie, ktoré väčšina ľudí nezmení nikdy. Ubian už dnes vracia zastávky aj dopravcov podľa polohy, takže výber z vlakov, autobusov a MHD hľadanie len zužuje. Návrh hľadá vo všetkých naraz.</li>
-      <li><b>Prepínanie medzi spojeniami a odchodmi</b>Spojenia a Odchody sú dva režimy s vlastným prepínačom navrchu obrazovky, hoci odpovedajú na tú istú otázku: čím a kedy odtiaľto pôjdem. V návrhu sú odchody priamo pod vyhľadávaním a netreba nič prepínať.</li>
-      <li><b>Rýchle odkazy na kredit a lístky</b>Kredit na kartu a MHD lístok z Ubian kreditu zaberajú spodok obrazovky, hoci v menu majú ešte Kartu, MHD lístok a Parkovanie. Kredit dobíjam raz za čas, odchody pozerám každý deň. Patria do jednotnej Peňaženky mimo domovskej obrazovky, no stále prehľadne a na dosah: v návrhu je to tlačidlo hneď vedľa vyhľadávania.</li>
-    </ol>
+        <div><div data-phone="ios" data-steps="dep"></div><figcaption><b>Návrh</b>domovská obrazovka v Proof of Concept</figcaption></div>
+      </figure>
+    </div>
     <div>
       <h4>Mapa vždy poruke</h4>
       <p class="muted">Živé polohy vozidiel sú dnes na samostatnej obrazovke za tlačidlom Mapa. V návrhu je mapa stále na pozadí a všetko ostatné je v jednom paneli nad ňou, ktorý sa dá stiahnuť dole, nechať v strede alebo vytiahnuť na celú výšku. Mapa ukazuje to, čo je práve v paneli: vozidlá najbližších odchodov, trasu vybraného spojenia alebo vozidlo, ktorým idem. Meškajúce vozidlá majú meškanie priamo na značke, takže ho netreba hľadať.</p>
@@ -1369,8 +1374,8 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">02</div>
       <h3>Sledovanie cesty</h3>
-      <p>Pri ceste vo svojom meste, stačí vedieť kedy odchádza spoj. Ak však používateľ ide do cudzieho mesta, alebo na regionálnu železničnú trať so staršími súpravami v najhoršom prípade oznamovania staníc, musí byť obzvlášť v strehu. A tu je potenciál pre Ubian. V PoC sa po ťuknutí na „Sledovať“ pri spojení alebo odchode nad panelom objaví pásik jazdy. Oznamuje bez zbytočných detailov to, čo cestujúci potrebuje vedieť: „Pri vás o 2 zast.“, „Prichádza“, „Vystúpte o 3 zast.“ a nakoniec „Vystúpte“. Ťuknutím alebo potiahnutím sa pásik roztiahne na Jazdu so zoznamom zastávok až po výstupnú, pričom mapa je celý čas centrovaná na vozidlo. Sledovanie skončí samo, keď vozidlo opustí výstupnú zastávku.</p>
-      <p>Sledovaniu dostupnému priamo v aplikácii stačia dáta, ktoré Ubian už vracia. Ten istý pásik sa dá neskôr rozšíriť na Live Activities na iOS a Live Updates na Androide, teda na zamknutú obrazovku a Dynamic Island. Na to už môžu byť potrebné notifikácie zo servera.</p>
+      <p>Pri ceste vo svojom meste stačí vedieť, kedy odchádza spoj. Ak však používateľ ide do cudzieho mesta alebo na regionálnu železničnú trať so staršími súpravami, ktoré v horšom prípade stanice ani neohlasujú, musí byť obzvlášť v strehu. A tu je potenciál pre Ubian. V PoC sa po ťuknutí na „Sledovať“ pri spojení alebo odchode nad panelom objaví pásik jazdy. Oznamuje bez zbytočných detailov to, čo cestujúci potrebuje vedieť: „Pri vás o 2 zast.“, „Prichádza“, „Vystúpte o 3 zast.“ a nakoniec „Vystúpte“. Ťuknutím alebo potiahnutím sa pásik roztiahne na Jazdu so zoznamom zastávok až po výstupnú, pričom mapa je celý čas centrovaná na vozidlo. Sledovanie skončí samo, keď vozidlo opustí výstupnú zastávku.</p>
+      <p>Sledovaniu priamo v aplikácii stačia dáta, ktoré Ubian už vracia. Ten istý pásik sa dá neskôr rozšíriť na Live Activities na iOS a Live Updates na Androide, teda na zamknutú obrazovku a Dynamic Island. Na to už môžu byť potrebné notifikácie zo servera.</p>
     </div>
     <figure class="feat-fig"><div class="card rail lt-card">
       <div class="lt-legend"><span class="tag on">Pásik nad panelom</span><span class="tag">Jazda</span></div>
@@ -1412,8 +1417,8 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">03</div>
       <h3>Pravdivá poloha vlakov</h3>
-      <p>Tu ma motivuje osobná skúsenosť. Svokor (železničiar) mi pred odchodom z návštevy hovorí - ale nepozeraj si meškania v Ubiane a CPčku. Pozri mapa.zsr.sk, tam majú správne dáta. Ubian je pri vlakoch v takom zvláštnom vákuu. Železničiarom nie je dosť dôveryhodný, no zároveň bežným cestujúcim môže pripadať jeho hlásenie polohy a meškania nejasné. Predkladám dizajn, ktorý - verím - môže vyjsť v ústrety obom.</p>
-      <p>Návrh necháva vlak tam, kde sa naposledy ohlásil, a pridá pulzujúcu šípku, ktorá podľa cestovného poriadku a meškania odhaduje, kam sa odvtedy dostal. Zastávky, ktoré polohu nezverejňujú, majú vlastnú ikonu, a text pomenuje úsek, v ktorom vlak určite je. Body, v ktorých vlaky hlásia polohu, rozoznáva návrh z OpenStreetMap, avšak v produkcii by mohlo byť spoľahlivejšie ich poskytovať priamo z backendu, ak ŽSR Ubianu tieto dáta poskytuje.</p>
+      <p>Tu ma motivuje osobná skúsenosť. Svokor, železničiar, mi pred odchodom z návštevy hovorí: „Nepozeraj si meškania v Ubiane a CPčku. Pozri mapa.zsr.sk, tam majú správne dáta.“ Ubian je pri vlakoch v zvláštnom vákuu. Železničiarom nie je dosť dôveryhodný, no zároveň bežným cestujúcim môže pripadať jeho hlásenie polohy a meškania nejasné. Predkladám dizajn, ktorý, verím, môže vyjsť v ústrety obom.</p>
+      <p>Návrh necháva vlak tam, kde sa naposledy ohlásil, a pridá pulzujúcu šípku, ktorá podľa cestovného poriadku a meškania odhaduje, kam sa odvtedy dostal. Zastávky, ktoré polohu nezverejňujú, majú vlastnú ikonu, a text pomenuje úsek, v ktorom vlak určite je. Body, v ktorých vlaky hlásia polohu, rozoznáva návrh z OpenStreetMap. V produkcii by však mohlo byť spoľahlivejšie posielať ich priamo z backendu, ak tieto dáta ŽSR Ubianu poskytuje.</p>
     </div>
     <figure class="feat-fig"><div class="card rail">
       <div><span class="tag">Dnes</span>
@@ -1444,7 +1449,7 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">04</div>
       <h3>Všetky lístky a nákupy v peňaženke</h3>
-      <p>Ako sa Ubian rozrastal, funkcie pribúdali a nie vždy si našli systematické miesto. Je čas upratať. Mnoho funkcií sa dá elegantne presunúť na osobitnú obrazovku - Peňaženka - čo priamo využíva známu metaforu. V peňaženke ľudia nosia predplatné lístky, aktívne lístky, všetky karty - dopravné aj študentské, parkovacie lístky... Takto budú mať tie virtuálne rovnako v peňaženke aj v Ubiane</p>
+      <p>Ako sa Ubian rozrastal, pribúdali funkcie, ktoré si nie vždy našli systematické miesto. Je čas upratať. Mnoho funkcií sa dá elegantne presunúť na osobitnú obrazovku, Peňaženku, ktorá priamo využíva známu metaforu. V peňaženke ľudia nosia predplatné aj aktívne lístky, dopravné a študentské karty či parkovacie lístky. Tie virtuálne tak budú mať rovnako pokope v Peňaženke v Ubiane.</p>
     </div>
     <figure class="feat-fig"><div data-phone="ios" data-steps="wallet"></div></figure>
   </article>
@@ -1452,7 +1457,7 @@ h1,h2,h3,h4{font-weight:800}
     <div>
       <div class="eyebrow">05</div>
       <h3>Príprava na natívny dizajn</h3>
-      <p>Dizajn sa neznaží vynájsť koleso. Vychádza z existujúcich vzorcov, ktoré dizajnové jazyky pre iOS a Android odporúčajú. To znamená, že celý koncept najviac zažiari vo forme natívnej aplikácie plne využívajúcej Liquid Glass a Material 3 Expressive. PoC je iba ochutnávka a demonštrácia funkčnosti týchto vzorcov.</p>
+      <p>Dizajn sa nesnaží vynájsť koleso. Vychádza z existujúcich vzorcov, ktoré dizajnové jazyky pre iOS a Android odporúčajú. To znamená, že celý koncept najviac zažiari v natívnej aplikácii, ktorá naplno využije Liquid Glass a Material 3 Expressive. PoC je iba ochutnávka a demonštrácia funkčnosti týchto vzorcov.</p>
     </div>
     <figure class="feat-fig"><div><div data-phone="ios" data-steps="dep" data-slice></div><figcaption><b>iOS 26</b>karta z Liquid Glass, SF</figcaption></div><div><div data-phone="android" data-steps="dep" data-slice></div><figcaption><b>Android</b>spodný panel Material 3 Expressive</figcaption></div></figure>
   </article>
