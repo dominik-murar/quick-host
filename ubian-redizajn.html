@@ -1277,7 +1277,7 @@ h1,h2,h3,h4{font-weight:800}
 <div class="hero">
   <div>
     <h1>UBIAN<span class="motto">cestovanie na <span class="swap"><span class="old">pár klikov</span> <em>jeden dotyk</em></span></span></h1>
-    <p>Milujem Ubian. No ťažko sa mi používa. Súčasné rozhranie nestíha za ruchom mesta a preto som vytvoril funkčný Proof of Concept, v ktorom som sa zameral na kľúčové funkcie aplikácie a nadizajnoval ich nanovo s minimálnym možným počtom krokov.</p>
+    <p>Ubian je najlepšia aplikácia na cestovanie na Slovensku. Odporúčam ju každému koho vidím používať niečo iné. CP je fajn na vlaky, ale chýba mu lepšia integrácia s MHD. Cyril... Fajn nápad, ale tam to nateraz ostalo. Preto si úprimne prajem aby Ubian ďalej staval na svojom potenciáli. Avšak súčasné rozhranie nestíha za ruchom mesta a preto som vytvoril funkčný Proof of Concept, v ktorom som sa zameral na kľúčové funkcie aplikácie a nadizajnoval ich nanovo s minimálnym možným počtom krokov.</p>
     <div class="pill-row">
       <span class="lb tram">2</span><span class="lb trolley">38</span><span class="lb bus">23</span><span class="lb regional">701</span><span class="lb train">Os 8813</span><span class="lb night">N1</span>
     </div>
@@ -1335,8 +1335,8 @@ h1,h2,h3,h4{font-weight:800}
     <div class="cmp-row">
       <ol class="marks">
         <li><b>Prepínanie medzi spojeniami a odchodmi</b>Spojenia a Odchody sú dva režimy s vlastným prepínačom navrchu obrazovky, hoci odpovedajú na tú istú otázku: čím a kedy odtiaľto pôjdem. V návrhu sú odchody priamo pod vyhľadávaním a netreba nič prepínať.</li>
-        <li><b>Výber druhu dopravy</b>Celý riadok pre nastavenie, ktoré väčšina ľudí nezmení nikdy. Ubian už dnes vracia zastávky aj dopravcov podľa polohy, takže výber z vlakov, autobusov a MHD hľadanie len zužuje. Návrh hľadá vo všetkých naraz.</li>
-        <li><b>Rýchle odkazy na kredit a lístky</b>Kredit na kartu a MHD lístok z Ubian kreditu zaberajú spodok obrazovky, hoci v menu majú ešte Kartu, MHD lístok a Parkovanie. Kredit si používateľ dobíja raz za čas, odchody pozerá každý deň. Tieto odkazy patria do jednotnej Peňaženky mimo domovskej obrazovky, no stále prehľadne a na dosah: v návrhu je to tlačidlo hneď vedľa vyhľadávania.</li>
+        <li><b>Výber druhu dopravy</b>Celý riadok pre nastavenie, ktoré väčšina ľudí nezmení nikdy. Ubian už dnes vracia zastávky aj dopravcov podľa aktuálnej polohy, takže výber z vlakov, autobusov a MHD nie je potrebný. V prípade potreby možno použiť "pill" komponent na filtrovanie pri vyhľadávaní, čo zaberie omnoho menej miesta.</li>
+        <li><b>Rýchle odkazy na kredit a lístky</b>Kredit na kartu a MHD lístok z Ubian kreditu zaberajú spodok obrazovky, hoci v spodnom menu sú duplicitné sekcie pre Kartu, MHD lístok a Parkovanie. Kredit si používateľ dobíja raz za čas, odchody pozerá každý deň. Tieto odkazy patria do jednotnej Peňaženky mimo domovskej obrazovky, no stále prehľadne a na dosah: v návrhu je to tlačidlo hneď vedľa vyhľadávania.</li>
       </ol>
       <figure class="feat-fig cmp">
         <div>
@@ -1346,22 +1346,18 @@ h1,h2,h3,h4{font-weight:800}
             <span class="mark" data-n="1" style="left:3%;top:12.9%;width:94%;height:4.9%"></span>
             <span class="mark" data-n="3" style="left:3%;top:79.9%;width:94%;height:9.8%"></span>
           </div>
-          <figcaption><b>Ubian dnes</b>obrazovka Spojenia v mojom telefóne</figcaption>
+          <figcaption><b>Ubian dnes</b>obrazovka Spojenia</figcaption>
         </div>
-        <div><div data-phone="ios" data-steps="dep"></div><figcaption><b>Návrh</b>domovská obrazovka v Proof of Concept</figcaption></div>
+        <div><div data-phone="ios" data-steps="dep"></div><figcaption><b>Návrh</b>domovská obrazovka</figcaption></div>
       </figure>
     </div>
     <div>
-      <h4>Mapa vždy poruke</h4>
-      <p class="muted">Živé polohy vozidiel sú dnes na samostatnej obrazovke za tlačidlom Mapa. V návrhu je mapa stále na pozadí a všetko ostatné je v jednom paneli nad ňou, ktorý sa dá stiahnuť dole, nechať v strede alebo vytiahnuť na celú výšku. Mapa ukazuje to, čo je práve v paneli: vozidlá najbližších odchodov, trasu vybraného spojenia alebo vozidlo, ktorým idem. Meškajúce vozidlá majú meškanie priamo na značke, takže ho netreba hľadať.</p>
-    </div>
-    <div>
-      <h4>Koľko dotykov ma stojí bežná cesta</h4>
-      <p class="small muted">Rátam aj otvorenie aplikácie, písanie na klávesnici nerátam.</p>
+      <h4>Koľko dotykov stoja bežné činnosti</h4>
+      <p class="small muted">Vrátane otvorenia aplikácie, bez písania na klávesnici.</p>
       <div class="tbl-wrap"><table class="taps">
-        <thead><tr><th>Čo chcem</th><th>Ubian dnes</th><th>Návrh</th></tr></thead>
+        <thead><tr><th>Cieľ</th><th>Ubian dnes</th><th>Návrh</th></tr></thead>
         <tbody>
-          <tr><td>Odchody z mojej polohy</td><td><span class="n">5</span><ol class="steps"><li>otvorenie</li><li>prepnutie na Odchody</li><li>textové pole</li><li>Aktuálna poloha</li><li>Vyhľadať</li></ol></td><td><span class="n ok">1</span><ol class="steps"><li>otvorenie</li></ol></td></tr>
+          <tr><td>Odchody z aktuálnej polohy</td><td><span class="n">5</span><ol class="steps"><li>otvorenie</li><li>prepnutie na Odchody</li><li>textové pole</li><li>Aktuálna poloha</li><li>Vyhľadať</li></ol></td><td><span class="n ok">1</span><ol class="steps"><li>otvorenie</li></ol></td></tr>
           <tr><td>Vyhľadanie spojenia</td><td><span class="n">4</span><ol class="steps"><li>otvorenie</li><li>textové pole</li><li>zadanie a potvrdenie cieľa</li><li>Vyhľadať</li></ol></td><td><span class="n ok">3</span><ol class="steps"><li>otvorenie</li><li>textové pole</li><li>zadanie a potvrdenie cieľa</li></ol></td></tr>
           <tr><td>Spojenie na obľúbené miesto</td><td><span class="n">3</span><ol class="steps"><li>otvorenie</li><li>textové pole</li><li>obľúbená zastávka</li></ol></td><td><span class="n ok">2</span><ol class="steps"><li>otvorenie</li><li>obľúbená zastávka alebo adresa</li></ol></td></tr>
           <tr><td>Polohy spojov na mape</td><td><span class="n">2</span><ol class="steps"><li>otvorenie</li><li>Mapa</li></ol></td><td><span class="n ok">1</span><ol class="steps"><li>otvorenie</li></ol></td></tr>
