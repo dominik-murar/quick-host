@@ -995,8 +995,7 @@ h1,h2,h3,h4{font-weight:800}
 .sign p{margin:0;color:var(--text-2)}
 .sign b{display:block;color:var(--text);font-size:18px;margin-bottom:4px}
 @media(max-width:520px){.sign{flex-direction:column;text-align:center}}
-.rl-reach{stroke:var(--mode-train);stroke-width:6;fill:none;stroke-linecap:round;stroke-dasharray:1;animation:rl-reach 6s linear infinite}
-@keyframes rl-reach{from{stroke-dashoffset:1}80%,to{stroke-dashoffset:.38}}
+.rl-reach{stroke:var(--mode-train);stroke-width:6;fill:none;stroke-linecap:butt;stroke-dasharray:1;stroke-dashoffset:1}
 .rl-arrow path{fill:var(--mode-train);stroke:#fff;stroke-width:2;stroke-linejoin:round;animation:rl-pulse 1.4s ease-in-out infinite}
 @keyframes rl-pulse{50%{opacity:.6}}
 .rail p svg{display:inline;width:14px}
@@ -1437,15 +1436,15 @@ h1,h2,h3,h4{font-weight:800}
         <svg viewBox="0 0 360 120" role="img" aria-label="Návrh: vlak ostáva v stanici, kde sa ohlásil, pulzujúca šípka odhaduje jeho polohu a zastávka bez hlásenia má ikonu">
           <text class="rl-say" x="0" y="16">Košice → Kostolany nad Hornádom</text>
           <path class="rl-line" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
-          <path class="rl-reach" pathLength="1" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"/>
+          <path class="rl-reach" pathLength="1" d="M30 90 C90 90 110 52 180 56 S290 90 330 70"><animate attributeName="stroke-dashoffset" values="1;.38;.38" keyTimes="0;.8;1" dur="6s" repeatCount="indefinite" calcMode="linear"/></path>
           <rect class="rl-st" x="23" y="83" width="14" height="14" rx="2"/><circle class="rl-st" cx="180" cy="56" r="6"/><rect class="rl-st" x="323" y="63" width="14" height="14" rx="2"/>
           <g transform="translate(180 32)" class="rl-off"><path d="M-7 4a4 4 0 0 1 .6-8 6 6 0 0 1 11.2 1.4A3.4 3.4 0 0 1 4.6 4Z"/><line x1="-8" y1="-8" x2="8" y2="8"/></g>
           <text class="nm" x="30" y="116" text-anchor="middle">Košice</text><text x="180" y="82" text-anchor="middle">Ťahanovce</text><text class="nm" x="345" y="100" text-anchor="end">Kostolany n. H.</text>
           <g class="rl-fixed" transform="translate(30 66)"><rect x="-16" y="-11" width="32" height="22" rx="3"/><text>Os</text></g>
-          <g class="rl-arrow"><path d="M11 0-8 10-3 0-8-10Z"/><animateMotion dur="6s" repeatCount="indefinite" rotate="auto" keyPoints="0;.62;.62" keyTimes="0;.8;1" calcMode="linear" path="M30 90 C90 90 110 52 180 56 S290 90 330 70"/></g>
+          <g class="rl-arrow"><path d="M0 0-19 10-14 0-19-10Z"/><animateMotion dur="6s" repeatCount="indefinite" rotate="auto" keyPoints="0;.62;.62" keyTimes="0;.8;1" calcMode="linear" path="M30 90 C90 90 110 52 180 56 S290 90 330 70"/></g>
         </svg>
       </div>
-      <p class="small muted" style="margin:0"><svg width="14" height="14" viewBox="-9 -9 18 18" class="rl-off" style="vertical-align:-2px"><path d="M-7 4a4 4 0 0 1 .6-8 6 6 0 0 1 11.2 1.4A3.4 3.4 0 0 1 4.6 4Z"/><line x1="-8" y1="-8" x2="8" y2="8"/></svg> zastávka nehlási polohu · <svg width="14" height="14" viewBox="-11 -11 22 22" class="rl-arrow" style="vertical-align:-2px"><path d="M11 0-8 10-3 0-8-10Z"/></svg> odhad podľa cestovného poriadku a meškania</p>
+      <p class="small muted" style="margin:0;text-align:center"><svg width="14" height="14" viewBox="-9 -9 18 18" class="rl-off" style="vertical-align:-2px"><path d="M-7 4a4 4 0 0 1 .6-8 6 6 0 0 1 11.2 1.4A3.4 3.4 0 0 1 4.6 4Z"/><line x1="-8" y1="-8" x2="8" y2="8"/></svg> zastávka nehlási polohu · <svg width="14" height="14" viewBox="-11 -11 22 22" class="rl-arrow" style="vertical-align:-2px"><path d="M11 0-8 10-3 0-8-10Z"/></svg> odhad podľa cestovného poriadku a meškania</p>
     </div></figure>
   </article>
   <article class="feat" id="wallet">
