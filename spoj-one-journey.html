@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spoj: one journey, not a planner and a Jazda</title>
+<style>
+:root{--bg:#F5F6F8;--surface:#fff;--line:#D8DCE2;--text:#1A1A1A;--text-2:#4A4F57;--text-3:#6E737B;--accent:#0066B3;
+--late:#B3261E;--warn:#A35200;--ok:#1E7A3C;--rail:#0066B3;--context:#B9BEC6;--font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1013;--surface:#16191E;--line:#2C323B;--text:#F1F3F5;--text-2:#B8BEC7;--text-3:#8B929C;--accent:#4DA3FF;
+--late:#FF6B63;--warn:#F5A524;--ok:#4CC27A;--rail:#4DA3FF;--context:#4A515C}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--font)}
+main{max-width:900px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:26px;margin:0 0 4px}
+.sub{color:var(--text-2);margin:0 0 24px}
+h2{font-size:19px;margin:36px 0 6px}
+h3{font-size:15px;margin:18px 0 4px}
+p,li{color:var(--text-2)}
+strong{color:var(--text)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0}
+.tldr{border-left:4px solid var(--accent)}
+.tldr p{margin:6px 0}
+code{font-size:13px}
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px;margin:10px 0}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--text-3);font-weight:600}
+td{color:var(--text-2)}
+tr:last-child td{border-bottom:none}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0}
+.flow .node{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:13px}
+.flow .node b{display:block;color:var(--text);font-size:14px}
+.flow .node.hl{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.flow .arrow{color:var(--text-3);font-size:13px}
+.phones{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:14px 0}
+.phone{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:14px 12px;font-size:12.5px;min-height:420px;position:relative;overflow:hidden}
+.phone .cap{font-size:12px;color:var(--text-3);text-align:center;margin:-2px 0 10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.map{height:150px;border-radius:14px;background:repeating-linear-gradient(135deg,rgba(127,127,127,.08) 0 10px,rgba(127,127,127,.03) 10px 20px);margin-bottom:-28px}
+.pill{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 10px;display:flex;gap:8px;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.12);margin:0 4px 8px}
+.pill .t{flex:1;min-width:0}
+.pill .t b{display:block;font-size:13px;color:var(--text)}
+.pill .t span{color:var(--text-3);font-size:11.5px}
+.pill .m{font-weight:700;font-size:15px}
+.sheet{border-top:1px solid var(--line);padding-top:8px}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:20px;padding:0 5px;border-radius:5px;background:#D9272E;color:#fff;font-weight:700;font-size:11.5px}
+.badge.b7{background:#0A7C3E}.badge.bt{background:#5B2A86}
+.head{font-size:17px;font-weight:700;color:var(--text);margin:2px 0}
+.meta{color:var(--text-3);font-size:11.5px;margin-bottom:8px}
+.leg{display:flex;align-items:center;gap:6px;margin:8px 0 2px;color:var(--text)}
+.leg .dir{flex:1;font-weight:600}
+.leg .st{font-size:11.5px}
+.row{display:grid;grid-template-columns:38px 14px 1fr;align-items:center;gap:6px;min-height:20px;color:var(--text)}
+.row .tm{font-variant-numeric:tabular-nums;font-size:12px;color:var(--text-2)}
+.row .rl{position:relative;height:100%;display:flex;justify-content:center}
+.row .rl:before{content:"";position:absolute;top:0;bottom:0;width:3px;background:var(--rail)}
+.row .rl.ctx:before{background:var(--context)}
+.row .rl.end:before{bottom:50%}
+.row .rl.start:before{top:50%}
+.row .dot{position:relative;width:9px;height:9px;border-radius:50%;background:var(--surface);border:2px solid var(--rail);align-self:center}
+.row .dot.ctx{border-color:var(--context)}
+.row .dot.veh{background:var(--rail);box-shadow:0 0 0 3px rgba(0,102,179,.25)}
+.row.pass{color:var(--text-3)}
+.note{display:grid;grid-template-columns:38px 14px 1fr;gap:6px;color:var(--text-3);font-size:11.5px;margin:3px 0}
+.note .rl{border-left:3px dotted var(--context);margin-left:5px;height:100%}
+.chip{display:inline-block;border-radius:999px;padding:1px 7px;font-size:11px;font-weight:600}
+.chip.warn{background:rgba(163,82,0,.14);color:var(--warn)}
+.chip.ok{background:rgba(30,122,60,.14);color:var(--ok)}
+.chip.late{background:rgba(179,38,30,.12);color:var(--late)}
+.late{color:var(--late)}.warn{color:var(--warn)}.ok{color:var(--ok)}
+.folded{opacity:.62}
+.done{color:var(--text-3);font-size:11.5px;margin:6px 0}
+.panel{background:var(--bg);border-radius:10px;padding:6px 8px;margin:4px 0 4px 46px}
+.panel .alt{display:flex;gap:6px;align-items:center;padding:3px 0}
+.panel .alt .d{flex:1}
+.panel .alt.sel{font-weight:700;color:var(--text)}
+.panel h4{margin:2px 0 4px;font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em}
+.btns{display:flex;gap:6px;margin:8px 0}
+.btn{flex:1;text-align:center;border-radius:9px;padding:6px;font-weight:600;font-size:12px;border:1px solid var(--line);color:var(--text-2)}
+.btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+.phases td:first-child{white-space:nowrap;font-weight:600;color:var(--text)}
+.q li{margin:6px 0}
+.small{font-size:13px;color:var(--text-3)}
+</style>
+</head>
+<body>
+<main>
+<h1>One journey, not a planner and a Jazda</h1>
+<p class="sub">How the trip planner's journey details and the live Jazda view should relate, what other transit apps do, and a phased plan that also brings multi-leg journeys to Jazda. Based on <code>main</code> at <code>65d77ba</code>.</p>
+
+<div class="card tldr">
+<p><strong>Merge them.</strong> Journey details and Jazda show the same thing, a <em>connection</em>, at different moments. Other apps keep one route object and one layout. Riding adds a "now" header and moves the focus along the route. It never switches you to a second view.</p>
+<p><strong>Keeping a journey and being guided through it are separate.</strong> You skip tracking because tracking is a mode you have to switch on. Make keeping implicit and cheap: a journey you opened stays as <em>Vaša cesta</em> until it ends, with live delays and transfer waits. Turn guidance (instructions, get-off cue, handover at transfers) on automatically once <code>isOnBoard</code> detects you on the vehicle. That retires the Sledovať toggle.</p>
+<p><strong>Multi-leg comes free.</strong> Store the whole connection instead of <code>TrackedRide</code> with <code>nextLegs</code>. Jazda then becomes the journey timeline in live mode, and transfer stops get the leg alternatives and departures panels you already built.</p>
+</div>
+
+<h2>What the code does today</h2>
+<table>
+<tr><th></th><th>Planner details</th><th>Jazda</th></tr>
+<tr><td><strong>Data</strong></td><td>Whole <code>Connection</code> in screen state (<code>selectedJourney</code>), <strong>not persisted</strong>. Leave it and it's gone, so coming back means searching again.</td><td><code>TrackedRide</code>, which is the current leg plus <code>nextLegs</code>, persisted under <code>spoj:tracked-ride</code>. Walks, transfer waits and the connection itself are dropped.</td></tr>
+<tr><td><strong>Live</strong></td><td>Already live: delay per leg, live transfer wait and missed change (<code>journeySteps</code> with <code>delayOf</code>), vehicles on the map.</td><td>Live position, instruction, countdown and progress for <strong>one leg only</strong>. <code>finishLeg</code> swaps in the next leg silently. Before that you can't see the next change or whether you'll make it.</td></tr>
+<tr><td><strong>Stop detail</strong></td><td>Legs fold and unfold (<code>JourneyLeg</code> → <code>LegStopRow</code>). No departures at a transfer.</td><td><code>TripTimeline</code>: tap a stop ahead of the vehicle to see departures once you get there (<code>ArrivalDepartures</code>).</td></tr>
+<tr><td><strong>Alternatives</strong></td><td>Swipe a leg for an earlier or later trip (<code>useLegAlternatives</code>).</td><td>None.</td></tr>
+<tr><td><strong>Surface</strong></td><td>Sheet page.</td><td>Separate overlay (<code>LiveRide</code>) that morphs from the pill and covers the sheet. Disabled on desktop.</td></tr>
+</table>
+<p>So the two views split the needed features between them. Each has half of what you want mid-trip: the planner has the whole journey and its transfers, Jazda has the vehicle and the stop panels. There are also two timeline renderings (<code>LegStopRow</code> and <code>TripTimeline</code>) with different rails for the same stops.</p>
+
+<h2>What other apps do</h2>
+<p class="small">From how these products are known to work. I haven't re-checked them in the apps today, so treat the details as indicative.</p>
+<table>
+<tr><th>App</th><th>Planning → riding</th><th>Keeping without guidance</th><th>Mid-trip at a stop</th></tr>
+<tr><td><strong>Citymapper</strong></td><td>"GO" keeps the route's step list. The current step expands and the rest fold.</td><td>Recent and saved trips reopen with live data.</td><td>Each step shows the next departures of its line. Get-off alerts.</td></tr>
+<tr><td><strong>Google Maps</strong></td><td>"Start" layers step guidance onto the same directions list.</td><td>Pinned trips sit in the Go tab with live times.</td><td>Tap a step for that line's later departures.</td></tr>
+<tr><td><strong>Apple Maps</strong></td><td>"Go" turns route cards into step cards in the same layout.</td><td>None to speak of.</td><td>Get-off notifications.</td></tr>
+<tr><td><strong>Transit</strong></td><td>GO mode adds a "now" header. The route stays below it.</td><td>Trips list. Live Activity on the lock screen.</td><td>Warns when a transfer is at risk.</td></tr>
+<tr><td><strong>DB Navigator, SBB, ÖBB</strong></td><td>No separate guidance mode. The saved journey <em>is</em> the live view.</td><td><strong>Saved journeys</strong> (DB's "Reise speichern" into its trips list) with live delays and platform changes. No GPS needed.</td><td>Warns when a connection is at risk and offers alternatives from that station.</td></tr>
+<tr><td><strong>IDOS / CP</strong></td><td>Connection detail updates live.</td><td>"Sledovať spojenie" notifies of changes.</td><td>Detail per stop.</td></tr>
+</table>
+<h3>Patterns that recur</h3>
+<ol>
+<li><strong>One route object, one layout.</strong> Planning and riding are densities of the same screen, never two screens.</li>
+<li><strong>Keeping is low-commitment.</strong> Rail apps lead here. Commuters who know the route still want the delay, so saving a journey is separate from step-by-step guidance and costs nothing.</li>
+<li><strong>The transfer is the headline.</strong> At a change, "will I make it" matters more than where the vehicle is. The wait left and the risk get top billing.</li>
+<li><strong>Recovery stays in place.</strong> When a change slips, the alternatives appear at that step, not in a new search.</li>
+<li><strong>The compact form shows the next event</strong> (board, get off, change), not the current leg's name.</li>
+</ol>
+
+<h2>The recommended model</h2>
+<div class="flow">
+<div class="node"><b>Výsledky</b>cards</div><span class="arrow">open →</span>
+<div class="node hl"><b>Cesta</b>timeline, planning density</div><span class="arrow">close or back to map →</span>
+<div class="node hl"><b>Vaša cesta</b>kept: pill + live timeline</div><span class="arrow">on board (auto) →</span>
+<div class="node hl"><b>Jazda</b>same timeline, live density + guidance</div><span class="arrow">transfer → next leg →</span>
+<div class="node"><b>Done</b>after the last exit</div>
+</div>
+<p>The three highlighted boxes are <strong>one component</strong> fed by one <code>KeptJourney { connection, keptAt }</code>. What changes between them is density and focus:</p>
+<ul>
+<li><strong>Planning:</strong> legs folded, header "Odchod o 6 min", alternatives swipeable. This is today's <code>JourneyDetails</code>.</li>
+<li><strong>Kept:</strong> the pill on the map shows the next event across all legs, with delay. Tapping it opens the same timeline, focused on now.</li>
+<li><strong>Jazda:</strong> past legs collapse to one line, the current leg unfolds with the vehicle on the rail, and the next transfer shows its live wait. Later legs stay folded with their known delay.</li>
+<li><strong>Single trip from Odchody</strong> becomes a one-leg connection, so <code>ConnectionDetails</code> goes away.</li>
+</ul>
+
+<div class="phones">
+<div class="phone">
+<div class="cap">1 · Cesta (planning)</div>
+<div class="head">Odchod o 6 min</div>
+<div class="meta">14:13 – 14:41 · 28 min · 1 prestup</div>
+<div class="leg"><span class="badge">4</span><span class="dir">Staničné nám.</span><span class="st late">+2 min</span></div>
+<div class="row"><span class="tm">14:13</span><span class="rl start"><span class="dot"></span></span><span>Technická univerzita <span class="small">A</span></span></div>
+<div class="row"><span class="tm">14:21</span><span class="rl end"><span class="dot"></span></span><span>Staničné námestie</span></div>
+<div class="note"><span></span><span class="rl"></span><span>🚶 pešo asi 2 min, čakanie 4 min</span></div>
+<div class="leg"><span class="badge b7">7</span><span class="dir">Ťahanovce</span><span class="st ok">načas</span></div>
+<div class="row"><span class="tm">14:27</span><span class="rl start"><span class="dot"></span></span><span>Staničné nám. <span class="small">2</span></span></div>
+<div class="row"><span class="tm">14:41</span><span class="rl end"><span class="dot"></span></span><span>Ťahanovce</span></div>
+<div class="btns"><span class="btn">🚧 — €</span></div>
+<p class="small" style="margin:6px 0 0">No Sledovať button. Close it and it stays as Vaša cesta.</p>
+</div>
+
+<div class="phone">
+<div class="cap">2 · Vaša cesta (kept)</div>
+<div class="map"></div>
+<div class="pill"><span class="badge">4</span><span class="t"><b>Nástup Technická univ.</b><span>potom 7 na Staničnom nám.</span></span><span class="m late">8 min</span></div>
+<div class="sheet">
+<div class="head" style="font-size:14px">Odchody</div>
+<div class="meta">The rest of the app works as usual. The pill only goes away after the last exit or with ✕.</div>
+</div>
+</div>
+
+<div class="phone">
+<div class="cap">3 · Jazda (on board)</div>
+<div class="head">Vystúpte o 3 zast.</div>
+<div class="meta">potom <span class="badge b7">7</span> o 14:27 · <span class="chip warn">prestup 2 min</span></div>
+<div class="leg"><span class="badge">4</span><span class="dir">Staničné nám.</span><span class="st late">+2 min</span></div>
+<div class="row pass"><span class="tm">14:13</span><span class="rl start ctx"><span class="dot ctx"></span></span><span>Technická univ.</span></div>
+<div class="row"><span class="tm">14:18</span><span class="rl"><span class="dot veh"></span></span><span><b>Hlavná</b></span></div>
+<div class="row"><span class="tm">14:20</span><span class="rl"><span class="dot"></span></span><span>Mestská hala</span></div>
+<div class="row"><span class="tm late">14:23</span><span class="rl end"><span class="dot"></span></span><span>Staničné námestie</span></div>
+<div class="note"><span></span><span class="rl"></span><span class="warn">🚶 2 min, čakanie 2 min (bolo 4)</span></div>
+<div class="leg folded"><span class="badge b7">7</span><span class="dir">Ťahanovce</span><span class="st">14:27 → 14:41</span></div>
+</div>
+
+<div class="phone">
+<div class="cap">4 · Tap the transfer</div>
+<div class="head" style="font-size:15px">Staničné námestie</div>
+<div class="meta">you arrive 14:23 · +2 min</div>
+<div class="panel">
+<h4>Linka 7 odtiaľto</h4>
+<div class="alt"><span class="badge b7">7</span><span class="d">14:27</span><span class="chip warn">tesne</span></div>
+<div class="alt sel"><span class="badge b7">7</span><span class="d">14:37</span><span class="chip ok">istota</span></div>
+<div class="alt"><span class="badge b7">7</span><span class="d">14:47</span></div>
+</div>
+<div class="panel">
+<h4>Iné odchody po príchode</h4>
+<div class="alt"><span class="badge bt">R2</span><span class="d">Ťahanovce · 14:25</span></div>
+<div class="alt"><span class="badge">6</span><span class="d">Sídl. KVP · 14:26</span></div>
+</div>
+<p class="small" style="margin:8px 0 0">The top panel is <code>useLegAlternatives</code>, the bottom one <code>ArrivalDepartures</code>. Picking one swaps the leg in the kept journey, the same as swiping does today.</p>
+</div>
+</div>
+
+<h2>Answering your two scenarios</h2>
+<table>
+<tr><th>You do</th><th>Today</th><th>Proposed</th></tr>
+<tr><td>Open a journey, don't track, walk off</td><td>Journey gone. To see the delay you search again.</td><td>The journey is kept. The pill shows the next event and delay, and one tap gets you back.</td></tr>
+<tr><td>Mid-ride, check a transfer stop's options</td><td>Jazda shows the current leg only. The transfer, its wait and the alternatives aren't there.</td><td>The transfer step shows the live wait. Tapping it opens the next leg's alternatives and the departures after you arrive.</td></tr>
+<tr><td>Change is missed (wait below zero)</td><td>Planner shows it red, Jazda doesn't show it at all.</td><td>Jazda's header switches to the first catchable alternative and offers to swap it in.</td></tr>
+</table>
+
+<h2>Plan</h2>
+<table class="phases">
+<tr><th>Phase</th><th>What</th><th>Effort</th></tr>
+<tr><td>1 · Model</td><td>Replace <code>TrackedRide</code>/<code>nextLegs</code> with <code>KeptJourney { connection, keptAt }</code> in storage, and drop or convert the old key once. Derive the current leg from the existing <code>hasPassedExit</code>/<code>isPastTimetable</code>, so <code>finishLeg</code> becomes a pure function. A single trip from Odchody becomes a one-leg connection. <code>ride.ts</code> keeps working per leg through <code>legSelection</code>.</td><td>M</td></tr>
+<tr><td>2 · One timeline</td><td>Extract <code>JourneyTimeline</code> (leg header, stop row, step note) with a single rail. <code>LegStopRow</code> and <code>TripTimeline</code> merge into its stop row, which can expand into <code>ArrivalDepartures</code>. <code>JourneyDetails</code> and <code>ConnectionDetails</code> both render it, so <code>ConnectionDetails</code> gets deleted.</td><td>M</td></tr>
+<tr><td>3 · Multi-leg Jazda</td><td><code>RideStops</code> renders <code>JourneyTimeline</code> in live mode: past legs collapsed, current one open, next transfer prominent. <code>rideInstruction</code> and <code>rideCountdown</code> look across legs ("Vystúpte… potom 7 o 14:27"). The pill shows the next event.</td><td>M</td></tr>
+<tr><td>4 · Implicit keep</td><td>Closing a journey's details, or going back to the map, keeps it when it boards within about 30 min or is already underway. Switching between results doesn't. ✕ on the pill drops it. Remove Sledovať. Guidance (instructions, handover) runs when <code>isOnBoard</code> says so. Show the kept journey in the desktop sidebar too.</td><td>S–M</td></tr>
+<tr><td>5 · Transfer recovery</td><td>Tapping a transfer step opens the alternatives and departures panel. A missed change suggests the first catchable alternative. Swaps persist in the kept journey.</td><td>M</td></tr>
+<tr><td>Later</td><td>Lock-screen and notifications for delay, risk and get-off. A PWA can't do Live Activities, and web push needs a server, which the design manual already notes.</td><td>XL</td></tr>
+</table>
+<p>Phases 1–3 delete code overall: <code>ConnectionDetails</code>, one of the two timelines, the <code>nextLegs</code> handover and the Sledovať wiring. Each phase can ship on its own.</p>
+
+<h2>Decisions for you</h2>
+<ol class="q">
+<li><strong>Implicit keep or an explicit "Uložiť cestu"?</strong> I recommend implicit, limited to journeys within about 30 min and dropped with ✕, because your habit is exactly the case where an explicit step gets skipped. The risk is surprise: a pill you didn't ask for. If that bothers you, the fallback is a one-tap "Pripnúť" in place of Sledovať.</li>
+<li><strong>Drop Sledovať entirely?</strong> I recommend yes, with guidance following <code>isOnBoard</code>. Keep a manual "Som vo vozidle" only if GPS detection proves unreliable on trains, which report only at stations.</li>
+<li><strong>One kept journey or a list?</strong> Rail apps keep a list. I recommend one for now. The pill has room for one, and the model can grow into a list later.</li>
+<li><strong>Does Jazda stay a separate overlay?</strong> The pill-to-sheet morph is a good signature, so keep it as the way in. The surface it grows into should be the journey's own page, though, with no second copy alongside it in the sheet.</li>
+</ol>
+</main>
+</body>
+</html>
