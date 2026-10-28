@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spoj: the journey drawer — planner and Jazda as one</title>
+<style>
+:root{--bg:#F5F6F8;--surface:#fff;--line:#D8DCE2;--text:#1A1A1A;--text-2:#4A4F57;--text-3:#6E737B;--accent:#1E7F3F;--warn:#A35200;--font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1013;--surface:#16191E;--line:#2C323B;--text:#F1F3F5;--text-2:#B8BEC7;--text-3:#8B929C;--accent:#4CC27A;--warn:#F5A524}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 var(--font)}
+main{max-width:1000px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:26px;margin:0 0 4px}
+.sub{color:var(--text-2);margin:0 0 24px}
+h2{font-size:19px;margin:40px 0 6px}
+h3{font-size:15px;margin:18px 0 4px}
+p,li{color:var(--text-2)}
+strong{color:var(--text)}
+code{font-size:13px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0}
+.tldr{border-left:4px solid var(--accent)}
+.tldr p{margin:6px 0}
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px;margin:10px 0}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--text-3);font-weight:600}
+td{color:var(--text-2)}
+tr:last-child td{border-bottom:none}
+td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin:14px 0}
+figure{margin:0}
+figure img{width:100%;border-radius:22px;border:1px solid var(--line);display:block}
+figcaption{font-size:13px;color:var(--text-2);margin-top:8px}
+figcaption b{color:var(--text);display:block}
+/* flow */
+.flow{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;overflow-x:auto}
+.lanes{display:grid;grid-template-columns:1fr 1fr;gap:18px;min-width:760px}
+.lane{border:1px dashed var(--line);border-radius:12px;padding:12px}
+.lane h4{margin:0 0 10px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+.chain{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.node{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:13px}
+.node b{display:block;color:var(--text);font-size:13.5px}
+.node.hl{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.arr{color:var(--text-3);font-size:12px}
+.edges{margin-top:14px;min-width:760px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.edge{font-size:13px;border-left:3px solid var(--accent);padding:4px 10px;color:var(--text-2);background:var(--bg);border-radius:0 8px 8px 0}
+.edge b{color:var(--text)}
+.edge.back{border-left-color:var(--warn)}
+.q li{margin:6px 0}
+.small{font-size:13px;color:var(--text-3)}
+</style>
+</head>
+<body>
+<main>
+<h1>The journey drawer: planner and Jazda as one</h1>
+<p class="sub">Spoj · proposal with mockups · 2026-10-28</p>
+
+<div class="card tldr">
+<p><strong>One journey surface.</strong> A journey opened from the planner, from departures or from the map opens in its own <strong>journey drawer</strong>, stacked over the main drawer. It looks the same whether you track it or not; tracking only adds live state (headline, progress bar, vehicle on the rail).</p>
+<p><strong>The pill is that drawer, tucked.</strong> Minimise a tracked journey and the drawer shrinks into the pill above the main drawer. Tap the pill and it grows back into the same drawer you planned with.</p>
+<p><strong>Two tiers inside it.</strong> Tier 1 is the journey (steps). Tier 2 is one leg (every stop, earlier and later trips, departures after you arrive at a stop). Tier 3, optional, is one stop's full departures. Back pops these, then closes the drawer.</p>
+<p><strong>Same CTAs everywhere:</strong> <code>Sledovať / Nesledovať</code> plus the ticket button. Jazda's separate stop button goes away.</p>
+</div>
+
+<h2>Flow</h2>
+<div class="flow">
+  <div class="lanes">
+    <div class="lane">
+      <h4>Main drawer (today's drawer, minus details)</h4>
+      <div class="chain">
+        <div class="node"><b>Odchody</b>nearby / picked stop</div><span class="arr">→</span>
+        <div class="node"><b>Search</b>layer</div><span class="arr">→</span>
+        <div class="node"><b>Plánovač</b>journey cards</div>
+      </div>
+      <p class="small" style="margin:10px 0 0">Stays mounted underneath at its own stage. While the journey drawer is open it is hidden; when that drawer closes or tucks, it comes back as you left it, with the same card still selected.</p>
+    </div>
+    <div class="lane">
+      <h4>Journey drawer (new, its own stages: peek · medium · full)</h4>
+      <div class="chain">
+        <div class="node hl"><b>1 · Cesta</b>steps, CTAs</div><span class="arr">→</span>
+        <div class="node hl"><b>2 · Úsek</b>all stops, alternatives</div><span class="arr">→</span>
+        <div class="node"><b>3 · Zastávka</b>departures</div>
+      </div>
+      <p class="small" style="margin:10px 0 0">A single-trip connection (a departure row, a vehicle tapped on the map) opens straight at tier 2 as its root, since it has no steps to list.</p>
+    </div>
+  </div>
+  <div class="edges">
+    <div class="edge"><b>Open:</b> tap a journey card, a departure or a vehicle → the journey drawer slides up at medium; the map frames the journey.</div>
+    <div class="edge"><b>Leg:</b> tap a leg's title row (›) → tier 2 slides in from the right; the map frames that leg.</div>
+    <div class="edge"><b>Stop:</b> in tier 2 tap a stop → departures after you arrive unfold inline; <i>Všetky odchody ›</i> → tier 3.</div>
+    <div class="edge"><b>Track:</b> Sledovať → same drawer, live. Header button turns from ✕ into ⌄ (minimise).</div>
+    <div class="edge"><b>Tuck:</b> ⌄, or drag a tracked journey below peek → it shrinks into the pill and the main drawer rises back.</div>
+    <div class="edge"><b>Untuck:</b> tap or drag up the pill → it grows into the journey drawer at medium, at tier 1.</div>
+    <div class="edge back"><b>Back</b> (Android key, Android browser back, iOS edge swipe): tier 3 → 2 → 1, then closes the drawer.</div>
+    <div class="edge back"><b>Closing a tracked journey tucks it</b> into the pill, as back from Jazda does today. Closing an untracked one dismisses it.</div>
+    <div class="edge back"><b>Nesledovať</b> leaves you in the open drawer, untracked; ✕ then dismisses it.</div>
+  </div>
+</div>
+
+<h2>Mockups</h2>
+<p class="small">Built from the app's own tokens and Ionicons, over real map captures. Data: walk → 98 Kutlíkova–Smolenická → 93 Smolenická–Hlavná stanica.</p>
+<div class="shots">
+  <figure><img src="spoj-unified-journey/s1.png" alt=""><figcaption><b>1 · Plánovač (main drawer)</b>Unchanged. Tapping a card opens the journey drawer instead of pushing details into this drawer.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s2.png" alt=""><figcaption><b>2 · Journey drawer, medium</b>Its own sheet. ✕ closes it, back returns to the plánovač. Leg title rows end in › because they now open tier 2 instead of unfolding in place.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s3.png" alt=""><figcaption><b>3 · Journey drawer, full height</b>Drag up and it reaches the status bar, which Jazda never could. The map comes back when you drag down.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s4.png" alt=""><figcaption><b>4 · Tier 2: one leg, not tracked</b>Earlier and later trips as chips (a missed change marked), the whole trip with the part you don't ride greyed out, and a stop opened to show what leaves after you arrive.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s5.png" alt=""><figcaption><b>5 · The same drawer, tracked</b>The headline turns into Jazda's instruction, countdown and progress bar. CTAs stay where they were: Nesledovať plus the ticket. Ridden legs fold to a ✓ line and the current leg is raised, showing where the vehicle is.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s6.png" alt=""><figcaption><b>6 · Tucked: the pill</b>⌄ or back shrinks drawer 5 into the strip; the main drawer comes back as it was. Tapping the strip runs the same morph in reverse.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s7.png" alt=""><figcaption><b>7 · Tier 2 while riding</b>Screen 4 with the vehicle on the rail and delayed times. The stops ahead still open to show departures after you arrive, so you can plan a change on the way.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s8.png" alt=""><figcaption><b>8 · Tier 3: a stop's departures</b>Everything leaving after you arrive, inside the journey drawer, so back returns to the leg. Today this jumps to the main drawer and closes Jazda.</figcaption></figure>
+</div>
+
+<h2>What changes in code</h2>
+<table>
+<tr><th>Area</th><th>Change</th></tr>
+<tr><td>State</td><td><code>Screen</code> loses <code>mode: 'details'</code>, <code>detailsBackMode</code> and <code>selectedConnection</code>. A new <code>JourneyView</code> holds <code>{ journey, pages: ('leg' | 'stop')[], tucked }</code>. The tracked ride still names its journey by uid, so the pill is simply a tucked <code>JourneyView</code> whose journey is tracked.</td></tr>
+<tr><td>Drawers</td><td>A second sheet, <code>JourneyDrawer</code>, with its own <code>sheetHeight</code>, stages and swipe-back, reusing <code>useSheetResponder</code> and <code>useSwipeBack</code>. Its expanded stage is the full height. The main drawer's <code>rideMorph</code> fade-out goes away.</td></tr>
+<tr><td>Tier 1</td><td><code>JourneyOverview</code> merges <code>JourneyDetails</code> with the top of <code>RideStops</code> (ridden legs, current leg). <code>JourneySteps</code> stays and loses in-place unfolding: a tap opens tier 2. Swiping a leg for another trip stays.</td></tr>
+<tr><td>Tier 2</td><td><code>LegView</code> merges <code>ConnectionDetails</code> and Jazda's timeline: <code>TripTimeline</code> plus <code>ArrivalDepartures</code> plus alternative chips from <code>useLegAlternatives</code>. A single-trip connection uses it as its root.</td></tr>
+<tr><td>Tier 3</td><td><code>StopView</code> reuses <code>StopCard</code> and <code>DepartureRow</code> with <code>useArrivalDepartures</code>. <code>OpenStopDepartures</code> pushes this page instead of jumping drawers.</td></tr>
+<tr><td>Headline</td><td>A single <code>journeyHeadline(journey, ride, vehicles)</code> returns <code>{ title, countdown, progress | null }</code>: <code>departureHeadline</code> when not tracked, <code>rideInstruction</code>, <code>rideCountdown</code> and <code>rideProgress</code> when tracked. The pill and the drawer header both read it, which is what lets one morph into the other.</td></tr>
+<tr><td>CTAs</td><td><code>JourneyActions</code> is the only place for Sledovať/Nesledovať and the ticket. Jazda's <code>stop</code> SheetButton is deleted.</td></tr>
+<tr><td>Pill</td><td><code>LiveRide</code> shrinks to the strip, plus a morph into the <code>JourneyDrawer</code> header (badge, title, countdown, bar), using the same interpolations as today.</td></tr>
+<tr><td>Back</td><td><code>drawerBackSteps</code> gains <code>'journey'</code> and one step per page. Android's hardware back and the Android browser's history (<code>useBackHandler</code>) pop them. At the root, back tucks a tracked journey and closes an untracked one. The iOS edge swipe pops pages inside the journey drawer only.</td></tr>
+<tr><td>Map</td><td><code>bottomInset</code>, routes and boarding stop come from the journey drawer while it is open. Tier 2 frames its leg. A tucked journey, or one at peek, keeps the map following its vehicle as today.</td></tr>
+<tr><td>Desktop</td><td>The journey drawer takes over the sidebar, with back in its header. There is still no tracking, so no pill.</td></tr>
+<tr><td>Deleted</td><td><code>ConnectionDetails</code>, <code>RideStops</code>, <code>rideOpen</code>/<code>stageBeforeRide</code>, the <code>stripShown</code> special case, <code>toggleLeg</code>/<code>selectLeg</code> unfolding, and the <code>details</code> branch of <code>previousScreen</code>.</td></tr>
+</table>
+<p class="small">Suggested PRs: <b>(1)</b> the journey drawer and navigation, keeping today's content; <b>(2)</b> the unified headline, CTAs and the pill morph; <b>(3)</b> tier 2 and tier 3 pages. Each PR stays shippable.</p>
+
+<h2>Open questions</h2>
+<ol class="q">
+<li><strong>Tuck untracked journeys too?</strong> Proposed: no. ✕ dismisses them, and only a tracked journey earns the pill. The alternative is a pill for "the journey I was just looking at", which competes with the tracked one.</li>
+<li><strong>Where should the pill reopen?</strong> Proposed: tier 1 at medium, since time has passed and the overview is what you want. The alternative is the page you left (Apple Maps style).</li>
+<li><strong>Alternatives in tier 2:</strong> chips, as mocked, as well as the existing sideways swipe on tier 1 rows? Or chips only?</li>
+<li><strong>The main drawer under an open journey:</strong> hidden, as proposed, or visible as a strip at peek so you can jump back to search?</li>
+</ol>
+</main>
+</body>
+</html>
