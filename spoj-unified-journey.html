@@ -52,7 +52,7 @@ figcaption b{color:var(--text);display:block}
 <body>
 <main>
 <h1>The journey drawer: planner and Jazda as one</h1>
-<p class="sub">Spoj · proposal with mockups · 2026-10-28 · rev 2: decisions folded in, list vs card comparison</p>
+<p class="sub">Spoj · proposal with mockups · 2026-10-28 · rev 3: links between legs, B with hidden ridden legs, position note moved</p>
 
 <div class="card tldr">
 <p><strong>One journey surface.</strong> A journey opened from the planner, from departures or from the map opens in its own <strong>journey drawer</strong>, stacked over the main drawer. It looks the same whether you track it or not; tracking only adds live state (headline, progress bar, vehicle on the rail).</p>
@@ -110,17 +110,21 @@ figcaption b{color:var(--text);display:block}
   <figure><img src="spoj-unified-journey/s10.png" alt=""><figcaption><b>10 · Tier 2 at medium</b>The vertical-space check: headline, CTAs and the one-line chips take ~190 px, leaving four stops visible before you drag up. Chips are 34 px tall instead of the 50 px two-line version.</figcaption></figure>
 </div>
 
-<h2>Tier 1 while tracked: card or plain list</h2>
-<p>Same moment, two treatments of the leg you ride. <b>A</b> (left) folds ridden legs to a ✓ line and raises the current leg into a card. <b>B</b> (right) keeps today's plain list: ridden legs stay in place, greyed, with a ✓; the current leg is ordinary rows with the vehicle on the rail.</p>
-<figure><img src="spoj-unified-journey/cmp.png" alt="" style="max-width:780px;border-radius:12px"></figure>
+<h2>Tier 2: how a trip links to the legs around it</h2>
+<p>One-line chips only carry the time. What a trip means for the journey sits on the schedule's edges, where the link actually happens: <b>above</b> the stops, how you get there from the previous leg; <b>under</b> them, whether you still make the next one. A link that works is a quiet row; one that breaks becomes a warning.</p>
+<figure><img src="spoj-unified-journey/links.png" alt="" style="max-width:1170px;border-radius:12px"></figure>
+<p class="small">Left: the planned 93, the link from 98 above (arrives 08:25, wait 9 min). Middle: the earlier 93 at 08:26 (struck-through chip) selected anyway; the warning above says why you can't make it. Right: a later 98; the warning under the stops says you miss the 93 and what that costs. Chips hide on the leg you are riding.</p>
+
+<h2>Tier 1 while tracked: A, B with ridden legs hidden, B</h2>
+<p>The position note (<i>Nasleduje Zochova</i>) moved out of the leg into the headline meta, in all three, so nothing sits between the leg's title and its stops. The middle one is the proposal: B's plain timeline, but ridden legs hide behind <i>Zobraziť predchádzajúce (n)</i>, the same way passed stops do in tier 2 and single-leg journeys today. Tapping it unfolds to the right one: the ridden legs in full, greyed.</p>
+<figure><img src="spoj-unified-journey/cmp3.png" alt="" style="max-width:1170px;border-radius:12px"></figure>
 <table>
-<tr><th></th><th>A · card</th><th>B · plain list</th></tr>
-<tr><td>Finding "now"</td><td>Instant: the raised card</td><td>Through colour: grey above, red from here</td></tr>
-<tr><td>Space at medium</td><td>Fits the walk to the destination</td><td>~70 px taller; the last step scrolls</td></tr>
-<tr><td>Consistency</td><td>A new surface that only exists while tracked</td><td>Same rows as untracked tier 1 (2) and today's Jazda; tracking only recolours</td></tr>
-<tr><td>Morph</td><td>Card appears and disappears as legs change</td><td>Nothing jumps; rows grey out in place</td></tr>
+<tr><th></th><th>A · card</th><th>B, ridden hidden</th><th>B · all shown</th></tr>
+<tr><td>Active leg in view</td><td>Yes</td><td>Yes, top of the list</td><td>Pushed down by every ridden leg</td></tr>
+<tr><td>Consistency</td><td>A surface only tracking has</td><td>Same rows as planning, same "show previous" as tier 2</td><td>Same rows as planning</td></tr>
+<tr><td>When a leg ends</td><td>Card jumps to the next leg</td><td>Leg joins the hidden ones, count goes up</td><td>Leg greys out in place</td></tr>
 </table>
-<p class="small">Recommendation: B. It matches "tracking only adds live state" — the same list as when planning, with ridden parts greyed — and nothing reflows when a leg ends. A is worth it only if long journeys make "where am I" hard to spot, and the progress bar plus tier 2 already answer that.</p>
+<p class="small">Recommendation: the middle one. It keeps the unified timeline and gets the active leg into view like A does.</p>
 
 <h2>What changes in code</h2>
 <table>
@@ -144,9 +148,9 @@ figcaption b{color:var(--text);display:block}
 <ol class="q">
 <li><strong>Untracked journeys don't tuck.</strong> ✕ dismisses them. Exception kept from #92: leaving the app with a journey open that departs within 30 min tracks it, so it comes back as the pill.</li>
 <li><strong>The pill reopens at the active leg's tier 2</strong> while you ride, and at tier 1 while you wait or walk. The back stack is built as if you had navigated there, so back from 7 goes to tier 1, then tucks.</li>
-<li><strong>Alternatives in tier 2 as one-line chips</strong>, plus the existing swipe on tier 1 rows. Chips hide on a leg you are riding. The CTAs sit above them on every tier, so the ticket stays reachable throughout.</li>
+<li><strong>Alternatives in tier 2 as one-line chips</strong>, plus the existing swipe on tier 1 rows. How a trip links to the previous leg shows above the schedule, to the next leg under it; a broken link turns into a warning. Chips hide on a leg you are riding. The CTAs sit above them on every tier, so the ticket stays reachable throughout.</li>
 <li><strong>The main drawer is hidden</strong> while a journey is open.</li>
-<li><strong>Open: card or plain list for the current leg in tier 1</strong>, see the comparison above. Recommended: plain list.</li>
+<li><strong>Tier 1 while tracked: plain list, ridden legs hidden</strong> behind <i>Zobraziť predchádzajúce (n)</i>; the position note lives in the headline meta. (Proposed, see above.)</li>
 </ol>
 </main>
 </body>
