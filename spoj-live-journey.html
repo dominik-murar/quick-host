@@ -1,0 +1,300 @@
+<!doctype html><html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Spoj · where the live journey lives</title><style>:root{--background:#fff;--foreground:#152937;--muted-foreground:#4b5b65;--border:#e2e5e7;--success:#146d37;--destructive:#b02a2a;--warning:#A35200;--radius:16px}
+@media (prefers-color-scheme:dark){:root{--background:#121619;--foreground:#e8edf0;--muted-foreground:#9aa7b0;--border:#2c353c;--success:#5fd08a;--destructive:#ff7b7b;--warning:#f5a524}}
+html{background:var(--background)}body{padding:20px 14px 48px}
+@media(max-width:640px){table,tbody,tr,td{display:block}tr:first-child{display:none}tr{padding:8px 0;border-bottom:1px solid var(--border)}td{border:none;padding:3px 0}td:first-child{font-weight:800}td[data-label]::before{content:attr(data-label)": ";color:var(--muted-foreground);font-weight:600}.pc{grid-template-columns:1fr}.grid{justify-content:center}}
+
+:root{--fg:#152937;--mut:#5f6c74;--bd:#e2e5e7;--red:#C8363A;--green:#1E7F3F;--blue:#1F6FB2;--late:#A35200}
+*{box-sizing:border-box}
+body{margin:0;padding:8px 0 40px;font-family:var(--font-sans,-apple-system),system-ui,sans-serif;color:var(--foreground,#152937)}
+main{max-width:980px;margin:0 auto}
+h1{font-size:26px;letter-spacing:-.5px;margin:0 0 6px}
+h2{font-size:19px;letter-spacing:-.3px;margin:44px 0 4px}
+h2 .tag{font-size:11px;font-weight:800;vertical-align:3px;margin-left:6px;padding:2px 7px;border-radius:9px;background:#e4f2e8;color:#146d37}
+h2 .tag.no{background:#f1f3f4;color:var(--mut)}
+p,li{font-size:14px;line-height:1.5}
+.lead,.pc p,h2+p,.rec li{color:var(--muted-foreground,#33444f)}
+.lead{font-size:15px;max-width:720px}
+.grid{display:flex;flex-wrap:wrap;gap:22px 18px;margin-top:14px}
+.cell{width:250px}
+.cap{font-size:13px;font-weight:800;margin:0 0 3px}
+.sub{font-size:12px;color:var(--muted-foreground,#5f6c74);margin:0 0 8px;line-height:1.35;min-height:50px}
+@media(max-width:800px){.cell{zoom:.86}.grid{gap:18px 14px}}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:4px 24px;max-width:760px;margin-top:10px}
+.pc p{margin:0;font-size:13px}
+.pc b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--foreground,#152937);margin-bottom:2px}
+/* phone */
+.phone{width:250px;height:520px;border-radius:36px;overflow:hidden;position:relative;border:1px solid var(--border,#e2e5e7);background:#e6ebe9;color:#152937}
+.phone p{color:inherit}
+.map{position:absolute;inset:0;background:
+ linear-gradient(115deg,transparent 46%,#cdd5d2 46%,#cdd5d2 48.5%,transparent 48.5%),
+ linear-gradient(20deg,transparent 58%,#cdd5d2 58%,#cdd5d2 60%,transparent 60%),
+ linear-gradient(160deg,transparent 30%,#d8dfdc 30%,#d8dfdc 31.5%,transparent 31.5%),
+ radial-gradient(circle at 80% 18%,#d3e4d6 0 46px,transparent 47px),#e6ebe9}
+.route{position:absolute;left:58px;top:60px;width:150px;height:230px;border:4px solid var(--red);border-color:var(--red) var(--red) transparent transparent;border-radius:0 60px 0 0;opacity:.9}
+.veh{position:absolute;left:180px;top:76px;width:26px;height:26px;border-radius:13px;background:var(--red);border:3px solid #fff;color:#fff;font:900 10px/20px system-ui;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.me{position:absolute;left:100px;top:210px;width:14px;height:14px;border-radius:50%;background:#2f7cf6;border:3px solid #fff;box-shadow:0 0 0 6px rgba(47,124,246,.2)}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;font-size:12px;font-weight:700;z-index:5}
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:82px;height:24px;border-radius:12px;background:#000;z-index:6}
+.ctrls{position:absolute;right:10px;display:flex;flex-direction:column;gap:8px;z-index:3}
+.ctrl{width:38px;height:38px;border-radius:19px;background:rgba(255,255,255,.92);box-shadow:0 2px 8px rgba(21,41,55,.15);display:flex;align-items:center;justify-content:center;font-size:15px}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#f9fafb;border-radius:28px 28px 0 0;box-shadow:0 -4px 20px rgba(21,41,55,.18);padding:7px 12px 0;z-index:4;overflow:hidden}
+.handle{width:36px;height:5px;border-radius:3px;background:#cfd5d8;margin:0 auto 9px}
+.head{display:flex;gap:7px;align-items:center;margin-bottom:12px}
+.search{flex:1;height:40px;border-radius:20px;background:#edf0f1;display:flex;align-items:center;padding:0 13px;font-size:13px;color:#63727b;gap:6px;min-width:0;white-space:nowrap;overflow:hidden}
+.btn{width:40px;height:40px;border-radius:20px;background:#edf0f1;display:flex;align-items:center;justify-content:center;font-size:15px;flex:none}
+.row{display:flex;gap:6px;overflow:hidden;margin:0 -12px 12px;padding:0 12px;white-space:nowrap}
+.fav{height:32px;border-radius:16px;background:#fff;border:1px solid var(--bd);display:flex;align-items:center;gap:6px;padding:0 11px 0 4px;font-size:12px;font-weight:700;flex:none}
+.ic{width:24px;height:24px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px}
+.title{font-size:19px;font-weight:900;letter-spacing:-.4px;margin:0 0 8px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:9px 11px 1px}
+.stopn{font-size:12px;font-weight:800;margin-bottom:3px}
+.dep{display:flex;align-items:center;gap:9px;min-height:42px;border-top:1px solid #eef0f1}
+.stopn+.dep{border-top:none}
+.b{min-width:30px;height:26px;padding:0 5px;color:#fff;font-weight:900;font-size:12px;display:inline-flex;align-items:center;justify-content:center;background:var(--red);flex:none}
+.b.tram{border-radius:13px}.b.trol{border-radius:7px}.b.bus{border-radius:3px}.b.reg{border-radius:3px;background:var(--blue)}
+.dir{flex:1;font-size:12px;font-weight:700}
+.t{font-size:13px;font-weight:900;color:var(--green)}
+/* journey page */
+.hl{display:flex;align-items:baseline;gap:6px}
+.hl .h{flex:1;font-size:19px;line-height:23px;font-weight:900;letter-spacing:-.4px}
+.hl .c{font-size:19px;font-weight:900;color:var(--green)}
+.meta{font-size:12px;color:var(--mut);margin-top:3px}
+.parts{display:flex;gap:4px;align-items:center;margin-top:8px;font-size:11px;color:var(--mut)}
+.track{height:4px;border-radius:2px;background:#e2e6e8;margin:9px 0 10px;overflow:hidden}
+.track i{display:block;height:100%;width:62%;background:var(--red);border-radius:2px}
+.acts{display:flex;gap:6px;margin-bottom:10px}
+.act{flex:1;height:34px;border-radius:17px;background:#edf0f1;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.act.on{background:#fdeeef;color:var(--red)}
+.rail{position:relative;padding-left:22px}
+.rail:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:4px;border-radius:2px;background:var(--red)}
+.st{position:relative;display:flex;justify-content:space-between;font-size:12px;font-weight:700;padding:7px 0}
+.st:before{content:"";position:absolute;left:-19px;top:10px;width:6px;height:6px;border-radius:50%;background:#fff;border:2px solid var(--red)}
+.st.past{color:#9aa5ab}.st span{color:var(--mut);font-weight:600}
+.st.here:before{background:var(--red);width:10px;height:10px;left:-21px;top:8px}
+/* today's pill */
+.pill{position:absolute;left:10px;right:10px;height:62px;border-radius:20px;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 4px 12px rgba(21,41,55,.14);z-index:4;display:flex;align-items:center;gap:9px;padding:0 12px}
+.pill .tx{flex:1;min-width:0}
+.pill .h{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill .track{margin:6px 0 0}
+.pill .c{font-size:16px;font-weight:900;color:var(--green);text-align:right}
+.pill .c small{display:block;font-size:10px;font-weight:600;color:var(--mut)}
+/* A: live chip */
+.live{height:40px;border-radius:20px;background:#fdeeef;display:flex;align-items:center;gap:6px;padding:0 10px 0 4px;flex:none;position:relative;overflow:hidden}
+.live .b{min-width:30px;height:30px;border-radius:15px}
+.live .c{font-size:13px;font-weight:900;color:var(--red);line-height:1}
+.live .c small{display:block;font-size:9px;font-weight:700;color:var(--mut);margin-top:2px}
+.live:after{content:"";position:absolute;left:0;bottom:0;height:3px;width:62%;background:var(--red)}
+.ring{position:relative;width:30px;height:30px;border-radius:15px;background:conic-gradient(var(--red) 0 62%,#f3c9cb 62% 100%);display:flex;align-items:center;justify-content:center;flex:none}
+.ring .b{min-width:24px;height:24px;border-radius:12px;font-size:11px;padding:0;border:2px solid #fdeeef;box-sizing:content-box}
+/* B: ride-mode back */
+.liveback{height:40px;border-radius:20px;background:#fdeeef;display:flex;align-items:center;gap:6px;padding:0 10px 0 6px;flex:none;font-size:13px;font-weight:900;color:var(--red)}
+.liveback .b{min-width:26px;height:24px;border-radius:12px;font-size:11px}
+.end{position:absolute;left:12px;right:12px;bottom:14px;background:#fff;border-radius:22px;box-shadow:0 8px 30px rgba(21,41,55,.25);padding:14px;z-index:7}
+.end{color:#152937}.end h4{margin:0 0 4px;font-size:14px}.end p{margin:0 0 10px;font-size:12px;color:var(--mut);line-height:1.35}
+.end .act{margin-bottom:6px}.end .act.red{background:var(--red);color:#fff}
+/* C: top banner */
+.banner{position:absolute;top:40px;left:10px;right:10px;height:50px;border-radius:25px;background:#111a20;color:#fff;display:flex;align-items:center;gap:9px;padding:0 14px 0 8px;z-index:6;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+.banner .h{flex:1;font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner .h small{display:block;font-size:10px;font-weight:600;color:#9fb0ba}
+.banner .c{font-size:15px;font-weight:900;color:#7fd99d}
+/* D: orb */
+.orb{position:absolute;right:10px;width:54px;height:54px;border-radius:27px;background:conic-gradient(var(--red) 0 62%,#ffffff 62% 100%);box-shadow:0 4px 12px rgba(21,41,55,.25);display:flex;align-items:center;justify-content:center;z-index:5}
+.orb .in{width:46px;height:46px;border-radius:23px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.orb .b{min-width:26px;height:20px;border-radius:10px;font-size:10px;padding:0 4px}
+.orb .c{font-size:10px;font-weight:900;color:var(--red)}
+/* native */
+.lock{background:linear-gradient(170deg,#3a4a66,#1c2433 60%,#151b26)}
+.clock{position:absolute;top:58px;left:0;right:0;text-align:center;color:#fff}
+.clock .d{font-size:13px;font-weight:600;opacity:.85}.clock .tm{font-size:66px;font-weight:700;letter-spacing:-2px;line-height:1}
+.la{position:absolute;left:10px;right:10px;border-radius:22px;background:rgba(30,36,44,.72);backdrop-filter:blur(20px);color:#fff;padding:12px 13px}
+.la .r{display:flex;align-items:center;gap:8px}
+.la .h{flex:1;font-size:13px;font-weight:800;line-height:1.25}
+.la .h small{display:block;font-size:11px;font-weight:600;color:#a9b6bf}
+.la .c{font-size:22px;font-weight:800;color:#7fd99d;font-variant-numeric:tabular-nums}
+.seg{display:flex;gap:3px;margin-top:11px;align-items:center}
+.seg i{height:5px;border-radius:3px;background:#55606a;flex:1}
+.seg i.done{background:#ef6a6e}.seg i.cur{background:linear-gradient(90deg,#ef6a6e 60%,#55606a 60%)}
+.seg i.walk{flex:.35;background:repeating-linear-gradient(90deg,#8a96a0 0 3px,transparent 3px 6px)}
+.seg .pt{width:9px;height:9px;border-radius:5px;background:#fff;flex:none}
+.di{position:absolute;top:8px;left:50%;transform:translateX(-50%);height:30px;border-radius:15px;background:#000;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 4px;z-index:6;font-size:12px;font-weight:800;gap:42px}
+.di .b{min-width:24px;height:22px;border-radius:11px;font-size:10px}
+.di .c{color:#7fd99d}
+.die{position:absolute;top:8px;left:8px;right:8px;border-radius:30px;background:#000;color:#fff;padding:14px 16px 14px;z-index:6}
+.sbar{position:absolute;top:0;left:0;right:0;height:30px;display:flex;align-items:center;padding:0 18px;gap:6px;font-size:11px;font-weight:700;z-index:6;color:#fff}
+.chipA{height:20px;border-radius:10px;background:var(--red);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:4px}
+.shade{position:absolute;top:30px;left:0;right:0;bottom:0;background:rgba(18,24,30,.92);padding:14px 10px}
+.qs{display:flex;gap:6px;margin-bottom:14px}.qs i{flex:1;height:40px;border-radius:20px;background:#2a333b}
+.an{background:#222b33;border-radius:22px;padding:12px 13px;color:#fff}
+.an .app{font-size:10px;color:#a9b6bf;margin-bottom:6px;display:flex;gap:5px;align-items:center}
+.an .app b{width:14px;height:14px;border-radius:4px;background:var(--green);display:inline-block}
+.an .h{font-size:14px;font-weight:800}.an .s{font-size:11px;color:#a9b6bf;margin-top:2px}
+.an .seg i{background:#4a545c}.an .seg i.done{background:#ef6a6e}
+.an .btns{display:flex;gap:6px;margin-top:11px}.an .btns span{flex:1;text-align:center;font-size:11px;font-weight:800;padding:7px;border-radius:14px;background:#2f3a43}
+.note{position:absolute;font-size:10px;font-weight:800;color:#fff;background:#d9480f;border-radius:6px;padding:2px 6px;white-space:nowrap;z-index:9}
+.arrow{position:absolute;z-index:9;font-size:16px;color:#d9480f;font-weight:900}
+table{border-collapse:collapse;margin-top:12px;font-size:13px;max-width:900px;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border,#e2e5e7);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted-foreground,#5f6c74)}
+td.y{color:var(--success,#146d37);font-weight:700}td.n{color:var(--destructive,#a33);font-weight:700}td.m{color:var(--warning,#A35200);font-weight:700}
+.rec{border:1px solid var(--border,#cfe7d6);border-radius:var(--radius,16px);padding:14px 18px;max-width:900px;margin-top:16px}
+.rec p,.rec li{margin:4px 0}
+</style></head><body><main>
+
+<h1>Where does the live journey live?</h1>
+<p class="lead">The music player's mini-player feels right because it has a fixed dock above the tab bar, and the full player is a modal over everything. Spoj's pill has neither. It rides the drawer's top edge, which moves, and it is a copy of the journey's own header living outside the drawer. So it reads as a third surface wedged between the map and the drawer, not as the drawer's "now playing". Below are four ways to give it a home, and what a native build adds.</p>
+
+<!-- ============ TODAY ============ -->
+<h2>Today <span class="tag no">for reference</span></h2>
+<p>The pill splits off the journey header when you go back, floats 12 px above the drawer, follows it at every height, merges into the top edge when the drawer is expanded, and pushes the map controls up.</p>
+<div class="grid">
+ <div class="cell"><p class="cap">Medium</p><p class="sub">The pill sits on top of the drawer, over the map, and the controls stack above it.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="ctrls" style="bottom:362px"><div class="ctrl">➤</div><div class="ctrl">◎</div></div>
+   <div class="pill" style="bottom:286px"><span class="b tram">4</span><div class="tx"><div class="h">Vystúp na Hodžovo nám.</div><div class="track"><i></i></div></div><div class="c">3 min<small>Dúbravka</small></div></div>
+   <div class="sheet" style="height:274px"><div class="handle"></div><div class="head"><div class="search">🔍 Kam idete?</div><div class="btn">👛</div></div>
+    <div class="row"><div class="fav"><div class="ic" style="background:#2f7cf6">⌂</div>Domov</div><div class="fav"><div class="ic" style="background:#e8590c">💼</div>Práca</div><div class="fav"><div class="ic" style="background:#7048e8">✎</div>Škola</div></div>
+    <p class="title">Odchody</p><div class="card"><div class="stopn">Hodžovo nám.</div><div class="dep"><span class="b tram">9</span><div class="dir">Karlova Ves</div><div class="t">2 min</div></div><div class="dep"><span class="b bus">39</span><div class="dir">Kramáre</div><div class="t">5 min</div></div></div></div>
+   <span class="note" style="left:20px;top:150px">moves with the drawer</span></div></div>
+ <div class="cell"><p class="cap">Peek</p><p class="sub">Now it floats mid-map: the drawer, the pill and the controls make three layers.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="ctrls" style="bottom:184px"><div class="ctrl">➤</div><div class="ctrl">◎</div></div>
+   <div class="pill" style="bottom:108px"><span class="b tram">4</span><div class="tx"><div class="h">Vystúp na Hodžovo nám.</div><div class="track"><i></i></div></div><div class="c">3 min<small>Dúbravka</small></div></div>
+   <div class="sheet" style="height:96px"><div class="handle"></div><div class="head"><div class="search">🔍 Kam idete?</div><div class="btn">👛</div></div></div></div></div>
+ <div class="cell"><p class="cap">Expanded</p><p class="sub">The pill merges into the top edge and becomes a strip, so it now has three shapes.</p>
+  <div class="phone"><div class="map"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="sheet" style="height:470px;padding-top:0"><div style="margin:0 -12px 10px;height:30px;background:#fdeeef;display:flex;align-items:center;gap:8px;padding:0 14px;font-size:11px;font-weight:800"><span class="b tram" style="height:20px;min-width:24px;font-size:10px">4</span>Vystúp na Hodžovo nám.<span style="margin-left:auto;color:var(--green)">3 min</span></div><div class="handle"></div><div class="head"><div class="search">🔍 Kam idete?</div><div class="btn">👛</div></div>
+    <div class="row"><div class="fav"><div class="ic" style="background:#2f7cf6">⌂</div>Domov</div><div class="fav"><div class="ic" style="background:#e8590c">💼</div>Práca</div></div>
+    <p class="title">Odchody</p><div class="card"><div class="stopn">Hodžovo nám.</div><div class="dep"><span class="b tram">9</span><div class="dir">Karlova Ves</div><div class="t">2 min</div></div><div class="dep"><span class="b bus">39</span><div class="dir">Kramáre</div><div class="t">5 min</div></div><div class="dep"><span class="b trol">71</span><div class="dir">Pražská</div><div class="t">8 min</div></div></div></div></div></div>
+</div>
+
+<!-- ============ A ============ -->
+<h2>A · A live chip in the drawer header <span class="tag">recommended</span></h2>
+<p>The wallet button turns into a chip showing the line and the countdown, with progress along its bottom edge. It is the same slot the planned-trips plan already uses: wallet, then the next planned trip, then the live ride. Going back slides the journey page away, and its headline shrinks into the chip of the page underneath, the way an iOS title shrinks into the back button. Tapping the chip grows it back into the headline. It lives inside the drawer, so it is visible at every height, never floats, and never moves the controls.</p>
+<div class="grid">
+ <div class="cell"><p class="cap">Peek</p><p class="sub">Two layers again. The ride is in the drawer's own header.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="ctrls" style="bottom:108px"><div class="ctrl">➤</div><div class="ctrl">◎</div></div>
+   <div class="sheet" style="height:96px"><div class="handle"></div><div class="head"><div class="search">🔍 Kam idete?</div><div class="live"><span class="b tram">4</span><div class="c">3 min<small>vystúp</small></div></div></div></div></div></div>
+ <div class="cell"><p class="cap">Medium</p><p class="sub">Favourites and departures keep their places. The search field gives up about 50 px.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="ctrls" style="bottom:286px"><div class="ctrl">➤</div><div class="ctrl">◎</div></div>
+   <div class="sheet" style="height:274px"><div class="handle"></div><div class="head"><div class="search">🔍 Kam idete?</div><div class="live"><span class="b tram">4</span><div class="c">3 min<small>vystúp</small></div></div></div>
+    <div class="row"><div class="fav"><div class="ic" style="background:#2f7cf6">⌂</div>Domov</div><div class="fav"><div class="ic" style="background:#e8590c">💼</div>Práca</div><div class="fav"><div class="ic" style="background:#7048e8">✎</div>Škola</div></div>
+    <p class="title">Odchody</p><div class="card"><div class="stopn">Hodžovo nám.</div><div class="dep"><span class="b tram">9</span><div class="dir">Karlova Ves</div><div class="t">2 min</div></div><div class="dep"><span class="b bus">39</span><div class="dir">Kramáre</div><div class="t">5 min</div></div></div></div></div></div>
+ <div class="cell"><p class="cap">Variant: progress ring</p><p class="sub">A smaller footprint: the badge sits in a ring and the countdown sits in the search field's trailing edge.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="ctrls" style="bottom:108px"><div class="ctrl">➤</div><div class="ctrl">◎</div></div>
+   <div class="sheet" style="height:96px"><div class="handle"></div><div class="head"><div class="search">🔍 Kam idete?</div><div class="btn" style="background:#fdeeef;width:auto;padding:0 10px 0 5px;gap:6px"><div class="ring"><span class="b tram">4</span></div><span style="font-size:13px;font-weight:900;color:var(--red)">3′</span></div></div></div></div></div>
+ <div class="cell"><p class="cap">Tap: the chip becomes the headline</p><p class="sub">The page slides in, and the chip's badge and countdown fly to the headline's places, as in a shared-element transition.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="sheet" style="height:300px"><div class="handle"></div>
+    <div class="head" style="margin-bottom:8px"><div class="btn">‹</div><div style="flex:1"></div><div class="btn">✕</div></div>
+    <div class="hl"><div class="h">Vystúp na Hodžovo nám.</div><div class="c">3 min</div></div>
+    <div class="meta">Za Šafárikovým nám. · +1 min</div><div class="parts"><span class="b tram" style="height:20px;min-width:24px;font-size:10px">4</span>›<span class="b trol" style="height:20px;min-width:24px;font-size:10px">71</span></div>
+    <div class="track"><i></i></div><div class="acts"><div class="act on">● Nesledovať</div><div class="act">🎫 Lístok</div></div>
+    <div class="rail"><div class="st here">Šafárikovo nám.<span>9:38</span></div><div class="st">Kamenné nám.<span>9:40</span></div><div class="st">Hodžovo nám.<span>9:44</span></div></div></div></div></div>
+</div>
+<div class="pc"><p><b>Wins</b>One fixed home inside the drawer, and the map goes back to two layers. It continues the planned-trips chip. It removes most of the pill geometry: <code>RIDE_PILL</code>, <code>usePillTuck</code>, the merge strip and the controls offset.</p><p><b>Costs</b>It is less glanceable than the pill: the line and countdown show, but not "Vystúp na Hodžovo nám.". A small subtitle (vystúp, nastúp, prestup, choď) covers the verb.</p></div>
+
+<!-- ============ B ============ -->
+<h2>B · Ride mode: the journey becomes the drawer's root</h2>
+<p>This is how navigation apps work. While a journey is tracked, the stack flips: the journey is the bottom page and home is a page you push over it with 🔍. Back from home returns to the ride, so nothing ever has to split off. Every page over the ride gets a live back button. The only way out is <i>Ukončiť jazdu</i>, or the ride ending by itself after the exit stop.</p>
+<div class="grid">
+ <div class="cell"><p class="cap">Root while tracked</p><p class="sub">Opening the app lands here. 🔍 replaces back, because there is nothing under it.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="ctrls" style="bottom:312px"><div class="ctrl">➤</div><div class="ctrl">◎</div></div>
+   <div class="sheet" style="height:300px"><div class="handle"></div>
+    <div class="head" style="margin-bottom:8px"><div class="btn">🔍</div><div style="flex:1"></div><div class="btn" style="width:auto;padding:0 12px;font-size:12px;font-weight:800">Ukončiť</div></div>
+    <div class="hl"><div class="h">Vystúp na Hodžovo nám.</div><div class="c">3 min</div></div>
+    <div class="meta">Za Šafárikovým nám. · +1 min</div><div class="parts"><span class="b tram" style="height:20px;min-width:24px;font-size:10px">4</span>›<span class="b trol" style="height:20px;min-width:24px;font-size:10px">71</span></div>
+    <div class="track"><i></i></div><div class="acts"><div class="act">🎫 Lístok</div><div class="act">↗ Zdieľať</div></div>
+    <div class="rail"><div class="st here">Šafárikovo nám.<span>9:38</span></div><div class="st">Kamenné nám.<span>9:40</span></div></div></div></div></div>
+ <div class="cell"><p class="cap">Home pushed over the ride</p><p class="sub">The back button carries the ride. It is the same chip as A, but it means "back" rather than "open".</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="ctrls" style="bottom:286px"><div class="ctrl">➤</div><div class="ctrl">◎</div></div>
+   <div class="sheet" style="height:274px"><div class="handle"></div><div class="head"><div class="liveback">‹ <span class="b tram">4</span>3 min</div><div class="search">🔍 Kam idete?</div></div>
+    <div class="row"><div class="fav"><div class="ic" style="background:#2f7cf6">⌂</div>Domov</div><div class="fav"><div class="ic" style="background:#e8590c">💼</div>Práca</div><div class="fav"><div class="ic" style="background:#7048e8">✎</div>Škola</div></div>
+    <p class="title">Odchody</p><div class="card"><div class="stopn">Hodžovo nám.</div><div class="dep"><span class="b tram">9</span><div class="dir">Karlova Ves</div><div class="t">2 min</div></div><div class="dep"><span class="b bus">39</span><div class="dir">Kramáre</div><div class="t">5 min</div></div></div></div></div></div>
+ <div class="cell"><p class="cap">Leaving ride mode</p><p class="sub">A deliberate exit. A journey that tracked by itself offers it straight away.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="sheet" style="height:300px;filter:brightness(.82)"><div class="handle"></div><div class="hl" style="margin-top:50px"><div class="h">Vystúp na Hodžovo nám.</div><div class="c">3 min</div></div></div>
+   <div class="end"><h4>Ukončiť jazdu?</h4><p>Spoj prestane sledovať 4 → 71 a vráti sa na odchody.</p><div class="act red">Ukončiť jazdu</div><div class="act">Pokračovať</div></div></div></div>
+</div>
+<div class="pc"><p><b>Wins</b>It is the most honest spatial model, with one stack and no detached surface. Android back and iOS edge-swipe already step through pages, and off the root they would leave the app, as in Maps.</p><p><b>Costs</b>Favourites and nearby departures are one tap deeper during a ride. Auto-tracking (leaving the app on a soon journey) would drop people into a mode they never chose, so it needs a quiet way out. It also changes the most code: the root of <code>screenState</code>.</p></div>
+
+<!-- ============ C ============ -->
+<h2>C · A banner pinned to the top <span class="tag no">weaker</span></h2>
+<p>This is the iOS call pill, or Google Maps' "Späť na navigáciu". It has a fixed home, but the wrong one.</p>
+<div class="grid">
+ <div class="cell"><p class="cap">Pinned under the status bar</p><p class="sub">It never moves, but tapping it opens a drawer from the opposite end of the screen.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="banner"><span class="b tram">4</span><div class="h">Vystúp na Hodžovo nám.<small>Dúbravka · +1 min</small></div><div class="c">3 min</div></div>
+   <div class="ctrls" style="bottom:286px"><div class="ctrl">➤</div><div class="ctrl">◎</div></div>
+   <div class="sheet" style="height:274px"><div class="handle"></div><div class="head"><div class="search">🔍 Kam idete?</div><div class="btn">👛</div></div>
+    <div class="row"><div class="fav"><div class="ic" style="background:#2f7cf6">⌂</div>Domov</div><div class="fav"><div class="ic" style="background:#e8590c">💼</div>Práca</div></div>
+    <p class="title">Odchody</p><div class="card"><div class="stopn">Hodžovo nám.</div><div class="dep"><span class="b tram">9</span><div class="dir">Karlova Ves</div><div class="t">2 min</div></div></div></div>
+   <span class="arrow" style="left:118px;top:96px">↕</span><span class="note" style="left:60px;top:118px">opens far from where you tapped</span></div></div>
+</div>
+<div class="pc"><p><b>Wins</b>It is glanceable and stable, and it is a good rehearsal for the Dynamic Island.</p><p><b>Costs</b>It is out of thumb reach, it covers the top of the map where the vehicle often is, and it splits the ride between the top and bottom of the screen.</p></div>
+
+<!-- ============ D ============ -->
+<h2>D · A circle <span class="tag no">weaker</span></h2>
+<p>An Android-style bubble: the line badge inside a progress ring, docked to the edge with the map controls.</p>
+<div class="grid">
+ <div class="cell"><p class="cap">Docked with the controls</p><p class="sub">It is the smallest footprint, but it is still a floating thing and still rides the drawer.</p>
+  <div class="phone"><div class="map"></div><div class="route"></div><div class="veh">4</div><div class="me"></div><div class="status"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="ctrls" style="bottom:350px"><div class="ctrl">➤</div><div class="ctrl">◎</div></div>
+   <div class="orb" style="bottom:286px"><div class="in"><span class="b tram">4</span><span class="c">3 min</span></div></div>
+   <div class="sheet" style="height:274px"><div class="handle"></div><div class="head"><div class="search">🔍 Kam idete?</div><div class="btn">👛</div></div>
+    <div class="row"><div class="fav"><div class="ic" style="background:#2f7cf6">⌂</div>Domov</div><div class="fav"><div class="ic" style="background:#e8590c">💼</div>Práca</div></div>
+    <p class="title">Odchody</p><div class="card"><div class="stopn">Hodžovo nám.</div><div class="dep"><span class="b tram">9</span><div class="dir">Karlova Ves</div><div class="t">2 min</div></div></div></div></div></div>
+</div>
+<div class="pc"><p><b>Wins</b>It hides very little map. It reads like a control, which suits a map app.</p><p><b>Costs</b>There's no room for the verb, it's a third layer again, and it's an easy target to hit by accident next to Locate.</p></div>
+
+<!-- ============ NATIVE ============ -->
+<h2>Native · The lock screen, the Dynamic Island and Android Live Updates <span class="tag">worth it</span></h2>
+<p>This is where the "now playing" feeling actually comes from. The OS gives a persistent surface with a fixed home, which is exactly what the in-app pill lacks. A PWA can't do any of this: the closest it gets is a Web Push "Vystupuješ na ďalšej", which needs a server.</p>
+<div class="grid">
+ <div class="cell"><p class="cap">iOS · Live Activity on the lock screen</p><p class="sub">The countdown ticks on its own (<code>Text(timerInterval:)</code>). Updates are only needed on a step change or a delay.</p>
+  <div class="phone lock"><div class="status" style="color:#fff"><span>9:41</span><span>●●●</span></div><div class="island"></div>
+   <div class="clock"><div class="d">streda 28. októbra</div><div class="tm">9:41</div></div>
+   <div class="la" style="top:196px"><div class="r"><span class="b tram">4</span><div class="h">Vystúp na Hodžovo nám.<small>o 2 zastávky · +1 min</small></div><div class="c">3:12</div></div>
+    <div class="seg"><i class="done"></i><span class="pt"></span><i class="cur"></i><span class="pt" style="background:#9aa5ab"></span><i class="walk"></i><span class="pt" style="background:#9aa5ab"></span><i></i><span style="font-size:11px;margin-left:4px">🏁</span></div>
+    <div class="r" style="margin-top:7px;font-size:10px;color:#a9b6bf;justify-content:space-between"><span>4 Dúbravka</span><span>prestup 71 · 9:49</span><span>9:58</span></div></div>
+   <div style="position:absolute;bottom:22px;left:0;right:0;display:flex;justify-content:space-between;padding:0 34px"><div class="ctrl" style="background:rgba(255,255,255,.18);color:#fff">🔦</div><div class="ctrl" style="background:rgba(255,255,255,.18);color:#fff">📷</div></div></div></div>
+ <div class="cell"><p class="cap">iOS · Dynamic Island, compact and expanded</p><p class="sub">Compact: the badge on one side, the countdown on the other. A long press expands it with a ticket shortcut.</p>
+  <div class="phone" style="background:#e6ebe9"><div class="map"></div><div class="route"></div><div class="veh">4</div>
+   <div class="di"><span class="b tram">4</span><span class="c">3 min</span></div>
+   <div class="die" style="top:96px"><div class="r" style="display:flex;align-items:center;gap:8px"><span class="b tram">4</span><div style="flex:1;font-size:13px;font-weight:800">Vystúp na Hodžovo nám.<div style="font-size:11px;color:#a9b6bf;font-weight:600">o 2 zastávky · +1 min</div></div><div style="font-size:22px;font-weight:800;color:#7fd99d">3:12</div></div>
+    <div class="seg"><i class="done"></i><span class="pt"></span><i class="cur"></i><span class="pt" style="background:#9aa5ab"></span><i class="walk"></i><span class="pt" style="background:#9aa5ab"></span><i></i></div>
+    <div style="display:flex;gap:6px;margin-top:11px"><span style="flex:1;text-align:center;font-size:11px;font-weight:800;padding:7px;border-radius:14px;background:#26303a">🎫 Lístok</span><span style="flex:1;text-align:center;font-size:11px;font-weight:800;padding:7px;border-radius:14px;background:#26303a">Otvoriť jazdu</span></div></div>
+   <span class="note" style="left:62px;top:44px">compact</span><span class="note" style="left:20px;top:250px">expanded (long press)</span></div></div>
+ <div class="cell"><p class="cap">Android 16 · Live Update</p><p class="sub">A status-bar chip, and a <code>ProgressStyle</code> notification whose segments are the legs and whose points are the changes.</p>
+  <div class="phone" style="background:#12181e"><div class="sbar"><span>9:41</span><span class="chipA">4 · 3 min</span><span style="margin-left:auto">▾ ▴ ▮</span></div>
+   <div class="shade"><div class="qs"><i></i><i></i><i></i><i></i></div>
+    <div class="an"><div class="app"><b></b>Spoj · teraz</div><div class="h">Vystúp na Hodžovo nám. · 3 min</div><div class="s">4 Dúbravka · o 2 zastávky · +1 min</div>
+     <div class="seg"><i class="done"></i><span class="pt"></span><i class="cur"></i><span class="pt" style="background:#9aa5ab"></span><i></i><span class="pt" style="background:#9aa5ab"></span><i></i></div>
+     <div class="btns"><span>🎫 Lístok</span><span>Ukončiť</span></div></div>
+    <div class="an" style="margin-top:8px;opacity:.5"><div class="app"><b style="background:#888"></b>Správy</div><div class="h" style="font-size:12px">…</div></div></div>
+   <span class="note" style="left:58px;top:32px">status chip</span></div></div>
+</div>
+
+<h2>Side by side</h2>
+<table>
+<tr><th></th><th>Today</th><th>A · Header chip</th><th>B · Ride mode</th><th>C · Top banner</th><th>D · Circle</th></tr>
+<tr><td>Fixed home</td><td data-label="Today" class="n">no, rides the edge</td><td data-label="A · Header chip" class="y">drawer header</td><td data-label="B · Ride mode" class="y">drawer root</td><td data-label="C · Top banner" class="y">top of map</td><td data-label="D · Circle" class="n">rides the edge</td></tr>
+<tr><td>Layers over the map</td><td data-label="Today" class="n">3</td><td data-label="A · Header chip" class="y">2</td><td data-label="B · Ride mode" class="y">2</td><td data-label="C · Top banner" class="m">3, fixed</td><td data-label="D · Circle" class="n">3</td></tr>
+<tr><td>Glance: verb + countdown</td><td data-label="Today" class="y">yes</td><td data-label="A · Header chip" class="m">countdown + short verb</td><td data-label="B · Ride mode" class="y">yes</td><td data-label="C · Top banner" class="y">yes</td><td data-label="D · Circle" class="n">countdown</td></tr>
+<tr><td>Open gesture near the thumb</td><td data-label="Today" class="y">yes</td><td data-label="A · Header chip" class="y">yes</td><td data-label="B · Ride mode" class="y">n/a, it's open</td><td data-label="C · Top banner" class="n">no</td><td data-label="D · Circle" class="y">yes</td></tr>
+<tr><td>Home features while riding</td><td data-label="Today" class="y">1 tap</td><td data-label="A · Header chip" class="y">1 tap</td><td data-label="B · Ride mode" class="m">2 taps</td><td data-label="C · Top banner" class="y">1 tap</td><td data-label="D · Circle" class="y">1 tap</td></tr>
+<tr><td>Code</td><td data-label="Today">—</td><td data-label="A · Header chip" class="y">deletes pill geometry</td><td data-label="B · Ride mode" class="m">flips the stack root</td><td data-label="C · Top banner" class="m">new surface</td><td data-label="D · Circle" class="m">new surface</td></tr>
+</table>
+
+<div class="rec"><p><b>Suggestion</b></p>
+<ul>
+<li><b>Now (PWA): A.</b> Make the live ride the third state of the wallet slot (wallet, then planned trip, then live). The journey page's headline shrinks into the chip on back and grows out of it on tap. The pill, its tuck and its merge strip go away.</li>
+<li><b>Borrow one thing from B:</b> opening the app while a ride is under way lands on the journey page with home underneath. That gives nav-mode focus without the trap.</li>
+<li><b>Native: build the Live Activity and the Android Live Update first.</b> This is the real now-playing pill, and "Vystúp na ďalšej" as an alert is the killer feature. Countdowns tick on the device, so the backend only pushes step changes and delays.</li>
+</ul></div>
+
+</main></body></html>
