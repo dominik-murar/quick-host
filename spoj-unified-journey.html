@@ -52,13 +52,13 @@ figcaption b{color:var(--text);display:block}
 <body>
 <main>
 <h1>The journey drawer: planner and Jazda as one</h1>
-<p class="sub">Spoj · proposal with mockups · 2026-10-28</p>
+<p class="sub">Spoj · proposal with mockups · 2026-10-28 · rev 2: decisions folded in, list vs card comparison</p>
 
 <div class="card tldr">
 <p><strong>One journey surface.</strong> A journey opened from the planner, from departures or from the map opens in its own <strong>journey drawer</strong>, stacked over the main drawer. It looks the same whether you track it or not; tracking only adds live state (headline, progress bar, vehicle on the rail).</p>
 <p><strong>The pill is that drawer, tucked.</strong> Minimise a tracked journey and the drawer shrinks into the pill above the main drawer. Tap the pill and it grows back into the same drawer you planned with.</p>
 <p><strong>Two tiers inside it.</strong> Tier 1 is the journey (steps). Tier 2 is one leg (every stop, earlier and later trips, departures after you arrive at a stop). Tier 3, optional, is one stop's full departures. Back pops these, then closes the drawer.</p>
-<p><strong>Same CTAs everywhere:</strong> <code>Sledovať / Nesledovať</code> plus the ticket button. Jazda's separate stop button goes away.</p>
+<p><strong>Same CTAs everywhere:</strong> <code>Sledovať / Nesledovať</code> plus the ticket button, under the headline on every tier, so a ticket is one tap away at any point of a journey. Jazda's separate stop button goes away.</p>
 </div>
 
 <h2>Flow</h2>
@@ -89,9 +89,9 @@ figcaption b{color:var(--text);display:block}
     <div class="edge"><b>Stop:</b> in tier 2 tap a stop → departures after you arrive unfold inline; <i>Všetky odchody ›</i> → tier 3.</div>
     <div class="edge"><b>Track:</b> Sledovať → same drawer, live. Header button turns from ✕ into ⌄ (minimise).</div>
     <div class="edge"><b>Tuck:</b> ⌄, or drag a tracked journey below peek → it shrinks into the pill and the main drawer rises back.</div>
-    <div class="edge"><b>Untuck:</b> tap or drag up the pill → it grows into the journey drawer at medium, at tier 1.</div>
+    <div class="edge"><b>Untuck:</b> tap or drag up the pill → it grows into the journey drawer at medium: at tier 2 of the leg you ride, or at tier 1 while you wait or walk (before boarding, between legs).</div>
     <div class="edge back"><b>Back</b> (Android key, Android browser back, iOS edge swipe): tier 3 → 2 → 1, then closes the drawer.</div>
-    <div class="edge back"><b>Closing a tracked journey tucks it</b> into the pill, as back from Jazda does today. Closing an untracked one dismisses it.</div>
+    <div class="edge back"><b>Closing a tracked journey tucks it</b> into the pill, as back from Jazda does today. Closing an untracked one dismisses it. The one exception stays as now: leaving the app with an untracked journey open that departs within 30 min starts tracking it.</div>
     <div class="edge back"><b>Nesledovať</b> leaves you in the open drawer, untracked; ✕ then dismisses it.</div>
   </div>
 </div>
@@ -102,12 +102,25 @@ figcaption b{color:var(--text);display:block}
   <figure><img src="spoj-unified-journey/s1.png" alt=""><figcaption><b>1 · Plánovač (main drawer)</b>Unchanged. Tapping a card opens the journey drawer instead of pushing details into this drawer.</figcaption></figure>
   <figure><img src="spoj-unified-journey/s2.png" alt=""><figcaption><b>2 · Journey drawer, medium</b>Its own sheet. ✕ closes it, back returns to the plánovač. Leg title rows end in › because they now open tier 2 instead of unfolding in place.</figcaption></figure>
   <figure><img src="spoj-unified-journey/s3.png" alt=""><figcaption><b>3 · Journey drawer, full height</b>Drag up and it reaches the status bar, which Jazda never could. The map comes back when you drag down.</figcaption></figure>
-  <figure><img src="spoj-unified-journey/s4.png" alt=""><figcaption><b>4 · Tier 2: one leg, not tracked</b>Earlier and later trips as chips (a missed change marked), the whole trip with the part you don't ride greyed out, and a stop opened to show what leaves after you arrive.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s4.png" alt=""><figcaption><b>4 · Tier 2: one leg, not tracked</b>The CTAs, then earlier and later trips as one-line chips (a missed one struck through), the whole trip with the part you don't ride greyed out, and a stop opened to show what leaves after you arrive.</figcaption></figure>
   <figure><img src="spoj-unified-journey/s5.png" alt=""><figcaption><b>5 · The same drawer, tracked</b>The headline turns into Jazda's instruction, countdown and progress bar. CTAs stay where they were: Nesledovať plus the ticket. Ridden legs fold to a ✓ line and the current leg is raised, showing where the vehicle is.</figcaption></figure>
-  <figure><img src="spoj-unified-journey/s6.png" alt=""><figcaption><b>6 · Tucked: the pill</b>⌄ or back shrinks drawer 5 into the strip; the main drawer comes back as it was. Tapping the strip runs the same morph in reverse.</figcaption></figure>
-  <figure><img src="spoj-unified-journey/s7.png" alt=""><figcaption><b>7 · Tier 2 while riding</b>Screen 4 with the vehicle on the rail and delayed times. The stops ahead still open to show departures after you arrive, so you can plan a change on the way.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s6.png" alt=""><figcaption><b>6 · Tucked: the pill</b>⌄ or back shrinks the drawer into the strip; the main drawer comes back as it was. Tapping the strip grows it back: into 7 while riding, into 5 while waiting or walking.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s7.png" alt=""><figcaption><b>7 · Tier 2 while riding</b>Where the pill reopens mid-leg. Screen 4 with the vehicle on the rail, delayed times and the ticket CTA; no alternative chips, since you are already on board. The stops ahead still open to show departures after you arrive, so you can plan a change on the way.</figcaption></figure>
   <figure><img src="spoj-unified-journey/s8.png" alt=""><figcaption><b>8 · Tier 3: a stop's departures</b>Everything leaving after you arrive, inside the journey drawer, so back returns to the leg. Today this jumps to the main drawer and closes Jazda.</figcaption></figure>
+  <figure><img src="spoj-unified-journey/s10.png" alt=""><figcaption><b>10 · Tier 2 at medium</b>The vertical-space check: headline, CTAs and the one-line chips take ~190 px, leaving four stops visible before you drag up. Chips are 34 px tall instead of the 50 px two-line version.</figcaption></figure>
 </div>
+
+<h2>Tier 1 while tracked: card or plain list</h2>
+<p>Same moment, two treatments of the leg you ride. <b>A</b> (left) folds ridden legs to a ✓ line and raises the current leg into a card. <b>B</b> (right) keeps today's plain list: ridden legs stay in place, greyed, with a ✓; the current leg is ordinary rows with the vehicle on the rail.</p>
+<figure><img src="spoj-unified-journey/cmp.png" alt="" style="max-width:780px;border-radius:12px"></figure>
+<table>
+<tr><th></th><th>A · card</th><th>B · plain list</th></tr>
+<tr><td>Finding "now"</td><td>Instant: the raised card</td><td>Through colour: grey above, red from here</td></tr>
+<tr><td>Space at medium</td><td>Fits the walk to the destination</td><td>~70 px taller; the last step scrolls</td></tr>
+<tr><td>Consistency</td><td>A new surface that only exists while tracked</td><td>Same rows as untracked tier 1 (2) and today's Jazda; tracking only recolours</td></tr>
+<tr><td>Morph</td><td>Card appears and disappears as legs change</td><td>Nothing jumps; rows grey out in place</td></tr>
+</table>
+<p class="small">Recommendation: B. It matches "tracking only adds live state" — the same list as when planning, with ridden parts greyed — and nothing reflows when a leg ends. A is worth it only if long journeys make "where am I" hard to spot, and the progress bar plus tier 2 already answer that.</p>
 
 <h2>What changes in code</h2>
 <table>
@@ -127,12 +140,13 @@ figcaption b{color:var(--text);display:block}
 </table>
 <p class="small">Suggested PRs: <b>(1)</b> the journey drawer and navigation, keeping today's content; <b>(2)</b> the unified headline, CTAs and the pill morph; <b>(3)</b> tier 2 and tier 3 pages. Each PR stays shippable.</p>
 
-<h2>Open questions</h2>
+<h2>Decisions</h2>
 <ol class="q">
-<li><strong>Tuck untracked journeys too?</strong> Proposed: no. ✕ dismisses them, and only a tracked journey earns the pill. The alternative is a pill for "the journey I was just looking at", which competes with the tracked one.</li>
-<li><strong>Where should the pill reopen?</strong> Proposed: tier 1 at medium, since time has passed and the overview is what you want. The alternative is the page you left (Apple Maps style).</li>
-<li><strong>Alternatives in tier 2:</strong> chips, as mocked, as well as the existing sideways swipe on tier 1 rows? Or chips only?</li>
-<li><strong>The main drawer under an open journey:</strong> hidden, as proposed, or visible as a strip at peek so you can jump back to search?</li>
+<li><strong>Untracked journeys don't tuck.</strong> ✕ dismisses them. Exception kept from #92: leaving the app with a journey open that departs within 30 min tracks it, so it comes back as the pill.</li>
+<li><strong>The pill reopens at the active leg's tier 2</strong> while you ride, and at tier 1 while you wait or walk. The back stack is built as if you had navigated there, so back from 7 goes to tier 1, then tucks.</li>
+<li><strong>Alternatives in tier 2 as one-line chips</strong>, plus the existing swipe on tier 1 rows. Chips hide on a leg you are riding. The CTAs sit above them on every tier, so the ticket stays reachable throughout.</li>
+<li><strong>The main drawer is hidden</strong> while a journey is open.</li>
+<li><strong>Open: card or plain list for the current leg in tier 1</strong>, see the comparison above. Recommended: plain list.</li>
 </ol>
 </main>
 </body>
