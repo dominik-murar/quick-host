@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>spoj: one drawer, live-step peek, glass pill split</title>
+<style>
+:root{--bg:#f9fafb;--fg:#152937;--muted:#5b6b75;--card:#fff;--border:#e4e7e9;--accent:#0a7d4f}
+@media (prefers-color-scheme:dark){:root{--bg:#10171c;--fg:#edf3f5;--muted:#9aa8b0;--card:#172128;--border:#26323a;--accent:#3ccf8e}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:24px 18px 60px}
+h1{font-size:1.5rem;line-height:1.25}h2{font-size:1.15rem;margin-top:1.8em}
+section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px 16px 12px;margin:14px 0}
+li{margin:4px 0}code{font-size:.9em;background:var(--border);padding:1px 4px;border-radius:4px}
+.muted{color:var(--muted)}
+</style></head><body><main>
+<h1>spoj: one drawer, live-step peek, glass pill split</h1>
+<p class="muted">Plan for the journey drawer refactor in <code>TransitScreen.tsx</code>. It replaces PR #96.</p>
+
+<section><h2>1. One drawer</h2><ul>
+<li>Journey pages render as a layer inside the main sheet, above the main drawer's content. The main content stays mounted underneath, hidden from touch and from screen readers.</li>
+<li>There is one height, one stage and one pan responder. Dimensions follow the top layer: the journey's header sets peek while a journey is open. Removed: <code>journeyHeight</code>, <code>journeyStage</code>, <code>journeyDimensions</code>, <code>mainDrop</code>, the second <code>Animated</code> sheet and its responders.</li>
+<li>A journey opens at medium. Closing it brings back the stage it was opened from, so the main drawer comes back as you left it.</li>
+<li>Push: the journey layer slides in from the right, like a navigation push inside the sheet. Pop: it slides back out, uncovering the main drawer. Swiping back from the journey's first page uncovers the main drawer live, exactly as swiping between journey pages does.</li>
+<li>Swipe down only ever sends the sheet to peek. Nothing closes, tracked or not.</li>
+<li>Desktop: the same layer inside the sidebar, with no pill.</li>
+</ul></section>
+
+<section><h2>2. Live-step peek header</h2><ul>
+<li>The page headline moves from the scrolling body into the pinned, frosting header, so peek always shows it. No page shows it twice.</li>
+<li>Journey overview, planned: <i>Odchod o N min</i>, times · duration · changes, and the line strip from the results card.</li>
+<li>Tracked: the live step, its countdown, a progress bar and where the vehicle is, the same content as the pill.</li>
+<li>Leg and trip pages: their existing headline and meta. Stop pages keep only their title.</li>
+<li>Sledovať and the ticket button stay in the body, just below peek.</li>
+</ul></section>
+
+<section><h2>3. Glass pill splits out (iOS style, on web)</h2><ul>
+<li>When a tracked journey closes (✕, back or swipe back), its header lifts off the sheet's top edge and settles as the glass pill above the main drawer. The rect, radius and inset are interpolated from the header to the pill, with the backdrop blur already used today.</li>
+<li>Tapping the pill or pulling it up does the reverse: the pill merges into the sheet's top edge and grows into the journey's header.</li>
+<li>The main drawer at expanded: the pill merges into the sheet's top edge and fades. It splits out again once the drawer comes down.</li>
+<li>The header button becomes ✕ for every journey. A tracked journey always leaves its pill behind, so ⌄ goes away.</li>
+</ul></section>
+
+<section><h2>Verification</h2><ul>
+<li><code>npm run check</code>.</li>
+<li>Prod build on :8097 with phone-sized screenshots of each stage: open, peek, back and swipe back, the tracked split, the pill merge, and desktop.</li>
+<li>A review loop, then a PR. Not merged without a go-ahead.</li>
+</ul>
+<p class="muted">Later: a zoom transition from the tapped card (iOS) or a container transform (Android) instead of the slide.</p></section>
+</main></body></html>
