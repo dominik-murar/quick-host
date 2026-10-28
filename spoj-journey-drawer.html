@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spoj: journey drawer, real screenshots</title>
+<style>
+:root{--bg:#F5F6F8;--surface:#fff;--line:#D8DCE2;--text:#1A1A1A;--text-2:#4A4F57;--text-3:#6E737B;--accent:#1E7F3F;--font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1013;--surface:#16191E;--line:#2C323B;--text:#F1F3F5;--text-2:#B8BEC7;--text-3:#8B929C;--accent:#4CC27A}}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 var(--font)}
+main{max-width:1100px;margin:0 auto;padding:32px 20px 64px} h1{font-size:26px;margin:0 0 4px} .sub{color:var(--text-2);margin:0 0 20px}
+h2{font-size:19px;margin:36px 0 6px} p,li{color:var(--text-2)} strong{color:var(--text)}
+.card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:12px 16px}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;margin:14px 0}
+figure{margin:0} figure img{width:100%;border-radius:20px;border:1px solid var(--line);display:block}
+figcaption{font-size:13px;color:var(--text-2);margin-top:8px} figcaption b{color:var(--text);display:block}
+.wide img{border-radius:10px}
+</style></head><body><main>
+<h1>Journey drawer: real screenshots</h1>
+<p class="sub">Spoj · production build on a 390×844 Android Chrome viewport, live Ubian data, Bratislava · 2026-10-28 · <a href="https://github.com/dominik-murar/spoj/pull/94">PR #94</a> · <a href="spoj-unified-journey.html">design</a></p>
+<div class="card"><p><strong>Checked:</strong> tiers 1, 2 and 3, Android browser back through the pages and out of the drawer, Sledovať and Nesledovať, ⌄ into the pill, reopening from the pill while waiting and while riding, finished legs hidden and shown, missed-change warnings above and below, full height, dark mode, and the desktop sidebar.</p>
+<p><strong>Simulated:</strong> "riding" (14, 15) and "on the second leg" (12, 13) come from editing the stored ride, since no journey was underway during the test. <strong>Not checked here:</strong> the iOS edge swipe, and the vehicle drawn on a tier 1 leg's line, which needs a real ride.</p></div>
+<div class="shots">
+  <figure><img src="spoj-journey-drawer/01-planner.png" alt=""><figcaption><b>Plánovač</b>Unchanged. Tapping a card opens the journey drawer.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/02-tier1.png" alt=""><figcaption><b>Tier 1 · journey</b>Its own drawer over the main one, which is hidden. ✕ closes; back too.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/03-tier2-first.png" alt=""><figcaption><b>Tier 2 · first leg</b>Tapping a leg opens it: CTAs, one-line trips, the walk onto it above the stops.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/04-tier2-link.png" alt=""><figcaption><b>Tier 2 · a later leg</b>The change from the previous leg above the stops: 96 arrives 11:29, 5 min wait.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/05-arrivals.png" alt=""><figcaption><b>Stop opened</b>Departures after you arrive, in line; Všetky odchody opens tier 3.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/06-tier3.png" alt=""><figcaption><b>Tier 3 · stop</b>All departures after you arrive, inside the journey. Back returns to the leg.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/07-missed-onto.png" alt=""><figcaption><b>Earlier trip picked</b>It is struck through in the chips, and the warning sits above the stops.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/08-missed-onward.png" alt=""><figcaption><b>Later first leg picked</b>The warning sits under the stops, with the next trip that still connects.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/09-tracked.png" alt=""><figcaption><b>Sledovať</b>Same drawer: live headline, countdown, bar. Nesledovať + ticket stay put; ✕ turns into ⌄.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/10-pill.png" alt=""><figcaption><b>⌄ tucks it</b>The drawer shrinks into the pill; the main drawer is back as it was.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/11-reopen-waiting.png" alt=""><figcaption><b>Pill tapped while waiting</b>Waiting or walking, it grows back into tier 1.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/12-ridden-hidden.png" alt=""><figcaption><b>On the second leg</b>Ridden legs hide behind Zobraziť predchádzajúce (1).</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/13-ridden-shown.png" alt=""><figcaption><b>…shown</b>Greyed, in place; Skryť predchádzajúce stays visible to fold them back.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/14-pill-riding.png" alt=""><figcaption><b>Pill while riding</b>Simulated: the vehicle has left where you board.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/15-reopen-riding.png" alt=""><figcaption><b>Pill tapped while riding</b>Opens the leg you ride (tier 2), passed stops folded away.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/16-full-height.png" alt=""><figcaption><b>Full height</b>The journey drawer reaches the top of the screen.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/17-dark-tier1.png" alt=""><figcaption><b>Dark</b>Tier 1 in dark mode.</figcaption></figure>
+  <figure><img src="spoj-journey-drawer/18-dark-warning.png" alt=""><figcaption><b>Dark warning</b>The missed change in dark mode.</figcaption></figure>
+</div>
+<h2>Desktop</h2>
+<figure class="wide"><img src="spoj-journey-drawer/19-desktop.png" alt=""><figcaption>The journey drawer takes over the sidebar. There is no tracking on desktop, so there is no pill or Sledovať.</figcaption></figure>
+</main></body></html>
