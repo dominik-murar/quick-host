@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spoj · one hue, one meaning</title>
+<style>
+:root{
+  --canvas:#efeae5;--surface:#fbfaf9;--raised:#fff;--control:#f3efeb;--sep:#e5e2df;
+  --label:#301c2c;--label2:#71626e;--label3:#9b8c98;
+  --tint:#1b7a3c;--tint-fill:#1b7a3c;--on-tint:#fff;--tint-soft:#e4f2e8;
+  --delay:#a35200;--pill:#f5b83d;--pill-ink:#2a2210;--cancel:#c62828;
+  --train:#28305e;--regional:#2b6fc0;--urban:#8e3a8a;--night:#262626;--night-ring:#ffd54a;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);color:var(--label);font:16px/1.55 var(--font);-webkit-font-smoothing:antialiased}
+main{max-width:1080px;margin:0 auto;padding:56px 24px 96px}
+h1{font-size:44px;line-height:1.05;letter-spacing:-.02em;margin:0 0 12px;font-weight:800}
+h1 em{font-style:normal;color:var(--tint)}
+h2{font-size:26px;letter-spacing:-.01em;margin:64px 0 8px;font-weight:750}
+h3{font-size:17px;margin:0 0 4px}
+p,li{color:var(--label2)}
+strong{color:var(--label)}
+.lede{font-size:19px;max-width:760px}
+.card{background:var(--surface);border:1px solid var(--sep);border-radius:22px;padding:24px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.verdict li{margin:6px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:650;color:var(--label);padding:10px 8px;border-bottom:1px solid var(--sep)}
+td{padding:10px 8px;border-bottom:1px solid var(--sep);color:var(--label2);vertical-align:middle}
+td b{color:var(--label);font-weight:650}
+.sw{display:inline-block;width:22px;height:22px;border-radius:7px;vertical-align:middle;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.hex{font:12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--label3)}
+.bad{color:var(--cancel);font-weight:700}
+.ok{color:var(--tint);font-weight:700}
+.tag{display:inline-block;font-size:12px;font-weight:650;padding:2px 8px;border-radius:999px;background:var(--control);color:var(--label2)}
+
+/* line badges, shapes from the design manual */
+.lb{--c:var(--urban);display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:28px;padding:0 7px;font:900 14px/1 var(--font);color:#fff;background:var(--c);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lb.tram{border-radius:14px}.lb.trolley{border-radius:7px}.lb.bus{border-radius:3px}
+.lb.regional{--c:var(--regional);border-radius:3px;box-shadow:inset 0 -3px 0 rgba(255,255,255,.55)}
+.lb.train{--c:var(--train);border-radius:2px;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);padding:0 12px}
+.lb.night{--c:var(--night);border-radius:14px;box-shadow:inset 0 0 0 2px var(--night-ring)}
+.dark .lb{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+.dark .lb.regional{box-shadow:inset 0 -3px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(255,255,255,.28)}
+.dark .lb.night{box-shadow:inset 0 0 0 2px var(--night-ring)}
+
+/* glass study */
+.study{position:relative;height:250px;border-radius:22px;overflow:hidden}
+.study svg.map{position:absolute;inset:0;width:100%;height:100%}
+.glassbar{position:absolute;left:14px;right:14px;bottom:14px;display:flex;gap:8px;align-items:center;padding:8px;border-radius:999px;
+  background:rgba(255,255,255,.52);backdrop-filter:blur(18px) saturate(1.7);-webkit-backdrop-filter:blur(18px) saturate(1.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 0 0 1px rgba(255,255,255,.45),0 8px 28px rgba(48,28,44,.16)}
+.dark .glassbar{background:rgba(38,36,33,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.08),0 8px 28px rgba(0,0,0,.5)}
+.gbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--label);font-size:18px}
+.gprim{margin-left:auto;height:40px;padding:0 18px;border-radius:999px;display:flex;align-items:center;gap:6px;font-weight:700;font-size:15px;background:var(--tint-fill);color:var(--on-tint);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 14px color-mix(in srgb,var(--tint-fill) 40%,transparent)}
+.cap{position:absolute;top:12px;left:14px;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.7);color:#301c2c}
+.dark .cap{background:rgba(0,0,0,.45);color:#f4f2ee}
+
+/* phones */
+.phones{display:flex;gap:28px;flex-wrap:wrap;justify-content:center}
+.phone{width:320px;height:784px;border-radius:44px;position:relative;overflow:hidden;background:var(--canvas);
+  box-shadow:0 0 0 10px #1b1a18,0 0 0 11px #3a3733,0 30px 60px rgba(48,28,44,.28)}
+.phone svg.map{position:absolute;left:0;top:0;width:100%;height:330px}
+.phone svg.route{top:14px}
+.search{position:absolute;top:52px;left:14px;right:14px;height:48px;border-radius:999px;display:flex;align-items:center;gap:10px;padding:0 16px;font-size:16px;color:var(--label2);
+  background:rgba(255,255,255,.55);backdrop-filter:blur(18px) saturate(1.7);-webkit-backdrop-filter:blur(18px) saturate(1.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 0 0 1px rgba(255,255,255,.5),0 6px 20px rgba(48,28,44,.14)}
+.dark .search{background:rgba(38,36,33,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.08),0 6px 20px rgba(0,0,0,.5)}
+.search .av{margin-left:auto;width:30px;height:30px;border-radius:50%;background:var(--control);display:grid;place-items:center;font-size:13px;color:var(--label)}
+.sheet{position:absolute;left:0;right:0;bottom:0;top:300px;background:var(--surface);border-radius:28px 28px 0 0;padding:8px 16px;box-shadow:0 -8px 30px rgba(48,28,44,.12)}
+.dark .sheet{box-shadow:0 -8px 30px rgba(0,0,0,.5)}
+.grab{width:36px;height:5px;border-radius:3px;background:var(--sep);margin:0 auto 12px}
+.stopname{display:flex;align-items:baseline;justify-content:space-between}
+.stopname b{font-size:20px;letter-spacing:-.01em}
+.stopname span{font-size:13px;color:var(--label2)}
+.chips{display:flex;gap:6px;margin:10px 0 6px}
+.chip{white-space:nowrap;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--control);color:var(--label2)}
+.chip.on{background:var(--tint-soft);color:var(--tint);box-shadow:inset 0 0 0 1.5px var(--tint)}
+.dep{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--sep)}
+.dep:last-child{border:0}
+.dep .to{flex:1;min-width:0}
+.dep .to b{display:block;font-size:15px;font-weight:650;color:var(--label);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dep .to small{font-size:12px;color:var(--label2)}
+.when{text-align:right;font-variant-numeric:tabular-nums;font-size:15px;font-weight:700;color:var(--label)}
+.when .live{color:var(--tint);display:inline-flex;align-items:center;gap:3px}
+.when .pill{display:inline-block;margin-top:2px;font-size:12px;font-weight:800;padding:1px 6px;border-radius:6px;background:var(--pill);color:var(--pill-ink)}
+.when .cx{color:var(--cancel);font-size:13px}
+.when s{color:var(--label3);font-weight:600}
+.acts{display:flex;gap:8px;margin-top:12px}
+.acts .primary{flex:1;height:46px;border-radius:999px;background:var(--tint-fill);color:var(--on-tint);display:grid;place-items:center;font-weight:700}
+.acts .second{height:46px;padding:0 18px;border-radius:999px;background:var(--control);color:var(--label);display:grid;place-items:center;font-weight:650}
+
+.light{--canvas:#efeae5;--surface:#fbfaf9;--raised:#fff;--control:#f3efeb;--sep:#e5e2df;
+  --label:#301c2c;--label2:#71626e;--label3:#9b8c98;
+  --tint:#1b7a3c;--tint-fill:#1b7a3c;--on-tint:#fff;--tint-soft:#e4f2e8;
+  --delay:#a35200;--cancel:#c62828;color:var(--label)}
+.dark{--canvas:#0f0e0e;--surface:#1b1a18;--raised:#1f1e1c;--control:#2f2d2a;--sep:#34322e;
+  --label:#f4f2ee;--label2:#a8a091;--label3:#827d73;
+  --tint:#7ad497;--tint-fill:#33b45d;--on-tint:#11301c;--tint-soft:#183426;
+  --delay:#f5a524;--cancel:#ff8a80;color:var(--label)}
+@media (prefers-color-scheme:dark){
+  :root{--canvas:#0f0e0e;--surface:#1b1a18;--raised:#1f1e1c;--control:#2f2d2a;--sep:#34322e;
+  --label:#f4f2ee;--label2:#a8a091;--label3:#827d73;
+  --tint:#7ad497;--tint-fill:#33b45d;--on-tint:#11301c;--tint-soft:#183426;
+  --delay:#f5a524;--cancel:#ff8a80;}
+  .mode-card .lb{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+  .mode-card .lb.regional{box-shadow:inset 0 -3px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(255,255,255,.28)}
+  .mode-card .lb.night{box-shadow:inset 0 0 0 2px var(--night-ring)}
+  .sw{box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+}
+@media (max-width:640px){
+  main{padding:36px 16px 72px}
+  h1{font-size:34px} h2{font-size:22px;margin-top:48px} .lede{font-size:17px}
+  .card{padding:18px;border-radius:18px}
+  table,tbody,tr,td{display:block;width:100%}
+  tr:first-child{display:none}
+  tr{padding:10px 0;border-bottom:1px solid var(--sep)}
+  td{border:0;padding:3px 0}
+  td[data-label]::before{content:attr(data-label);display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--label3)}
+  .phone{transform:scale(.92);transform-origin:top center;margin-bottom:-60px}
+}
+.mode-card .badges{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px;align-items:center}
+.plum{--tint:#8d2f72;--tint-fill:#8d2f72;--tint-soft:#f6e5f0}
+.plum.dark{--tint:#e7a3d3;--tint-fill:#e7a3d3;--on-tint:#3a0f2e;--tint-soft:#3a1f33}
+.note{font-size:13px;color:var(--label3)}
+code{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--control);padding:1px 5px;border-radius:5px;color:var(--label)}
+footer{margin-top:72px;font-size:13px;color:var(--label3);font-style:italic}
+</style>
+</head>
+<body>
+<main>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="map-l" viewBox="0 0 320 330" preserveAspectRatio="xMidYMid slice">
+      <rect width="320" height="330" fill="#f7f4f2"/>
+      <path d="M-10 250 C60 225 120 270 200 240 S300 210 340 230 L340 340 L-10 340Z" fill="#d9d4d0"/>
+      <rect x="196" y="40" width="96" height="70" rx="10" fill="#e8ede5"/>
+      <g fill="#e7e4e1"><rect x="24" y="60" width="54" height="36" rx="3"/><rect x="92" y="54" width="40" height="46" rx="3"/><rect x="30" y="140" width="62" height="40" rx="3"/><rect x="214" y="130" width="54" height="40" rx="3"/><rect x="120" y="150" width="44" height="34" rx="3"/></g>
+      <g stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round"><path d="M-10 120 H340"/><path d="M160 -10 V260"/><path d="M-10 30 L330 210"/></g>
+      <path d="M-10 196 L340 104" stroke="#cbc5bf" stroke-width="3" stroke-dasharray="8 6" fill="none"/>
+    </symbol>
+    <symbol id="map-d" viewBox="0 0 320 330" preserveAspectRatio="xMidYMid slice">
+      <rect width="320" height="330" fill="#131312"/>
+      <path d="M-10 250 C60 225 120 270 200 240 S300 210 340 230 L340 340 L-10 340Z" fill="#0b0a0a"/>
+      <rect x="196" y="40" width="96" height="70" rx="10" fill="#141611"/>
+      <g fill="#222220"><rect x="24" y="60" width="54" height="36" rx="3"/><rect x="92" y="54" width="40" height="46" rx="3"/><rect x="30" y="140" width="62" height="40" rx="3"/><rect x="214" y="130" width="54" height="40" rx="3"/><rect x="120" y="150" width="44" height="34" rx="3"/></g>
+      <g stroke="#373533" stroke-width="9" fill="none" stroke-linecap="round"><path d="M-10 120 H340"/><path d="M160 -10 V260"/><path d="M-10 30 L330 210"/></g>
+      <path d="M-10 196 L340 104" stroke="#403e3b" stroke-width="3" stroke-dasharray="8 6" fill="none"/>
+    </symbol>
+    <symbol id="route" viewBox="0 0 320 330" preserveAspectRatio="xMidYMid slice">
+      <path d="M70 262 L110 237" stroke="#8a8077" stroke-width="3.5" stroke-dasharray="1 6" stroke-linecap="round" fill="none"/>
+      <path d="M110 237 L160 204 L160 150" stroke="#8e3a8a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M160 150 L246 120" stroke="#28305e" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <circle cx="160" cy="150" r="6" fill="#fff" stroke="#28305e" stroke-width="3"/>
+      <circle cx="110" cy="237" r="5" fill="#fff" stroke="#8e3a8a" stroke-width="3"/>
+      <circle cx="70" cy="262" r="11" fill="#0a84ff" opacity=".18"/><circle cx="70" cy="262" r="6.5" fill="#0a84ff" stroke="#fff" stroke-width="2.5"/>
+      <path d="M246 120 c-9 0 -15 -7 -15 -15 c0 -10 15 -24 15 -24 s15 14 15 24 c0 8 -6 15 -15 15z" transform="translate(0,0)" fill="#d23f31" stroke="#fff" stroke-width="2"/>
+      <circle cx="246" cy="96" r="4.5" fill="#fff"/>
+    </symbol>
+  </defs>
+</svg>
+
+<span class="tag">Spoj · colour proposal · 30 Oct 2026</span>
+<h1>One hue, <em>one meaning</em>.</h1>
+<p class="lede">Keep Ember's warm paper, aubergine ink and warm-charcoal nights. Give it back a chromatic tint, and keep that tint Ubian green. Then give every other hue exactly one job: red for things that went wrong, amber for delays, and three mode colours that never look like a status.</p>
+
+<h2>Short answer</h2>
+<div class="card verdict">
+<ul>
+  <li><strong>Ember's ink-as-primary doesn't carry over to Liquid Glass.</strong> Glass chrome is already monochrome: every glyph on a toolbar is label-coloured. A black primary is only a heavier version of its neighbours, and at night a white glass-prominent button becomes the brightest thing on a dark map. On iOS, the tint is the one place a brand can show inside system chrome. A monochrome tint gives that place away.</li>
+  <li><strong>On Material 3 it's legitimate.</strong> <code>SchemeMonochrome</code> is a first-class variant, and a filled button with an on-primary label works. M3 Expressive pushes the other way, though, towards more colour. The same tokens should work on both platforms, so I'd drop ink-as-primary on both.</li>
+  <li><strong>Ember's character isn't in its accent anyway.</strong> It comes from the cream, the aubergine ink and the warm map. On iOS those show in the content layer: the map, the sheet's opaque body, cards. The glass picks them up from what's underneath it.</li>
+  <li><strong>Ember also silently dropped a status.</strong> In Spoj, <code>accent</code> paints the live and on-time times, the countdowns and the done ticks. Make the accent ink and "live" turns into plain text. Tint and live need their own roles.</li>
+  <li><strong>Mode colours today reuse status colours.</strong> Klasická's train colour can't be told from its delay colour (ΔE 2.2), its city lines are the "missed" red, and its regional buses are the exact info blue.</li>
+</ul>
+</div>
+
+<h2>Ink vs tint on glass</h2>
+<p>The same toolbar over the same map. A glass-prominent primary only stands out when it carries a colour the rest of the glass doesn't.</p>
+<div class="grid g4">
+  <div class="study light" style="--tint-fill:#301c2c;--on-tint:#fff;--label:#301c2c"><svg class="map"><use href="#map-l"/></svg><svg class="map"><use href="#route"/></svg><span class="cap">Ember · ink</span>
+    <div class="glassbar"><span class="gbtn">◎</span><span class="gbtn">≡</span><span class="gprim">Sledovať</span></div></div>
+  <div class="study dark" style="--tint-fill:#ece6dc;--on-tint:#161614"><svg class="map"><use href="#map-d"/></svg><svg class="map"><use href="#route"/></svg><span class="cap">Ember · ink, night</span>
+    <div class="glassbar"><span class="gbtn">◎</span><span class="gbtn">≡</span><span class="gprim">Sledovať</span></div></div>
+  <div class="study light"><svg class="map"><use href="#map-l"/></svg><svg class="map"><use href="#route"/></svg><span class="cap">Proposal · green tint</span>
+    <div class="glassbar"><span class="gbtn">◎</span><span class="gbtn">≡</span><span class="gprim">Sledovať</span></div></div>
+  <div class="study dark"><svg class="map"><use href="#map-d"/></svg><svg class="map"><use href="#route"/></svg><span class="cap">Proposal · night</span>
+    <div class="glassbar"><span class="gbtn">◎</span><span class="gbtn">≡</span><span class="gprim">Sledovať</span></div></div>
+</div>
+
+<h2>What collides today</h2>
+<p>ΔE is the OKLab distance ×100. About 2 is barely visible; categories that must be told apart at a glance want 15 or more. "CVD" is the worse of the deuteranopia and protanopia simulations (Machado 2009).</p>
+<div class="card">
+<table>
+<tr><th>Theme</th><th>Pair</th><th></th><th>ΔE</th><th>CVD</th><th>What it means</th></tr>
+<tr><td data-label="Theme">Klasická</td><td data-label="Pair"><b>train</b> vs <b>warning</b></td><td><span class="sw" style="background:#a85a00"></span> <span class="sw" style="background:#a35200"></span></td><td class="bad" data-label="ΔE">2.2</td><td class="bad" data-label="CVD">2.1</td><td data-label="What it means">Every train looks like it's running late</td></tr>
+<tr><td data-label="Theme">Klasická</td><td data-label="Pair"><b>MHD</b> vs <b>missed</b></td><td><span class="sw" style="background:#c8363a"></span> <span class="sw" style="background:#c62828"></span></td><td class="bad" data-label="ΔE">2.2</td><td class="bad" data-label="CVD">2.1</td><td data-label="What it means">A city stop's list is a column of alarm red</td></tr>
+<tr><td data-label="Theme">Klasická</td><td data-label="Pair"><b>MHD</b> = <b>ride</b> = route</td><td><span class="sw" style="background:#c8363a"></span></td><td class="bad" data-label="ΔE">0</td><td class="bad" data-label="CVD">0</td><td data-label="What it means">Your journey, city lines and errors share one red</td></tr>
+<tr><td data-label="Theme">Klasická</td><td data-label="Pair"><b>regional</b> = <b>info</b></td><td><span class="sw" style="background:#1f6fb2"></span></td><td class="bad" data-label="ΔE">0</td><td class="bad" data-label="CVD">0</td><td data-label="What it means">The modes menu's ticks look like regional buses</td></tr>
+<tr><td data-label="Theme">Ember</td><td data-label="Pair"><b>MHD</b> = <b>destination</b>, vs <b>warning</b></td><td><span class="sw" style="background:#b84c30"></span> <span class="sw" style="background:#a35200"></span></td><td class="bad" data-label="ΔE">5.5</td><td class="bad" data-label="CVD">2.9</td><td data-label="What it means">Coral sits between delay amber and missed red</td></tr>
+<tr><td data-label="Theme">Ember</td><td data-label="Pair"><b>train</b> vs <b>MHD</b></td><td><span class="sw" style="background:#3d6e2a"></span> <span class="sw" style="background:#b84c30"></span></td><td data-label="ΔE">21.4</td><td class="bad" data-label="CVD">2.6</td><td data-label="What it means">Olive and coral merge for protanopes</td></tr>
+<tr><td data-label="Theme">Ember</td><td data-label="Pair"><b>accent</b> = <b>text</b></td><td><span class="sw" style="background:#301c2c"></span></td><td class="bad" data-label="ΔE">0</td><td class="bad" data-label="CVD">0</td><td data-label="What it means">Live times, countdowns and the primary action read as body text</td></tr>
+<tr><td data-label="Theme">All</td><td data-label="Pair"><b>delay</b> vs <b>missed</b></td><td><span class="sw" style="background:#a35200"></span> <span class="sw" style="background:#c62828"></span></td><td data-label="ΔE">10.0</td><td class="bad" data-label="CVD">1.9</td><td data-label="What it means">As text they can't be told apart by colour, so form has to carry it: Ember's delay pill</td></tr>
+</table>
+</div>
+
+<h2>The roles</h2>
+<p>Five families, and none of them lends its hue to another. Neutrals collapse from 51 hand-tuned keys per scheme to the ladder both platforms already define.</p>
+<div class="card">
+<table>
+<tr><th>Role</th><th>Light</th><th>Dark</th><th>Used for, and only for</th><th>iOS</th><th>Material 3</th></tr>
+<tr><td data-label="Role"><b>Tint</b></td><td data-label="Light"><span class="sw" style="background:#1b7a3c"></span> <span class="hex">#1b7a3c</span></td><td data-label="Dark"><span class="sw" style="background:#7ad497"></span> <span class="hex">#7ad497</span> / fill <span class="hex">#33b45d</span></td><td data-label="Used for, and only for">What you can act on, and what you picked: primary buttons, selection, focus rings, ticks, favourite star, links</td><td data-label="iOS"><code>AccentColor</code>, <code>.glassProminent</code></td><td data-label="Material 3"><code>primary</code> / <code>primaryContainer</code></td></tr>
+<tr><td data-label="Role"><b>Live</b></td><td colspan="2" data-label="Light / Dark"><span class="sw" style="background:#1b7a3c"></span> the tint, plus a signal glyph</td><td data-label="Used for, and only for">A time confirmed by a live vehicle, countdowns, legs done. Green means "go" in both roles: the action you take and the departure you'll make</td><td data-label="iOS">tint</td><td data-label="Material 3"><code>primary</code></td></tr>
+<tr><td data-label="Role"><b>Delay</b></td><td data-label="Light"><span class="sw" style="background:#f5b83d"></span> pill, ink <span class="hex">#2a2210</span></td><td data-label="Dark">same pill</td><td data-label="Used for, and only for">A late departure: the Ember pill in every theme. It's the only form red-green colour-blind riders can tell from a cancellation</td><td data-label="iOS">custom</td><td data-label="Material 3">custom colour, harmonised</td></tr>
+<tr><td data-label="Role"><b>Wrong</b></td><td data-label="Light"><span class="sw" style="background:#c62828"></span> <span class="hex">#c62828</span></td><td data-label="Dark"><span class="sw" style="background:#ff8a80"></span> <span class="hex">#ff8a80</span></td><td data-label="Used for, and only for">Cancelled, missed change, error, destructive actions. Always with a word or icon, never a fill</td><td data-label="iOS"><code>systemRed</code> role</td><td data-label="Material 3"><code>error</code></td></tr>
+<tr><td data-label="Role"><b>Modes</b></td><td colspan="2" data-label="Light / Dark"><span class="sw" style="background:#28305e"></span> <span class="sw" style="background:#2b6fc0"></span> <span class="sw" style="background:#8e3a8a"></span> &nbsp;same fills in both, with a hairline ring at night</td><td data-label="Used for, and only for">Line badges, a ride's tint, the legs of a route on the map, a leg's timeline. Never a status, never a button</td><td data-label="iOS">custom</td><td data-label="Material 3">custom colours, harmonised</td></tr>
+<tr><td data-label="Role"><b>Neutrals</b></td><td data-label="Light"><span class="sw" style="background:#fbfaf9"></span> <span class="sw" style="background:#efeae5"></span> <span class="sw" style="background:#301c2c"></span></td><td data-label="Dark"><span class="sw" style="background:#1b1a18"></span> <span class="sw" style="background:#0f0e0e"></span> <span class="sw" style="background:#f4f2ee"></span></td><td data-label="Used for, and only for">Ember: 3 surfaces, 4 labels (label, secondary, tertiary, disabled), 1 separator, 1 fill</td><td data-label="iOS"><code>label</code>…<code>quaternaryLabel</code>, system fills on glass</td><td data-label="Material 3"><code>surfaceContainer*</code>, <code>onSurface(Variant)</code>, <code>outline(Variant)</code></td></tr>
+<tr><td data-label="Role"><b>Map conventions</b></td><td colspan="2" data-label="Light / Dark"><span class="sw" style="background:#0a84ff"></span> you &nbsp; <span class="sw" style="background:#d23f31"></span> destination pin &nbsp; <span class="sw" style="background:#e3434a"></span> compass north</td><td data-label="Used for, and only for">Kept as every map app draws them. The red pin is the one red that isn't an error, and it only appears on the map</td><td data-label="iOS">system blue dot</td><td data-label="Material 3">—</td></tr>
+</table>
+<p class="note">Contrast: tint text 5.2:1 on the sheet and 4.5:1 on the canvas; tint fill with white 5.4:1; dark fill with its ink 5.3:1; delay pill ink 8.8:1; red 5.4:1, or 7.6:1 at night.</p>
+</div>
+
+<h2>Mode colours</h2>
+<p>Red, amber and green are taken by status, so modes take the cool half of the wheel and a red-violet. Light mode spaces them by lightness as well as hue, so they stay apart for colour-blind riders. The badge shapes from the manual still carry the mode on their own.</p>
+<div class="grid g3">
+  <div class="card mode-card"><h3>Vlaky · deep navy</h3>
+    <div class="badges"><span class="lb train">R 605</span><span class="lb train">Os 2010</span></div>
+    <p>Maps draw railways dark: the heaviest, longest-distance mode gets the darkest ink. It's 12.5:1 with white text, and dark enough to stay apart from the other modes for every type of colour vision. <span class="hex">#28305e</span></p></div>
+  <div class="card mode-card"><h3>Regionálne · road blue</h3>
+    <div class="badges"><span class="lb regional">520</span><span class="lb regional">701</span></div>
+    <p>Its mid blue sits in the same cool family as trains, since both run between towns, but it's clearly lighter. The blue left status once "info" became the tint. <span class="hex">#2b6fc0</span></p></div>
+  <div class="card mode-card"><h3>MHD · city plum</h3>
+    <div class="badges"><span class="lb tram">4</span><span class="lb trolley">201</span><span class="lb bus">39</span><span class="lb night">N93</span></div>
+    <p>It nods to red city vehicles and to Ember's aubergine, yet stays 17.6 away from alarm red. The mode you see most is no longer the colour of an alarm. <span class="hex">#8e3a8a</span></p></div>
+</div>
+<div class="card" style="margin-top:16px">
+<table>
+<tr><th>Closest pairs</th><th>ΔE</th><th>Deutan</th><th>Protan</th><th>White text</th></tr>
+<tr><td data-label="Closest pairs"><b>regional</b> vs <b>MHD</b></td><td class="ok" data-label="ΔE">18.5</td><td data-label="Deutan">8.9</td><td data-label="Protan">12.2</td><td data-label="White text">5.1 · 6.7</td></tr>
+<tr><td data-label="Closest pairs"><b>train</b> vs <b>MHD</b></td><td class="ok" data-label="ΔE">20.8</td><td data-label="Deutan">17.3</td><td data-label="Protan">11.7</td><td data-label="White text">12.5 · 6.7</td></tr>
+<tr><td data-label="Closest pairs"><b>MHD</b> vs <b>cancel red</b></td><td class="ok" data-label="ΔE">17.6</td><td data-label="Deutan">18.0</td><td data-label="Protan">16.3</td><td data-label="White text">—</td></tr>
+<tr><td data-label="Closest pairs"><b>train</b> vs <b>night</b></td><td data-label="ΔE">10.1</td><td data-label="Deutan">9.9</td><td data-label="Protan">10.5</td><td data-label="White text">ring and slant tell them apart</td></tr>
+</table>
+<p class="note">On "what people are used to": real city vehicles are often red, and that's the strongest argument for keeping MHD red. I'd still trade it away. The mode you look at most shouldn't share a hue with "cancelled", and the plum keeps the warm red family without the alarm.</p>
+</div>
+
+<h2>Specimen</h2>
+<p>A city stop at rush hour: one of each mode, one live time, two delays and a cancellation.</p>
+<div class="phones">
+  <div class="phone light">
+    <svg class="map"><use href="#map-l"/></svg><svg class="map route"><use href="#route"/></svg>
+    <div class="search">⌕ Kam idete?<span class="av">⚙</span></div>
+    <div class="sheet"><div class="grab"></div>
+      <div class="stopname"><b>Hodžovo námestie</b><span>120 m</span></div>
+      <div class="chips"><span class="chip on">Všetky</span><span class="chip">Centrum</span><span class="chip">Nást. B</span></div>
+      <div class="dep"><span class="lb tram">4</span><div class="to"><b>Dúbravka, Pri kríži</b><small>Nástupište A</small></div><div class="when"><span class="live">◉ 2 min</span></div></div>
+      <div class="dep"><span class="lb trolley">201</span><div class="to"><b>Hlavná stanica</b><small>Nástupište B</small></div><div class="when">14:12<br><span class="pill">+4</span></div></div>
+      <div class="dep"><span class="lb regional">520</span><div class="to"><b>Senec, aut. st.</b><small>Nástupište C</small></div><div class="when"><span class="live">◉ 14:18</span></div></div>
+      <div class="dep"><span class="lb train">Os 2010</span><div class="to"><b>Nové Zámky</b><small>Bratislava hl. st., k. 3</small></div><div class="when">14:25<br><span class="pill">+12</span></div></div>
+      <div class="dep"><span class="lb bus">39</span><div class="to"><b>Raždiny</b><small>Nástupište A</small></div><div class="when"><s>14:27</s><br><span class="cx">✕ Zrušený</span></div></div>
+      <div class="acts"><span class="primary">Sledovať</span><span class="second">Lístok</span></div>
+    </div>
+  </div>
+  <div class="phone dark">
+    <svg class="map"><use href="#map-d"/></svg><svg class="map route"><use href="#route"/></svg>
+    <div class="search">⌕ Kam idete?<span class="av">⚙</span></div>
+    <div class="sheet"><div class="grab"></div>
+      <div class="stopname"><b>Hodžovo námestie</b><span>120 m</span></div>
+      <div class="chips"><span class="chip on">Všetky</span><span class="chip">Centrum</span><span class="chip">Nást. B</span></div>
+      <div class="dep"><span class="lb night">N93</span><div class="to"><b>Petržalka, Ovsište</b><small>Nástupište A</small></div><div class="when"><span class="live">◉ 6 min</span></div></div>
+      <div class="dep"><span class="lb trolley">201</span><div class="to"><b>Hlavná stanica</b><small>Nástupište B</small></div><div class="when">23:12<br><span class="pill">+4</span></div></div>
+      <div class="dep"><span class="lb regional">520</span><div class="to"><b>Senec, aut. st.</b><small>Nástupište C</small></div><div class="when"><span class="live">◉ 23:18</span></div></div>
+      <div class="dep"><span class="lb train">R 605</span><div class="to"><b>Košice</b><small>Bratislava hl. st., k. 1</small></div><div class="when">23:25<br><span class="pill">+12</span></div></div>
+      <div class="dep"><span class="lb tram">4</span><div class="to"><b>Dúbravka, Pri kríži</b><small>Nástupište A</small></div><div class="when"><s>23:27</s><br><span class="cx">✕ Zrušený</span></div></div>
+      <div class="acts"><span class="primary">Sledovať</span><span class="second">Lístok</span></div>
+    </div>
+  </div>
+</div>
+<p class="note" style="text-align:center">The route on the map takes the colour of each leg's mode, the walk is dotted, you are the system blue dot, and the destination is the red pin.</p>
+
+<h2>A bolder alternative: Ember Plum</h2>
+<div class="grid g2">
+  <div class="card">
+    <p>Push Ember's aubergine ink up to full chroma and make that the tint. Green is then left meaning only "live", and purple primaries are rare on iOS, so it would be unmistakably Spoj.</p>
+    <p><strong>What it costs:</strong> it drops Ubian's green, the brand the manual pitches. MHD would have to leave plum for cobalt, and regional would go to petrol, which sits 11 from live green. "Go" stops being the brand's colour. I'd keep it as a theme, not the default.</p>
+  </div>
+  <div class="grid g2" style="gap:12px">
+    <div class="study light plum" style="height:200px"><svg class="map"><use href="#map-l"/></svg><span class="cap">Plum</span><div class="glassbar"><span class="gbtn">◎</span><span class="gprim">Sledovať</span></div></div>
+    <div class="study plum dark" style="height:200px"><svg class="map"><use href="#map-d"/></svg><span class="cap">Plum · night</span><div class="glassbar"><span class="gbtn">◎</span><span class="gprim">Sledovať</span></div></div>
+  </div>
+</div>
+
+<h2>What it means for the code</h2>
+<div class="card">
+<ul>
+  <li><strong>Split <code>accent</code></strong> into <code>tint</code> (interactive) and <code>live</code> (status), even while both are green. Today a single key does both jobs, and that's how Ember lost "live".</li>
+  <li><strong>Delete <code>info</code></strong>: the modes menu ticks and the layers dot become tint, and notices become a neutral surface with an icon.</li>
+  <li><strong>Delete <code>ride</code>, <code>rideRoute</code> and <code>routeStop</code></strong>: a ride, its timeline and its route take their leg's mode colour, as the trip strip already does.</li>
+  <li><strong>Collapse the neutrals.</strong> 51 neutral keys per scheme, 13 of them text greys, become the platform ladder of about 10. <code>palette.ts</code> shrinks by more than half.</li>
+  <li><strong>The delay pill everywhere</strong>, so <code>delayPill</code> stops being nullable.</li>
+  <li><strong>Native later:</strong> on iOS, text on glass uses <code>PlatformColor('label')</code> and friends, so it stays vibrant as the glass adapts, and the tint is <code>AccentColor</code>. On Android, build the scheme with material-color-utilities: Ubian green as the primary seed and Ember's warm neutral palette. Modes and delay are harmonised custom colours. Material You's wallpaper colours can be an Android-only theme choice, applied to tint and neutrals and never to modes or status.</li>
+  <li><strong>Themes:</strong> one default (Ember neutrals with the green tint), Plum as an option, and Neutrálna and Medená retired as finished experiments.</li>
+</ul>
+</div>
+
+<h2>Your calls</h2>
+<div class="card">
+<ol>
+  <li>MHD in plum, or keep it red as the vehicles are and live with the alarm overlap?</li>
+  <li>Klasická's cool greys: retire them, or keep them as the "classic" option under the new roles?</li>
+  <li>Plum as a theme, or not at all?</li>
+</ol>
+</div>
+
+<footer>Contrast and colour-blindness figures computed from the hex values shown (WCAG 2 contrast, OKLab ΔE, Machado 2009 CVD at full severity). Drafted with Claude Code.</footer>
+</main>
+</body>
+</html>
