@@ -968,9 +968,10 @@ g.rl-arrow path,svg.rl-arrow path{fill:#fff;stroke:var(--mode-train);animation:n
 .lt-dgrab{display:block;width:42px;height:5px;border-radius:3px;background:var(--poc-grab);margin:9px auto 12px}
 .lt-home,.lt-jazda{position:absolute;left:16px;right:16px;top:30px;transition:opacity .3s,transform .45s var(--sp)}
 .lt-home .fav{padding:0 0 12px}
-.lt-bar{display:flex;align-items:center;gap:12px;height:52px;padding:0 14px 0 8px;border-radius:14px;background:color-mix(in srgb,var(--mode-tram) 12%,var(--poc-card));font-size:15px;font-weight:700}
-.lt-bar b{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lt-chev{font-style:normal;color:var(--poc-text-2);font-size:18px}
+.lt-bar{position:relative;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px 0 8px;border-radius:12px;background:color-mix(in srgb,var(--mode-tram) 12%,var(--poc-card));font-size:14px;font-weight:700;overflow:hidden}
+.lt-bar b{flex:1;white-space:nowrap}
+.lt-eta{font-weight:900;color:var(--ok);font-variant-numeric:tabular-nums}
+.lt-prog{position:absolute;left:0;bottom:0;height:3px;width:40%;background:var(--mode-tram)}
 .lt-jazda{opacity:0;transform:translateY(10px)}
 .lt-stage.open .lt-home{opacity:0;transform:translateY(-10px)}
 .lt-stage.open .lt-jazda{opacity:1;transform:none}
@@ -1391,7 +1392,7 @@ g.rl-arrow path,svg.rl-arrow path{fill:#fff;stroke:var(--mode-train);animation:n
           <span class="lt-dgrab"></span>
           <div class="lt-home">
             <div class="fav"><div><i style="background:#B0562F"><svg><use href="#i-home"/></svg></i>Domov</div><div><i style="background:#2F6B76"><svg><use href="#i-work"/></svg></i>Práca</div><div class="add" aria-label="Pridať miesto">＋</div></div>
-            <div class="lt-bar"><span class="lb tram">36</span><b>Nasleduje Hanojská</b><i class="lt-chev">›</i></div>
+            <div class="lt-bar"><span class="lb tram">4</span><b>Vystúpte o 3 zast.</b><span class="lt-eta">6 min</span><i class="lt-prog"></i></div>
           </div>
           <div class="lt-jazda">
             <div class="lt-hd"><span class="lb tram">4</span><b>→ Staničné nám.</b></div>
