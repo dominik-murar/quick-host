@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spoj: trip feedback plan, 2026-11-02</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --surface: #ffffff;
+    --text: #1d1d1f;
+    --muted: #6b6b70;
+    --border: #d9d9de;
+    --code-bg: #eeeef2;
+    --accent: #2f6fdd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161618;
+      --surface: #1f1f23;
+      --text: #ececef;
+      --muted: #9a9aa3;
+      --border: #3a3a41;
+      --code-bg: #2a2a30;
+      --accent: #7aa7ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 16px 64px;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 1.7rem; margin: 0 0 0.6em; line-height: 1.25; }
+  h2 { font-size: 1.3rem; margin: 2em 0 0.6em; padding-bottom: 0.3em; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 1.05rem; margin: 1.6em 0 0.4em; }
+  p, ul, ol, table, pre, blockquote { margin: 0 0 1em; }
+  ul, ol { padding-left: 1.4em; }
+  li + li { margin-top: 0.3em; }
+  a { color: var(--accent); }
+  code {
+    font: 0.9em ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--code-bg);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    word-break: break-word;
+  }
+  blockquote {
+    margin-left: 0;
+    padding: 0.2em 1em;
+    border-left: 3px solid var(--border);
+    color: var(--muted);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th, td {
+    text-align: left;
+    vertical-align: top;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  th { font-size: 0.85rem; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+  tr:last-child td { border-bottom: none; }
+  @media (max-width: 640px) {
+    body { padding: 16px 12px 48px; }
+    h1 { font-size: 1.45rem; }
+    table, thead, tbody, tr, td { display: block; width: 100%; }
+    thead { display: none; }
+    table { background: none; border: none; }
+    tr {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      padding: 4px 0;
+    }
+    td { border: none; padding: 6px 12px; }
+    td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Trip feedback 2026-11-02: train + MHD ride</h1>
+
+<p>Feedback from a Košice → Margecany → Krompachy train ride (Os 7806) and a later Os → RA5 journey.</p>
+<p>Other work in flight: PRs #131 / #133 / #134 (ride destination, Plánovať odtiaľto, stop menu) touch <code>src/domain/ride.ts</code> and the stop panel in <code>TransitScreen.tsx</code>. Each PR below starts from <code>main</code>, keeps away from the stop panel, and re-bumps the version from main when it lands.</p>
+
+<h2>What went wrong, and why</h2>
+
+<table>
+  <thead>
+    <tr><th>#</th><th>Seen</th><th>Cause in the code</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td data-label="#">1</td>
+      <td data-label="Seen">Train "refused to leave Kysak" though the delayed timetable put it at Malá Lodina</td>
+      <td data-label="Cause in the code">OSM switch point <strong>Kysak výh. č. 35/36</strong> (1.1 km out) is in our report points. The timetable estimate stops at 90 % of the way to the next report point, so it stalled 1 km past Kysak. Trains never report at switches.</td>
+    </tr>
+    <tr>
+      <td data-label="#">2</td>
+      <td data-label="Seen">Train reported at Ružín, app didn't recognise it</td>
+      <td data-label="Cause in the code"><strong>Ružín výhybňa</strong> is missing from the OSM-built report points.</td>
+    </tr>
+    <tr>
+      <td data-label="#">3</td>
+      <td data-label="Seen">Train never merged with you</td>
+      <td data-label="Cause in the code">Phone GPS in a carriage drifts 100–400 m off the track; the on-board check allows <strong>50 m</strong>.</td>
+    </tr>
+    <tr>
+      <td data-label="#">4</td>
+      <td data-label="Seen">Merged, but the hatched "likely reach" arrow kept running ahead / timeline stuck at "Margecany → Krompachy" past Krompachy</td>
+      <td data-label="Cause in the code">The timetable guess (<code>likelyVehicle</code>, reach line, pulse) still applies on board. Your position should win.</td>
+    </tr>
+    <tr>
+      <td data-label="#">5</td>
+      <td data-label="Seen">"My location" landed on the train</td>
+      <td data-label="Cause in the code">While following a ride the map's selected vehicle is the tracked one, so the locate request frames you <strong>and</strong> the vehicle, and following re-frames it.</td>
+    </tr>
+    <tr>
+      <td data-label="#">6</td>
+      <td data-label="Seen">Tracks vanish zoomed out</td>
+      <td data-label="Cause in the code">Positron draws railways only zoomed in.</td>
+    </tr>
+    <tr>
+      <td data-label="#">7</td>
+      <td data-label="Seen">Train leg stayed focused long after you left it; bus never merged</td>
+      <td data-label="Cause in the code">A leg hands over only when its vehicle <strong>reports passing the exit</strong>, or <strong>1 h</strong> after the timetable. A train ending at Košice stops reporting, so the Os leg stayed tracked for up to an hour, and the bus leg's on-board check never ran. Two RA5 markers: Ubian can pair several vehicles with one trip (see BACKEND.md).</td>
+    </tr>
+    <tr>
+      <td data-label="#">8</td>
+      <td data-label="Seen">No signal → stale data, nothing said</td>
+      <td data-label="Cause in the code">Polls fail quietly; the ride keeps the last report.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Current leg-focus rules (asked)</h2>
+
+<ul>
+  <li><strong>Tracked leg</strong> = <code>trackedRide</code>. It changes only in <code>finishLeg</code>: vehicle reported past the exit, or timetable exit + 60 min.</li>
+  <li><strong>Map highlight</strong> = the leg page open in the journey drawer, else the tracked leg on its overview.</li>
+  <li><strong>Drawer</strong> reopens on the tracked leg while its vehicle has left your boarding stop, else on the journey overview.</li>
+</ul>
+
+<h2>PRs</h2>
+
+<p>Independent from <code>main</code>: 1, 2, 3. Stacked: 4 → 5 → 6 → 7 (they share the on-board model in <code>ride.ts</code>).</p>
+
+<h3>1. fix(rail): report points trains actually use — patch</h3>
+<p>Research: mapa.zsr.sk has no catalogue of dopravné body, only an undocumented live-trains call (<code>api/action gtall</code>, session cookie, no licence). ŽSR names the loop <strong>Výh. Ružín</strong>; live it also reports at Výh. Drienovec, Dúbrava, Lučivná, Nivy, Paludza, Potvorice, Výhybňa Váh and several odbočky that OSM lacks. 11 of 83 sampled live trains sat &gt; 300 m from any of our points. ŽSR <em>does</em> list passages at Kysak výh. č. 35/36, so switches stay.</p>
+<ul>
+  <li>The timetable estimate stops short only of the next point <strong>the trip stops at</strong>, not of points it passes (switches, loops, junctions). Fixes Kysak.</li>
+  <li>Add the missing ŽSR report points as a curated list in <code>build-rail-network.mjs</code> (names from ŽSR, coordinates from where Ubian reports trains there), merged into the OSM points. No build-time dependency on mapa.zsr.sk.</li>
+  <li>A small <code>scripts/find-missing-report-points.mjs</code> samples live trains and lists positions far from any point, for refreshing that list.</li>
+</ul>
+
+<h3>2. feat(map): rail network at every zoom — minor</h3>
+<ul>
+  <li>Draw our own <code>RAIL_NETWORK</code> tracks as one quiet line layer under routes, visible from country zoom.</li>
+</ul>
+
+<h3>3. fix(map): my location shows you — patch</h3>
+<ul>
+  <li>Locate frames only you and pauses following the vehicle until you open the ride again or tap the vehicle.</li>
+  <li>On board a train the camera frames you and the next station, so it zooms out between stations and in as you arrive.</li>
+</ul>
+
+<h3>4. fix(ride): your position wins on board a train — patch</h3>
+<ul>
+  <li>Trains: on-board if within <strong>250 m</strong> of the track (GPS in a carriage), <strong>500 m</strong> once aboard. Buses keep 50 m.</li>
+  <li>On board: your dot snaps to the line and carries the vehicle; no reach arrow, hatch or pulse; next stop, passed stops and the timeline come from your position, not the timetable guess.</li>
+</ul>
+
+<h3>5. feat(ride): boarding confidence — minor</h3>
+<ul>
+  <li><strong>High</strong> (today's checks, train tolerances from #4): join automatically.</li>
+  <li><strong>Medium</strong>: you move along the ride's line past your boarding stop at vehicle speed (&gt; 300 m along the line, &gt; 15 km/h), around when the delayed timetable has it there, while the vehicle reports before your stop, too far behind, or not at all → a floating <strong>Som vo vozidle</strong> pill on your dot.</li>
+  <li>Confirmed, you ride on your position even with no vehicle report; <strong>Nie som vo vozidle</strong> or leaving the line for 2 min undoes it.</li>
+</ul>
+
+<h3>6. fix(journey): hand over legs on time — patch</h3>
+<p>New hand-over rules, first match wins:</p>
+<ol>
+  <li>vehicle reported past the exit (as today);</li>
+  <li>you are on board the next leg's vehicle (high confidence);</li>
+  <li>you are past the exit on foot: off the line &gt; 150 m within 300 m of the exit, or the exit's delayed arrival has passed and the vehicle stopped reporting for 2 min;</li>
+  <li>timetable exit + 60 min (as today).</li>
+</ol>
+<ul>
+  <li>When several vehicles share a trip, take the one that fits: nearest you on the line, else the smallest delay.</li>
+</ul>
+
+<h3>7. feat(ride): say when data is stale — minor</h3>
+<ul>
+  <li>No successful vehicle update for <strong>45 s</strong> (or the browser is offline): the ride drawer says <strong>Bez spojenia · údaje spred N min</strong>.</li>
+  <li>On board, the ride keeps moving by your position: passed stops from GPS, times shifted by the delay estimated from your progress against the timetable.</li>
+</ul>
+
+<h3>Ideas (not built)</h3>
+<ul>
+  <li>LLM over ŽSR výluky PDFs: warn about boarding from the opposite platform at halts, and single-track delays for Ex trains. Saved to the parked-ideas list.</li>
+</ul>
+
+<h2>Process</h2>
+<p>Each PR: opus implements → review loop with GPT Sol → PR (safe ship: preview + local screenshots, merge only on your OK).</p>
+
+</main>
+</body>
+</html>
