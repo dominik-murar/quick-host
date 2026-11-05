@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spoj Type Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Inter+Tight:wght@400..700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Sans+3:wght@400..700&family=Geist:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --canvas: #efeae5; --surface: #fbfaf9; --raised: #ffffff; --fill: #f3efeb; --separator: #e5e2df;
+  --label: #301c2c; --label2: #71626e; --label3: #958491; --tint: #1b7a3c; --tintSurface: #e4f2e8;
+  --urban: #8E3A8A; --regional: #2B6FC0; --delayFill: #f5b83d; --delayInk: #2a2210;
+  --sys: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0f0e0e; --surface: #1b1a18; --raised: #1f1e1c; --fill: #2f2d2a; --separator: #34322e;
+    --label: #f4f2ee; --label2: #b0a99a; --label3: #8a8478; --tint: #7ad497; --tintSurface: #183426;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--canvas); color: var(--label); font: 15px/22px var(--sys); }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 26px; line-height: 32px; margin: 0 0 6px; font-weight: 700; letter-spacing: -0.3px; }
+h2 { font-size: 18px; line-height: 24px; margin: 36px 0 10px; font-weight: 600; }
+p.lede { color: var(--label2); margin: 0 0 18px; max-width: 70ch; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 8px; }
+.seg { display: inline-flex; background: var(--fill); border-radius: 10px; padding: 3px; }
+.seg button { border: 0; background: none; color: var(--label2); font: 500 13px/18px var(--sys); padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--raised); color: var(--label); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 16px; }
+.option { min-width: 0; }
+.option h3 { margin: 0 0 2px; font: 600 15px/20px var(--sys); }
+.option .why { color: var(--label2); font-size: 13px; line-height: 18px; margin: 0 0 8px; min-height: 36px; }
+.tag { display: inline-block; font: 600 11px/16px var(--sys); padding: 0 6px; border-radius: 5px; background: var(--tintSurface); color: var(--tint); margin-left: 6px; vertical-align: 1px; }
+.width { color: var(--label3); font: 400 12px/16px var(--sys); font-variant-numeric: tabular-nums; }
+
+/* The card, in the face under test */
+.card { font-family: var(--ui); font-variant-numeric: tabular-nums; background: var(--raised); border: 1px solid var(--separator); border-radius: 18px; padding: 10px 14px 4px; }
+.card.mono .fig { font-family: 'Cascadia Code', 'SF Mono', ui-monospace, monospace; }
+.head { display: flex; align-items: center; gap: 8px; height: 40px; }
+.stop { font-size: 17px; line-height: 22px; font-weight: var(--w-stop); white-space: nowrap; }
+.chev { color: var(--label3); font-size: 15px; }
+.walk { margin-left: auto; color: var(--label2); font-size: 13px; line-height: 18px; white-space: nowrap; }
+.from { background: var(--tintSurface); color: var(--tint); font-size: 13px; line-height: 18px; font-weight: var(--w-action); height: 26px; padding: 0 10px; border-radius: 13px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.row { display: flex; align-items: center; gap: 10px; min-height: 62px; padding: 8px 0; border-top: 1px solid var(--separator); }
+.badge { color: #fff; min-width: 38px; height: 32px; padding: 0 6px; display: grid; place-items: center; font-size: 15px; font-weight: 600; flex: none; }
+.badge.bus { background: var(--urban); border-radius: 3px; }
+.badge.tram { background: var(--urban); border-radius: 16px; }
+.badge.reg { background: var(--regional); border-radius: 3px; box-shadow: inset 0 -3px rgba(255,255,255,.55); font-size: 14px; }
+.dest { flex: 1; min-width: 0; }
+.dline { display: flex; align-items: center; gap: 5px; }
+.dname { font-size: 16px; line-height: 21px; font-weight: var(--w-dest); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.plat { flex: none; font-size: 12px; line-height: 16px; font-weight: var(--w-plat); color: var(--label2); background: var(--fill); border-radius: 5px; padding: 1px 5px; }
+.meta { color: var(--label2); font-size: 14px; line-height: 19px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.time { text-align: right; flex: none; min-width: 60px; }
+.cd { font-size: 17px; line-height: 22px; font-weight: 600; white-space: nowrap; }
+.cd .u { font-weight: var(--w-unit); font-size: var(--s-unit); color: var(--c-unit); }
+.sched { font-size: 14px; line-height: 19px; font-weight: var(--w-sched); color: var(--tint); margin-top: 1px; }
+.late { display: inline-flex; gap: 5px; background: var(--delayFill); color: var(--delayInk); border-radius: 6px; padding: 0 5px; font-size: 13px; line-height: 19px; font-weight: 600; margin-top: 2px; }
+.late s { font-weight: 400; opacity: .65; }
+
+/* Weight schemes */
+.now  { --w-stop: 600; --w-dest: 600; --w-plat: 600; --w-sched: 600; --w-action: 600; --w-unit: 400; --s-unit: 13px; --c-unit: var(--label); }
+.prop { --w-stop: 600; --w-dest: 500; --w-plat: 500; --w-sched: 400; --w-action: 500; --w-unit: 400; --s-unit: 17px; --c-unit: var(--label2); }
+.cd-uniform { --w-unit: 600; --s-unit: 17px; --c-unit: var(--label); }
+.cd-split   { --w-unit: 400; --s-unit: 17px; --c-unit: var(--label2); }
+.cd-stack   { --w-unit: 400; --s-unit: 13px; --c-unit: var(--label); }
+
+table { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 20px; }
+.tablewrap { overflow-x: auto; background: var(--raised); border: 1px solid var(--separator); border-radius: 14px; }
+th, td { text-align: left; padding: 8px 12px; border-top: 1px solid var(--separator); vertical-align: top; }
+thead th { border-top: 0; color: var(--label2); font-weight: 500; font-size: 13px; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.chg { color: var(--tint); font-weight: 600; }
+@media (max-width: 640px) {
+  table, thead, tbody, tr, td { display: block; } thead { display: none; }
+  tr { border-top: 1px solid var(--separator); padding: 6px 0; } tr:first-child { border-top: 0; }
+  td { border-top: 0; padding: 3px 12px; } td::before { content: attr(data-label); display: inline-block; width: 84px; color: var(--label2); font-weight: 400; }
+}
+ul.notes { padding-left: 20px; max-width: 75ch; margin: 0; }
+ul.notes li { margin: 6px 0; }
+.cdgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr)); gap: 12px; }
+.cdcard { background: var(--raised); border: 1px solid var(--separator); border-radius: 14px; padding: 12px 14px; font-family: var(--sys); font-variant-numeric: tabular-nums; }
+.cdcard h4 { margin: 0 0 8px; font: 600 13px/18px var(--sys); color: var(--label2); }
+.cdcard .stack { display: flex; gap: 22px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Spoj type options</h1>
+  <p class="lede">Each card below is the same Belehradská departure card set in a different face. Switch between the 0.29 weights and the proposed ones. Width is how wide “Námestie osloboditeľov” sets compared with SF Pro.</p>
+
+  <div class="controls">
+    <div class="seg" id="scheme">
+      <button aria-pressed="false" data-v="now">Weights: 0.29</button>
+      <button aria-pressed="true" data-v="prop">Weights: proposed</button>
+    </div>
+    <div class="seg" id="figs">
+      <button aria-pressed="true" data-v="">Figures: same face</button>
+      <button aria-pressed="false" data-v="mono">Figures: Cascadia</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <h2>The countdown: one line height, not two</h2>
+  <div class="cdgrid">
+    <div class="cdcard cd-stack"><h4>0.29: small unit</h4><div class="stack"><div class="cd">1<span class="u"> min</span></div><div class="cd">&lt;1<span class="u"> min</span></div><div class="cd">12<span class="u"> min</span></div></div></div>
+    <div class="cdcard cd-uniform"><h4>Before 0.29: all one style</h4><div class="stack"><div class="cd">1<span class="u"> min</span></div><div class="cd">&lt;1<span class="u"> min</span></div><div class="cd">12<span class="u"> min</span></div></div></div>
+    <div class="cdcard cd-split"><h4>Proposed: same size, quieter unit <span class="tag">pick</span></h4><div class="stack"><div class="cd">1<span class="u"> min</span></div><div class="cd">&lt;1<span class="u"> min</span></div><div class="cd">12<span class="u"> min</span></div></div></div>
+  </div>
+
+  <h2>Proposed weights by role</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Role</th><th>Example</th><th>0.29</th><th>Proposed</th></tr></thead>
+    <tbody>
+      <tr><td data-label="Role">Screen title</td><td data-label="Example">Odchody</td><td data-label="0.29" class="num">22 / 700</td><td data-label="Proposed" class="num">22 / 700</td></tr>
+      <tr><td data-label="Role">Card header (stop)</td><td data-label="Example">Belehradská</td><td data-label="0.29" class="num">16 / 600</td><td data-label="Proposed" class="num">17 / 600</td></tr>
+      <tr><td data-label="Role">Destination</td><td data-label="Example">Madridská</td><td data-label="0.29" class="num">16 / 600</td><td data-label="Proposed" class="num chg">16 / 500</td></tr>
+      <tr><td data-label="Role">Line badge</td><td data-label="Example">27, 802415</td><td data-label="0.29" class="num">14 / 600</td><td data-label="Proposed" class="num">15 / 600</td></tr>
+      <tr><td data-label="Role">Countdown digits</td><td data-label="Example">3</td><td data-label="0.29" class="num">18 / 600</td><td data-label="Proposed" class="num chg">17 / 600</td></tr>
+      <tr><td data-label="Role">Countdown unit</td><td data-label="Example">min</td><td data-label="0.29" class="num">13 / 400</td><td data-label="Proposed" class="num chg">17 / 400, secondary</td></tr>
+      <tr><td data-label="Role">Scheduled time</td><td data-label="Example">06:57</td><td data-label="0.29" class="num">13 / 600</td><td data-label="Proposed" class="num chg">14 / 400</td></tr>
+      <tr><td data-label="Role">Platform chip</td><td data-label="Example">1</td><td data-label="0.29" class="num">13 / 600</td><td data-label="Proposed" class="num chg">12 / 500</td></tr>
+      <tr><td data-label="Role">Pill actions, chips</td><td data-label="Example">Odtiaľto, Domov</td><td data-label="0.29" class="num">13–15 / 600</td><td data-label="Proposed" class="num chg">13–15 / 500</td></tr>
+      <tr><td data-label="Role">Delay pill</td><td data-label="Example">+3 min</td><td data-label="0.29" class="num">13 / 600</td><td data-label="Proposed" class="num">13 / 600, struck time 400</td></tr>
+      <tr><td data-label="Role">Meta</td><td data-label="Example">→ Sofijská · 1 zast.</td><td data-label="0.29" class="num">13 / 400</td><td data-label="Proposed" class="num chg">14 / 400</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Notes</h2>
+  <ul class="notes">
+    <li><b>Only four things get 600:</b> the stop header, the line badge, the countdown digits and the delay pill. Destinations drop to 500. A row then has one bold number and one bold badge, not five bold runs.</li>
+    <li><b>Why Inter looks “expandy”:</b> it isn’t the width. At the same size it sets only 3 to 4% wider than SF Pro. The cause is Inter’s tall x-height and round, open letters: each word looks a size bigger. Put 600 on every run, as 0.29 does, and the card swells.</li>
+    <li><b>Default face, recommended: the system face with tabular digits.</b> This is SF Pro on iPhone and Roboto on Android. SF Pro’s <code>tnum</code> digits line up, so there’s no font to download and the app feels native, the way it did before 0.29. It also drops the 133 KB of Inter from the PWA.</li>
+    <li><b>Bundled options, for the same look on every platform:</b> Inter Tight keeps Inter’s shapes but sets narrower. IBM Plex Sans is narrower still, with more character, and pairs with Plex Mono. Source Sans 3 is the most compact.</li>
+    <li><b>The Cascadia figures toggle stays.</b> It still works with any of these faces.</li>
+  </ul>
+</main>
+<script>
+const FACES = [
+  { name: 'System (SF Pro / Roboto)', ui: "var(--sys)", why: 'The pre-0.29 text face. No download, native feel, and its tnum digits line up.', tag: 'recommended' },
+  { name: 'Inter (0.29)', ui: "'Inter', sans-serif", why: 'For reference: what ships now.' },
+  { name: 'Inter Tight', ui: "'Inter Tight', sans-serif", why: 'Inter’s shapes with tighter spacing. The smallest change if a bundled face matters.' },
+  { name: 'IBM Plex Sans', ui: "'IBM Plex Sans', sans-serif", why: 'Narrower, with more character. Pairs with Plex Mono for figures.' },
+  { name: 'Source Sans 3', ui: "'Source Sans 3', sans-serif", why: 'The most compact. Humanist and calm, it fits long Slovak stop names.' },
+  { name: 'Geist', ui: "'Geist', sans-serif", why: 'Geometric and crisp, with Geist Mono as its figure partner.' },
+];
+const card = () => `
+  <div class="head">
+    <span class="stop">Belehradská</span><span class="chev">›</span>
+    <span class="walk">🚶 3 min</span><span class="from">↗ Odtiaľto</span>
+  </div>
+  <div class="row">
+    <div class="badge bus fig">27</div>
+    <div class="dest"><div class="dline"><span class="dname">Madridská</span><span class="plat fig">1</span></div><div class="meta">→ Sofijská · 1 zast.</div></div>
+    <div class="time"><div class="cd"><span class="fig">1</span><span class="u"> min</span></div><div class="sched fig">06:55</div></div>
+  </div>
+  <div class="row">
+    <div class="badge bus fig">51</div>
+    <div class="dest"><div class="dline"><span class="dname probe">Námestie osloboditeľov</span><span class="plat fig">2</span></div><div class="meta">→ Berlínska · 2 zast.</div></div>
+    <div class="time"><div class="cd"><span class="fig">3</span><span class="u"> min</span></div><div class="sched fig">06:57</div></div>
+  </div>
+  <div class="row">
+    <div class="badge reg fig">802415</div>
+    <div class="dest"><div class="dline"><span class="dname">Košice, AS</span><span class="plat fig">4</span></div><div class="meta">● Košice, Ryba</div></div>
+    <div class="time"><div class="cd"><span class="fig">&lt;1</span><span class="u"> min</span></div><div class="late fig"><s>17:01</s> +3 min</div></div>
+  </div>
+  <div class="row">
+    <div class="badge tram fig">3</div>
+    <div class="dest"><div class="dline"><span class="dname">Važecká</span><span class="plat fig">2</span></div><div class="meta">→ Ryba</div></div>
+    <div class="time"><div class="cd"><span class="fig">12</span><span class="u"> min</span></div><div class="sched fig">17:16</div></div>
+  </div>`;
+const grid = document.getElementById('grid');
+grid.innerHTML = FACES.map((f, i) => `
+  <section class="option">
+    <h3>${f.name}${f.tag ? `<span class="tag">${f.tag}</span>` : ''} <span class="width" id="w${i}"></span></h3>
+    <p class="why">${f.why}</p>
+    <div class="card prop" style="--ui:${f.ui.replace(/"/g, '&quot;')}">${card()}</div>
+  </section>`).join('');
+
+function measure() {
+  const c = document.createElement('canvas').getContext('2d');
+  const sys = getComputedStyle(document.documentElement).getPropertyValue('--sys');
+  const w = (fam, wt) => { c.font = `${wt} 16px ${fam}`; return c.measureText('Námestie osloboditeľov').width; };
+  const weight = document.querySelector('.card').classList.contains('now') ? 600 : 500;
+  const base = w(sys, weight);
+  FACES.forEach((f, i) => {
+    const fam = f.ui === 'var(--sys)' ? sys : f.ui;
+    const pct = Math.round((w(fam, weight) / base - 1) * 100);
+    document.getElementById('w' + i).textContent = i === 0 ? '· base width' : `· ${pct >= 0 ? '+' : '−'}${Math.abs(pct)}% width`;
+  });
+}
+function seg(id, apply) {
+  const el = document.getElementById(id);
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    apply(b.dataset.v);
+  });
+}
+seg('scheme', v => { document.querySelectorAll('.card').forEach(c => { c.classList.toggle('now', v === 'now'); c.classList.toggle('prop', v === 'prop'); }); measure(); });
+seg('figs', v => document.querySelectorAll('.card').forEach(c => c.classList.toggle('mono', v === 'mono')));
+document.fonts.ready.then(measure);
+</script>
+</body>
+</html>
